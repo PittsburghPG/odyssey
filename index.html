@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+	<head>
+	
+	<title>Odysseys</title>
+	<meta charset="utf-8">
+
+	  <!-- GOOGLE ANALYTICS -->
+		<script type="text/javascript">
+		
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-15716261-1']);
+		_gaq.push(['_setDomainName', 'post-gazette.com']);
+		_gaq.push(['_trackPageview']);
+		
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+		
+		</script>
+	<!-- end Google Analytics -->
+	<meta name="viewport" content="initial-scale=1.0, width=device-width, user-scalable=no" />
+    
+	<meta property="og:type"            content="article" /> 
+	<meta property="og:url"             content="http://newsinteractive.post-gazette.com/unitednationhoods" /> 
+	<meta property="og:title"           content="Odysseys" /> 
+	<meta property="og:description"     content="Almost every country in the United Nations is represented by immigrants in the Pittsburgh metro area" /> 
+	<meta property="og:image"           content="http://newsinteractive.post-gazette.com/unitednationhoods/shale-water.jpg" /> 
+
+	<meta name="twitter:card" 			content="summary">
+	<meta name="twitter:site" 			content="@pittsburghpg">
+	<meta name="twitter:title"			content="Odysseys">
+	<meta name="twitter:description"	content="Almost every country in the United Nations is represented by immigrants in the Pittsburgh metro area (via @PittsburghPG)">
+	<meta name="twitter:image" 			content="http://newsinteractive.post-gazette.com/unitednationhoods/shale-water.jpg">
+	<link href='http://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
+	
+	<script type='text/javascript' src='http://d3js.org/d3.v3.min.js'></script>
+	<script type='text/javascript' src='http://d3js.org/topojson.v1.min.js'></script>
+	<link href='styles.css' rel='stylesheet' type='text/css'>
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
+	
+	</head>
+
+	<body>
+	  <div id="grayout"><video id="largescreen" fullscreen style="display: none; z-index: 999; width: 100%; height: 100%;"></video>
+	  </div>
+	  
+		<div class="header">
+		<h1>Odysseys</h1>
+		<h2>How immigrants from every country in the United Nations found a home in Pittsburgh</h2>
+		</div>
+		
+		<svg id="canvas">
+		<div id="bigsmall">
+		  <div class="searchsurround1"><i class="fa fa-search-plus"></i></div>
+		  <div class="searchsurround2"><i class="fa fa-search-minus  fa-flip-horizontal"></i></div>
+		</div></svg>
+	
+	
+	<div id="person_wrapper">
+		<div class="closeperson"><i class="fa fa-times-circle fa-2x"></i></div>
+		
+		<div class="container-fluid">
+			<div class="row" id="toprow">
+				<div class="col-md-8">
+				<div id="nameSpace"><span id='Name' class="response"></span> <span id='Country' class="response"></span></div>
+				<div id="vidspace"></div>
+				<div id="personInfo">
+					<div class="morespace"><span class="gray">Age:</span> <span id='Age' class="response"></span></div>
+					<div class="morespace"><span class="gray">Origin:</span> <span id='Origin' class="response"></span></div>
+					<div class="morespace"><span class="gray">Pittsburgh home:</span> <span id='Neighborhood' class="response"></span></div>
+					<div class="morespace"><span class="gray">Occupation:</span> <span id='Occupation' class="response"></span></div>
+				</div>
+				</div>
+				<div id="personImages" class="col-md-4">
+				 <img id="countryimage"  />
+				 <div id="aboutcountry"><h4></h4>
+					 <strong>Population:</strong> <span id="population"></span><br/>
+					 <strong>GDP: </strong> <span id="gdp"></span><br/>
+					 <strong>Income level: </strong> <span id="income"></span>
+				 </div>
+				</div>
+		    </div><!-- end row--></!-->	 
+			<div class="row" id="row2">
+				<div class="col-md-12">
+				<div id="Notes"></div>
+				<div id="slideshow" style="width: 100%;">
+					<div id="largeimage" style=""></div>
+					<div id="thumbs" style="clear: both;">
+					</div>
+				</div>
+				</div>
+			</div><!-- end row--></!-->	 
+			
+		</div><!-- end container --></!-->
+	</div><!-- end person_wrapper --></!-->
+		
+		<div id="countriesTab">
+				<i class="fa fa-angle-double-left"></i> <span id="tabName">Countries</span>
+			</div>
+			<div id="panel"></div>
+		<div id="request">Tell us your story.</div>
+		
+		  <div id="fTellUs">
+		  <div class="close"><i class="fa fa-times-circle"></i></div>
+		  <form id="tellusForm" method="post" role="form">
+		  <div class="formHead">Tell us your story</div>
+		  <div id="thank">Thank you.</div>
+		  <input type="text" class="form-control" placeholder="Name" name="tellName" id="tellName" >
+		  <select class="form-control" name="tellCountry" id="tellCountry"></select>
+		  <select name="tellAge" id="tellAge"  class="form-control"></select>
+		  <input type="text" class="form-control" placeholder="Occupation" name="tellOccupation" id="tellOccupation" >
+		  <input class="form-control" type="text" placeholder="Email address" id="tellEmail">
+		  <input type="tel" class="form-control" placeholder="Phone (format: 999-999-9999)" pattern='\d{3}[\-]\d{3}[\-]\d{4}'  name="tellPhone" id="tellPhone">
+		  <textarea class="form-control" rows="3"  id="tellAbout" placeholder="A bit about you" name="tellAbout"></textarea> 
+		  <button type="submit" class="btn btn-default submit">Send</button> 
+		  </form>
+		  </div>
+		  
+		  <div class="socialWrapper" >
+			<div class="social">
+			<div class="logo"></div>
+			<a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://newsinteractive.post-gazette.com/unitednationhoods" style="border:0"><i class="fa fa-facebook-square fa-2x"></i></a>
+			<a target="_blank" href="https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fnewsinteractive.post-gazette.com%2Funitednationhoods%2F&text=All nations are represented among the Pittsburgh region's immigrants (via @PittsburghPG):&:tw_p=tweetbutton&url=http://newsinteractive.post-gazette.com/unitednationhoods"><i class="fa fa-twitter-square fa-2x"></i></a>
+			</div>
+			<div class="creditClick">Credits</div>
+			</div>
+
+			<div id="credits">
+			<div class="closecredits"><i class="fa fa-times-circle"></i></div>
+			<table>
+			<tr><td class="bold">Reporting</td><td>Mila Sanina<br/>Steve Mellon</td></tr>
+			<tr><td class="bold">Video</td><td>Steve Mellon</td></tr>
+			<tr><td class="bold">Design</td><td>Dan Marsula<br/>Laura Malt Schneiderman</td></tr>
+			<tr><td class="bold">Interactivity</td><td>Laura Malt Schneiderman<br/>Andrew McGill</td></tr>
+			<tr><td class="bold">Data Source</td><td>The World Bank</td></tr>
+			</div>
+			
+			
+		  
+		<script type="text/javascript" src="scripts.js"></script>
+	</body>
+	
+	
+</html>
