@@ -45,7 +45,7 @@ $(document).ready(function(){
 	$('#bigsmall').css('margin-left', '-' + w + 'px');
 	
 //get data
-$.get("getNations.php", function(data){
+$.get("../odyssey/php/getNations.php", function(data){
 		eval(data);		
 		var str = "";
 		var dropdownstr = "<option value=''>We are seeking people from these countries...</option>";
@@ -101,7 +101,7 @@ function handleGlobe() {
 		.projection(projection);
 
 		
-	d3.json("world.json", function(error, world) {	//world.json is already a topojson file - converted // add background circle for aesthetics
+	d3.json("../odyssey/world.json", function(error, world) {	//world.json is already a topojson file - converted // add background circle for aesthetics
 			
 		circle = svg.append("circle")																// add background circle for aesthetics
 			.attr('cx', width / 2)
@@ -473,7 +473,7 @@ var position = $('.socialWrapper').position();
 		var phone = $("#tellPhone").val();
 		var about = $("#tellAbout").val();
 		
-		$.post("tellus.php", {tellName:name, tellCountry: country, tellAge: age, tellOccupation: occupation, tellEmail: email, tellPhone: phone, tellAbout: about}, function(data){
+		$.post("../php/tellus.php", {tellName:name, tellCountry: country, tellAge: age, tellOccupation: occupation, tellEmail: email, tellPhone: phone, tellAbout: about}, function(data){
 				$('.form-control').css('visibility', 'hidden');
 				$('.submit').css('display', 'none');
 				$('#fTellUs #thank').css('display', 'block');

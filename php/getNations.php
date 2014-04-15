@@ -1,5 +1,5 @@
 <?php
-require_once ('constants_live.php'); 
+require_once ('constants_test.php'); 
 $str = "";
 				//dB connection to get all violations
 				$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
