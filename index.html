@@ -1,53 +1,59 @@
 <!doctype html>
 <html>
 	<head>
+		<title>Odysseys</title>
+		<meta charset="utf-8">
 	
-	<title>Odysseys</title>
-	<meta charset="utf-8">
-
-	  <!-- GOOGLE ANALYTICS -->
-		<script type="text/javascript">
+		<!-- GOOGLE ANALYTICS -->
+			<script type="text/javascript">
+			
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-15716261-1']);
+			_gaq.push(['_setDomainName', 'post-gazette.com']);
+			_gaq.push(['_trackPageview']);
+			
+			(function() {
+				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+			
+			</script>
+		<!-- end Google Analytics -->
+		<meta name="viewport" content="initial-scale=1.0, width=device-width, user-scalable=no" />
 		
-		var _gaq = _gaq || [];
-		_gaq.push(['_setAccount', 'UA-15716261-1']);
-		_gaq.push(['_setDomainName', 'post-gazette.com']);
-		_gaq.push(['_trackPageview']);
-		
-		(function() {
-			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		})();
-		
-		</script>
-	<!-- end Google Analytics -->
-	<meta name="viewport" content="initial-scale=1.0, width=device-width, user-scalable=no" />
-    
-	<meta property="og:type"            content="article" /> 
-	<meta property="og:url"             content="http://newsinteractive.post-gazette.com/unitednationhoods" /> 
-	<meta property="og:title"           content="Odysseys" /> 
-	<meta property="og:description"     content="Almost every country in the United Nations is represented by immigrants in the Pittsburgh metro area" /> 
-	<meta property="og:image"           content="http://newsinteractive.post-gazette.com/unitednationhoods/shale-water.jpg" /> 
-
-	<meta name="twitter:card" 			content="summary">
-	<meta name="twitter:site" 			content="@pittsburghpg">
-	<meta name="twitter:title"			content="Odysseys">
-	<meta name="twitter:description"	content="Almost every country in the United Nations is represented by immigrants in the Pittsburgh metro area (via @PittsburghPG)">
-	<meta name="twitter:image" 			content="http://newsinteractive.post-gazette.com/unitednationhoods/shale-water.jpg">
-	<link href='http://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
+		<meta property="og:type"            content="article" /> 
+		<meta property="og:url"             content="http://newsinteractive.post-gazette.com/unitednationhoods" /> 
+		<meta property="og:title"           content="Odysseys" /> 
+		<meta property="og:description"     content="Almost every country in the United Nations is represented by immigrants in the Pittsburgh metro area" /> 
+		<meta property="og:image"           content="http://newsinteractive.post-gazette.com/unitednationhoods/shale-water.jpg" /> 
 	
-	<script type='text/javascript' src='http://d3js.org/d3.v3.min.js'></script>
-	<script type='text/javascript' src='http://d3js.org/topojson.v1.min.js'></script>
-	<link href='css/styles.css' rel='stylesheet' type='text/css'>
-	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-	<!-- Latest compiled and minified JavaScript -->
-	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-	<link href='http://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
-	
+		<meta name="twitter:card" 			content="summary">
+		<meta name="twitter:site" 			content="@pittsburghpg">
+		<meta name="twitter:title"			content="Odysseys">
+		<meta name="twitter:description"	content="Almost every country in the United Nations is represented by immigrants in the Pittsburgh metro area (via @PittsburghPG)">
+		<meta name="twitter:image" 			content="http://newsinteractive.post-gazette.com/unitednationhoods/shale-water.jpg">
+		<link href='http://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
+		
+		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+		
+		<script type='text/javascript' src='http://d3js.org/d3.v3.min.js'></script>
+		<script type='text/javascript' src='http://d3js.org/topojson.v1.min.js'></script>
+		
+		<!-- We probably won't need these -->
+		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+		
+		<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+		
+		<!--probably won't use this font -->
+		<link href='http://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
+		<link href='css/styles.css' rel='stylesheet' type='text/css'>
+		
+		
+		
+		
 	</head>
 
 	<body>
