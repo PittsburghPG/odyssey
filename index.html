@@ -33,126 +33,84 @@
 		<meta name="twitter:title"			content="Odysseys">
 		<meta name="twitter:description"	content="Almost every country in the United Nations is represented by immigrants in the Pittsburgh metro area (via @PittsburghPG)">
 		<meta name="twitter:image" 			content="http://newsinteractive.post-gazette.com/unitednationhoods/shale-water.jpg">
-		<link href='http://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
 		
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 		<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 		
 		<script type='text/javascript' src='http://d3js.org/d3.v3.min.js'></script>
 		<script type='text/javascript' src='http://d3js.org/topojson.v1.min.js'></script>
-		
-		<!-- We probably won't need these -->
-		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-		
+			
 		<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+	
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Arvo:400,700' rel='stylesheet' type='text/css'>
 		
-		<!--probably won't use this font -->
-		<link href='http://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
 		<link href='css/styles.css' rel='stylesheet' type='text/css'>
-		
-		
-		
-		
 	</head>
 
 	<body>
-	  <div id="grayout"><video id="largescreen" fullscreen style="display: none; z-index: 999; width: 100%; height: 100%;"></video>
-	  </div>
-	  
-		<div class="header">
-		<h1>Odysseys</h1>
-		<h2>How immigrants from every country in the United Nations found a home in Pittsburgh</h2>
+		<div class="browse">
+			<div class="intro">
+				<h1>ODDYSSEYS</h1>
+				<div class="text">
+					<p>From all over the world, people have come to Pittsburgh.</p>
+					<p>Some left because of war; some came because of opportunity. Many started a business. Many started a family. In this project, the Pittsburgh Post-Gazette tells a story of an immigrant to this city from every country in the world. </p> 
+				</div>
+				
+				<button id="begin">Begin</button>
+				
+			</div>
+			
+			<img class="preview" />
+			
+			<svg id="canvas">
+			<defs>
+				<linearGradient id="gradBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+					<stop offset="0%" style="stop-color:#005C99;stop-opacity:1" />
+					<stop offset="100%" style="stop-color:#0099FF;stop-opacity:1" />
+				</linearGradient>
+				<filter id="glow">
+					<feColorMatrix type="matrix"
+						values=
+						"0 0 0 0   0
+						0 0 0 0.9 0
+						0 0 0 0.9 0
+						0 0 0 1   0"/>
+					<feGaussianBlur stdDeviation="5.5" result="coloredBlur"/>
+					<feMerge>
+						<feMergeNode in="coloredBlur"/>
+						<feMergeNode in="SourceGraphic"/>
+					</feMerge>
+				</filter>
+			</defs>
+			</svg>
+		</div>
+		<div class="story">
+			<h1>"I never thought I would leave Germany"</h1>
+			<div class="text">
+				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.</p>
+
+				<p>Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>
+				
+				<p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus.</p>
+				
+				<p>Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante.</p>
+				
+				<p>Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus.</p>
+				
+				<p>Nullam accumsan lorem in dui. Cras ultricies mi eu turpis hendrerit fringilla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; In ac dui quis mi consectetuer lacinia. Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget, imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris.</p>
+				
+				<p>Integer ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus. Vestibulum volutpat pretium libero. Cras id dui. Aenean ut eros et nisl sagittis vestibulum. Nullam nulla eros, ultricies sit amet, nonummy id, imperdiet feugiat, pede. Sed lectus.</p>
+				
+				<p>Donec mollis hendrerit risus. Phasellus nec sem in justo pellentesque facilisis. Etiam imperdiet imperdiet orci. Nunc nec neque. Phasellus leo dolor, tempus non, auctor et, hendrerit quis, nisi. Curabitur ligula sapien, tincidunt non, euismod vitae, posuere imperdiet, leo. Maecenas malesuada. Praesent congue erat at massa. Sed cursus turpis vitae tortor.</p>
+				
+				<p>Donec posuere vulputate arcu. Phasellus accumsan cursus velit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed aliquam, nisi quis porttitor congue, elit erat euismod orci, ac placerat dolor lectus quis orci. Phasellus consectetuer vestibulum elit. Aenean tellus metus, bibendum sed, posuere ac, mattis non, nunc.</p>
+				
+				<p>Vestibulum fringilla pede sit amet augue. In turpis. Pellentesque posuere. Praesent turpis. Aenean posuere, tortor sed cursus feugiat, nunc augue blandit nunc, eu sollicitudin urna dolor sagittis lacus. Donec elit libero, sodales nec, volutpat a, suscipit non, turpis. Nullam sagittis. Suspendisse pulvinar, augue ac venenatis condimentum, sem libero volutpat nibh, nec pellentesque velit pede quis nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce id purus. Ut varius tincidunt libero. Phasellus dolor. Maecenas vestibulum mollis</p>
+			</div>
 		</div>
 		
-		<svg id="canvas">
-		<div id="bigsmall">
-		  <div class="searchsurround1"><i class="fa fa-search-plus"></i></div>
-		  <div class="searchsurround2"><i class="fa fa-search-minus  fa-flip-horizontal"></i></div>
-		</div></svg>
-	
-	
-	<div id="person_wrapper">
-		<div class="closeperson"><i class="fa fa-times-circle fa-2x"></i></div>
-		
-		<div class="container-fluid">
-			<div class="row" id="toprow">
-				<div class="col-md-8">
-				<div id="nameSpace"><span id='Name' class="response"></span> <span id='Country' class="response"></span></div>
-				<div id="vidspace"></div>
-				<div id="personInfo">
-					<div class="morespace"><span class="gray">Age:</span> <span id='Age' class="response"></span></div>
-					<div class="morespace"><span class="gray">Origin:</span> <span id='Origin' class="response"></span></div>
-					<div class="morespace"><span class="gray">Pittsburgh home:</span> <span id='Neighborhood' class="response"></span></div>
-					<div class="morespace"><span class="gray">Occupation:</span> <span id='Occupation' class="response"></span></div>
-				</div>
-				</div>
-				<div id="personImages" class="col-md-4">
-				 <img id="countryimage"  />
-				 <div id="aboutcountry"><h4></h4>
-					 <strong>Population:</strong> <span id="population"></span><br/>
-					 <strong>GDP: </strong> <span id="gdp"></span><br/>
-					 <strong>Income level: </strong> <span id="income"></span>
-				 </div>
-				</div>
-		    </div><!-- end row--></!-->	 
-			<div class="row" id="row2">
-				<div class="col-md-12">
-				<div id="Notes"></div>
-				<div id="slideshow" style="width: 100%;">
-					<div id="largeimage" style=""></div>
-					<div id="thumbs" style="clear: both;">
-					</div>
-				</div>
-				</div>
-			</div><!-- end row--></!-->	 
-			
-		</div><!-- end container --></!-->
-	</div><!-- end person_wrapper --></!-->
-		
-		<div id="countriesTab">
-				<i class="fa fa-angle-double-left"></i> <span id="tabName">Countries</span>
-			</div>
-			<div id="panel"></div>
-		<div id="request">Tell us your story.</div>
-		
-		  <div id="fTellUs">
-		  <div class="close"><i class="fa fa-times-circle"></i></div>
-		  <form id="tellusForm" method="post" role="form">
-		  <div class="formHead">Tell us your story</div>
-		  <div id="thank">Thank you.</div>
-		  <input type="text" class="form-control" placeholder="Name" name="tellName" id="tellName" >
-		  <select class="form-control" name="tellCountry" id="tellCountry"></select>
-		  <select name="tellAge" id="tellAge"  class="form-control"></select>
-		  <input type="text" class="form-control" placeholder="Occupation" name="tellOccupation" id="tellOccupation" >
-		  <input class="form-control" type="text" placeholder="Email address" id="tellEmail">
-		  <input type="tel" class="form-control" placeholder="Phone (format: 999-999-9999)" pattern='\d{3}[\-]\d{3}[\-]\d{4}'  name="tellPhone" id="tellPhone">
-		  <textarea class="form-control" rows="3"  id="tellAbout" placeholder="A bit about you" name="tellAbout"></textarea> 
-		  <button type="submit" class="btn btn-default submit">Send</button> 
-		  </form>
-		  </div>
-		  
-		  <div class="socialWrapper" >
-			<div class="social">
-			<div class="logo"></div>
-			<a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://newsinteractive.post-gazette.com/unitednationhoods" style="border:0"><i class="fa fa-facebook-square fa-2x"></i></a>
-			<a target="_blank" href="https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fnewsinteractive.post-gazette.com%2Funitednationhoods%2F&text=All nations are represented among the Pittsburgh region's immigrants (via @PittsburghPG):&:tw_p=tweetbutton&url=http://newsinteractive.post-gazette.com/unitednationhoods"><i class="fa fa-twitter-square fa-2x"></i></a>
-			</div>
-			<div class="creditClick">Credits</div>
-			</div>
-
-			<div id="credits">
-			<div class="closecredits"><i class="fa fa-times-circle"></i></div>
-			<table>
-			<tr><td class="bold">Reporting</td><td>Mila Sanina<br/>Steve Mellon</td></tr>
-			<tr><td class="bold">Video</td><td>Steve Mellon</td></tr>
-			<tr><td class="bold">Design</td><td>Dan Marsula<br/>Laura Malt Schneiderman</td></tr>
-			<tr><td class="bold">Interactivity</td><td>Laura Malt Schneiderman<br/>Andrew McGill</td></tr>
-			<tr><td class="bold">Data Source</td><td>The World Bank</td></tr>
-			</div>
-			
-			
-		  
 		<script type="text/javascript" src="js/scripts.js"></script>
 	</body>
 	
