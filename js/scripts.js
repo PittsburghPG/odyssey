@@ -66,7 +66,8 @@ d3.json("world.json", function(error, world) {
 			var rotate = projection.rotate();
 			coord = [d3.event.x, d3.event.y];
 			// This keeps map from being turned upside down. (Might not work anymore)
-			if (coord[1] > projection.scale()) coord[1] = projection.scale(); else if(coord[1] < -projection.scale()) coord[1] = -projection.scale();
+			console.log(coord[1] + " & " + projection.scale() * 2);
+			if (coord[1] > projection.scale() / 2) coord[1] = projection.scale() / 2; else if(coord[1] < -projection.scale() / 2 ) coord[1] = -projection.scale() / 2;
 			projection.rotate([coord[0] * sens, -coord[1] * sens, rotate[2]]);
 			globe.attr("d", path);
 		})
@@ -75,8 +76,8 @@ d3.json("world.json", function(error, world) {
 	// Start the intro
 	loadIntro(function(){
 		d3.select("body")
-			.transition().duration(1000)
-			.style("opacity","1");
+			.transition().duration(2000)
+			.style("opacity",1);
 	});
 	
 });
@@ -106,6 +107,9 @@ function loadIntro(callback){
 	$("#begin").click(function(){ 
 		loadBrowse();
 	});
+	
+	if(typeof callback === 'function') callback();
+	
 }
 
 // End load intro
@@ -121,65 +125,15 @@ function loadBrowse(callback) {
 	newZoom = 100;																				
 	sens = 1;	// makes it easier to rotate smaller globe																		
 	
-	moveAndZoom(width - newZoom / 2 - 100, height - newZoom / 2 - 100, 100, 1000);
+	moveAndZoom(width / 2, height / 2, height / 2 * .8, 1000);
 	$(".intro").fadeOut(1000); 
 	
+	d3.select("h1#title")
+		.transition().duration(1000)
+		.style({"margin-top":"25px", "font-size":"65px", "padding-left":"10px"});
+	
 	var text = [{'name':'Afghanistan','id':'AFG'},{'name':'Angola','id':'AGO'},{'name':'Albania','id':'ALB'},{'name':'Andorra','id':'AND'},{'name':'United Arab Emirates','id':'ARE'},{'name':'Argentina','id':'ARG'},{'name':'Armenia','id':'ARM'},{'name':'Antarctica','id':'ATA'},{'name':'Fr. S. Antarctic Lands','id':'ATF'},{'name':'Australia','id':'AUS'},{'name':'Austria','id':'AUT'},{'name':'Azerbaijan','id':'AZE'},{'name':'Brussels','id':'BCR'},{'name':'Burundi','id':'BDI'},{'name':'Benin','id':'BEN'},{'name':'Burkina Faso','id':'BFA'},{'name':'Flemish','id':'BFR'},{'name':'Bangladesh','id':'BGD'},{'name':'Bulgaria','id':'BGR'},{'name':'Fed. of Bos. & Herz.','id':'BHF'},{'name':'Bahamas','id':'BHS'},{'name':'Rep. Srpska','id':'BIS'},{'name':'Belarus','id':'BLR'},{'name':'Belize','id':'BLZ'},{'name':'Bolivia','id':'BOL'},{'name':'Brazil','id':'BRA'},{'name':'Brunei','id':'BRN'},{'name':'Bhutan','id':'BTN'},{'name':'Botswana','id':'BWA'},{'name':'Walloon','id':'BWR'},{'name':'Central African Rep.','id':'CAF'},{'name':'Canada','id':'CAN'},{'name':'Switzerland','id':'CHE'},{'name':'Chile','id':'CHL'},{'name':'China','id':'CHN'},{'name':'Côte d\'Ivoire','id':'CIV'},{'name':'Cameroon','id':'CMR'},{'name':'Dem. Rep. Congo','id':'COD'},{'name':'Congo','id':'COG'},{'name':'Colombia','id':'COL'},{'name':'Comoros','id':'COM'},{'name':'Costa Rica','id':'CRI'},{'name':'Cuba','id':'CUB'},{'name':'N. Cyprus','id':'CYN'},{'name':'Cyprus','id':'CYP'},{'name':'Czech Rep.','id':'CZE'},{'name':'Germany','id':'DEU'},{'name':'Djibouti','id':'DJI'},{'name':'Denmark','id':'DNK'},{'name':'Dominican Rep.','id':'DOM'},{'name':'Algeria','id':'DZA'},{'name':'Ecuador','id':'ECU'},{'name':'Egypt','id':'EGY'},{'name':'England','id':'ENG'},{'name':'Eritrea','id':'ERI'},{'name':'Spain','id':'ESP'},{'name':'Estonia','id':'EST'},{'name':'Ethiopia','id':'ETH'},{'name':'Finland','id':'FIN'},{'name':'Fiji','id':'FJI'},{'name':'Falkland Is.','id':'FLK'},{'name':'France','id':'FXX'},{'name':'Gabon','id':'GAB'},{'name':'Gaza','id':'GAZ'},{'name':'Georgia','id':'GEG'},{'name':'Ghana','id':'GHA'},{'name':'Guinea','id':'GIN'},{'name':'Gambia','id':'GMB'},{'name':'Guinea-Bissau','id':'GNB'},{'name':'Eq. Guinea','id':'GNQ'},{'name':'Greece','id':'GRC'},{'name':'Greenland','id':'GRL'},{'name':'Guatemala','id':'GTM'},{'name':'French Guiana','id':'GUF'},{'name':'Guyana','id':'GUY'},{'name':'Hong Kong','id':'HKG'},{'name':'Honduras','id':'HND'},{'name':'Croatia','id':'HRV'},{'name':'Haiti','id':'HTI'},{'name':'Hungary','id':'HUN'},{'name':'Indonesia','id':'IDN'},{'name':'India','id':'IND'},{'name':'Ireland','id':'IRL'},{'name':'Iran','id':'IRN'},{'name':'Iraq','id':'IRQ'},{'name':'Iceland','id':'ISL'},{'name':'Israel','id':'ISR'},{'name':'Italy','id':'ITA'},{'name':'Jamaica','id':'JAM'},{'name':'Jordan','id':'JOR'},{'name':'Japan','id':'JPN'},{'name':'Siachen Glacier','id':'KAS'},{'name':'Kazakhstan','id':'KAZ'},{'name':'Kenya','id':'KEN'},{'name':'Kyrgyzstan','id':'KGZ'},{'name':'Cambodia','id':'KHM'},{'name':'Korea','id':'KOR'},{'name':'Kosovo','id':'KOS'},{'name':'Kuwait','id':'KWT'},{'name':'Lao PDR','id':'LAO'},{'name':'Lebanon','id':'LBN'},{'name':'Liberia','id':'LBR'},{'name':'Libya','id':'LBY'},{'name':'Liechtenstein','id':'LIE'},{'name':'Sri Lanka','id':'LKA'},{'name':'Lesotho','id':'LSO'},{'name':'Lithuania','id':'LTU'},{'name':'Luxembourg','id':'LUX'},{'name':'Latvia','id':'LVA'},{'name':'Macao','id':'MAC'},{'name':'St-Martin','id':'MAF'},{'name':'Morocco','id':'MAR'},{'name':'Monaco','id':'MCO'},{'name':'Moldova','id':'MDA'},{'name':'Madagascar','id':'MDG'},{'name':'Mexico','id':'MEX'},{'name':'Macedonia','id':'MKD'},{'name':'Mali','id':'MLI'},{'name':'Myanmar','id':'MMR'},{'name':'Montenegro','id':'MNE'},{'name':'Mongolia','id':'MNG'},{'name':'Mozambique','id':'MOZ'},{'name':'Mauritania','id':'MRT'},{'name':'Martinique','id':'MTQ'},{'name':'Mauritius','id':'MUS'},{'name':'Malawi','id':'MWI'},{'name':'Malaysia','id':'MYS'},{'name':'Namibia','id':'NAM'},{'name':'New Caledonia','id':'NCL'},{'name':'Niger','id':'NER'},{'name':'Nigeria','id':'NGA'},{'name':'Nicaragua','id':'NIC'},{'name':'N. Ireland','id':'NIR'},{'name':'Netherlands','id':'NLD'},{'name':'Norway','id':'NOR'},{'name':'Nepal','id':'NPL'},{'name':'Svalbard Is.','id':'NSV'},{'name':'New Zealand','id':'NZL'},{'name':'Oman','id':'OMN'},{'name':'Pakistan','id':'PAK'},{'name':'Panama','id':'PAN'},{'name':'Peru','id':'PER'},{'name':'Philippines','id':'PHL'},{'name':'Bougainville','id':'PNB'},{'name':'Papua New Guinea','id':'PNX'},{'name':'Poland','id':'POL'},{'name':'Puerto Rico','id':'PRI'},{'name':'Dem. Rep. Korea','id':'PRK'},{'name':'Portugal','id':'PRX'},{'name':'Paraguay','id':'PRY'},{'name':'Qatar','id':'QAT'},{'name':'Reunion','id':'REU'},{'name':'Romania','id':'ROU'},{'name':'Russia','id':'RUS'},{'name':'Rwanda','id':'RWA'},{'name':'W. Sahara','id':'SAH'},{'name':'Saudi Arabia','id':'SAU'},{'name':'Scotland','id':'SCT'},{'name':'Sudan','id':'SDN'},{'name':'S. Sudan','id':'SDS'},{'name':'Senegal','id':'SEN'},{'name':'S. Geo. and S. Sandw. Is.','id':'SGS'},{'name':'Solomon Is.','id':'SLB'},{'name':'Sierra Leone','id':'SLE'},{'name':'El Salvador','id':'SLV'},{'name':'San Marino','id':'SMR'},{'name':'Somaliland','id':'SOL'},{'name':'Somalia','id':'SOM'},{'name':'Serbia','id':'SRS'},{'name':'Vojvodina','id':'SRV'},{'name':'Suriname','id':'SUR'},{'name':'Slovakia','id':'SVK'},{'name':'Slovenia','id':'SVN'},{'name':'Sweden','id':'SWE'},{'name':'Swaziland','id':'SWZ'},{'name':'Sint Maarten','id':'SXM'},{'name':'Syria','id':'SYR'},{'name':'Chad','id':'TCD'},{'name':'Togo','id':'TGO'},{'name':'Thailand','id':'THA'},{'name':'Tajikistan','id':'TJK'},{'name':'Turkmenistan','id':'TKM'},{'name':'Timor-Leste','id':'TLS'},{'name':'Trinidad and Tobago','id':'TTO'},{'name':'Tunisia','id':'TUN'},{'name':'Turkey','id':'TUR'},{'name':'Taiwan','id':'TWN'},{'name':'Tanzania','id':'TZA'},{'name':'Zanzibar','id':'TZZ'},{'name':'Uganda','id':'UGA'},{'name':'Ukraine','id':'UKR'},{'name':'Uruguay','id':'URY'},{'name':'United States','id':'USA'},{'name':'Uzbekistan','id':'UZB'},{'name':'Venezuela','id':'VEN'},{'name':'Vietnam','id':'VNM'},{'name':'Vanuatu','id':'VUT'},{'name':'West Bank','id':'WEB'},{'name':'Wales','id':'WLS'},{'name':'Samoa','id':'WSM'},{'name':'Yemen','id':'YEM'},{'name':'South Africa','id':'ZAF'},{'name':'Zambia','id':'ZMB'},{'name':'Zimbabwe','id':'ZWE'}];
-	var interval = 10;
-	var degrees = 290;
-
-	var countryTextBox = svg.append("g")
-		.attr("transform", "translate(0,0)")
-		.style("pointer-events", "all");
-		
-	countryTextBox.append('rect')
-		.attr("visibility","hidden")
-		.attr("x",0)
-		.attr("y",0)
-		.attr("width","100%")
-		.attr("height","100%");
-		
-	var countryText = countryTextBox.selectAll(".countryText")
-	.data(text).enter()
-	.append("text")
-		.attr("class", "countryText")
-		.attr("x", 200)
-		.attr("y", height)
-		.attr("transform", function(d, i){ return "rotate(" +  (degrees + interval * (i-1)) + "," + 0 + "," + height + ")" })
-		.attr("currentRotation", function(d, i){ return (degrees + interval * (i-1)) })
-		.style("display", function(d,i){ if( interval * i >= 0 && interval * i <= 90) return "block"; else return "none"; })
-		.text(function(d){ return d.name })
-		.on("mouseup", function() {	
-			loadVideo( function(){ 
-				loadStory(); 
-			});
-		})
-		.on("mouseover", function(d) {
-			panTo(svg.selectAll("#" + d.id).datum(), 500);
-			console.log(d.name);
-			d3.select(".preview")			
-				.attr("src", "img/Germany_DoritBrauer.png")
-				.style("left", function(d){ return ((width - this.width) / 2) + "px" })
-				.transition().duration(250)
-				.style("opacity", ".5");
-		})
-		.on("mouseout", function(d) {
-			d3.select(".preview")
-				.transition().duration(250)
-				.style("opacity", "0");
-		});
-		
-	countryTextBox.on("wheel", function(){
-		degrees--;
-		countryText.attr("transform", function(d,i){
-			r1 = parseInt(d3.select(this).attr("currentRotation")) - ( event.deltaY * Math.abs(event.deltaY) )/1200;
-			d3.select(this).attr("currentRotation", r1);
-			d3.select(this).style("display", function(){ if( r1 >= 290 - 2 * interval && r1 <= 360 ) return "block"; else return "none"; });
-			return "rotate(" + r1 + ", 0, " + height + ")";
-		});
-	})
-	.on("mouseover", function(){console.log("yooooo");});
-
+	
 	if(typeof callback === 'function') callback();
 }
 
