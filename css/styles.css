@@ -27,7 +27,7 @@ opacity:0;
 
 .browse
 {
-overflow:auto;
+overflow:hidden;
 position:relative;
 width:100%;
 height:100%;
@@ -39,13 +39,13 @@ h1#title
 {
 font-family:"Lora", Times New Roman, serif;
 font-weight:normal;
-font-size:225px;
+font-size:200px;
 //line-height:200px;
-margin:1% 0px 0 0;
+margin:5% 0px 0 0;
 color:#454343;
 text-align:left;
 line-height:.8em;
-border-left: 10px solid #007fd4;
+border-left: 8px solid #007fd4;
 padding-left:50px;
 }
 
@@ -103,15 +103,53 @@ z-index:3;
 		cursor:pointer;
 		}
 
-.preview
+.navbar
 {
+width:200px;
 height:100%;
+padding-top:20px;
 position:absolute;
 top:0;
-z-index:1;
-margin:auto;
+//right:15px;
+z-index:2;
+right:-213px;
+opacity:0;
 }
+	
+	.navbar .navHandle
+	{
+	font-family: "Muli", Helvetica, Arial, sans-serif;
+	letter-spacing:.4em;
+	color:white;
+	border-top: 8px solid #007fd4;
+	padding-top:10px;
+	text-transform:uppercase;
+	text-align:center;
+	font-size:10pt;
+	-webkit-transform:rotate(90deg);
+	position:absolute;
+	left: -130px;
+	top: 50%;
+	width:200px;
+	}
 
+	.navbar .nav
+	{
+	color:gray;
+	font-family: "Muli", Helvetica, Arial, sans-serif;
+	letter-spacing:.12em;
+	font-size:8pt;
+	text-transform:uppercase;
+	margin-bottom:9px;
+	font-weight:bold; 
+	}
+	
+		.navbar .nav:hover
+		{
+		color:white;
+		cursor:pointer;
+		}
+		
 .videoHolder
 {
 position:absolute;
@@ -166,21 +204,23 @@ height:100%;
 position:absolute;
 top:0;
 left:0;
-z-index:2;
+z-index:1;
 }
 
 .country 
 {
-fill: #333;
-stroke: #666;
+fill: #004674;
+stroke: rgba(0,130,216,.3);
 stroke-width: 1px;
 transition: all 0.5s;
 }
-	.country:hover 
+	.country:hover , .country.hover
 	{
-		fill: #777;
+		fill:white;
+		box-shadow: 0 0 10 white;
+		filter:url("#countryGlow");
 	}
-
+	
 .countryText
 {
 font-family:Arial;

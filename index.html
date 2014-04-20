@@ -74,6 +74,19 @@
 							0 0 0 0.9 0
 							0 0 0 0.9 0
 							0 0 0 1   0"/>
+						<feGaussianBlur stdDeviation="10.5" result="coloredBlur"/>
+						<feMerge>
+							<feMergeNode in="coloredBlur"/>
+							<feMergeNode in="SourceGraphic"/>
+						</feMerge>
+					</filter>
+					<filter id="countryGlow">
+						<feColorMatrix type="matrix"
+							values=
+							"0 0 0 0   0
+							0 0 0 1 0
+							0 0 0 1 0
+							0 0 0 1   0"/>
 						<feGaussianBlur stdDeviation="5.5" result="coloredBlur"/>
 						<feMerge>
 							<feMergeNode in="coloredBlur"/>
@@ -82,6 +95,11 @@
 					</filter>
 				</defs>
 			</svg>
+			
+			<div class="navbar">
+				<div class="navHandle">Country</div>
+			</div>
+			
 		</div>
 		
 		<div class="story">

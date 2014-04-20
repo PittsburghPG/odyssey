@@ -1,4 +1,10 @@
 // **************************************************
+// Global variables
+// **************************************************
+var world;
+
+
+// **************************************************
 // Loading functions
 // **************************************************
 
@@ -35,7 +41,9 @@ var path = d3.geo.path()
     .projection(projection);
 
 	
-d3.json("world.json", function(error, world) {													
+d3.json("world.json", function(error, result) {													
+	world = result;
+	
 	// add background circle for aesthetics
 	circle = svg.append("circle")
 		.attr('cx', width / 2)
@@ -52,8 +60,11 @@ d3.json("world.json", function(error, world) {
 			.append("path")
 			.attr("d", path)
 			.attr("class", "country")
-			.attr("id", function(d){ console.log("'name':'"+ d.properties.name +"','id':'" + d.properties.id + "'"); return d.properties.id})
-			.on("click", panTo);
+			.attr("id", function(d){ return d.properties.id })
+			.on("click", panTo)
+			.on("mouseover", function(){
+				d3.select(this).moveToFront();
+			});
 
 	// Now bind events to the globe
 	
@@ -65,8 +76,7 @@ d3.json("world.json", function(error, world) {
 			timer_on = true;
 			var rotate = projection.rotate();
 			coord = [d3.event.x, d3.event.y];
-			// This keeps map from being turned upside down. (Might not work anymore)
-			console.log(coord[1] + " & " + projection.scale() * 2);
+			// This keeps map from being turned upside down.
 			if (coord[1] > projection.scale() / 2) coord[1] = projection.scale() / 2; else if(coord[1] < -projection.scale() / 2 ) coord[1] = -projection.scale() / 2;
 			projection.rotate([coord[0] * sens, -coord[1] * sens, rotate[2]]);
 			globe.attr("d", path);
@@ -131,6 +141,35 @@ function loadBrowse(callback) {
 	d3.select("h1#title")
 		.transition().duration(1000)
 		.style({"margin-top":"25px", "font-size":"65px", "padding-left":"10px"});
+	
+	d3.select(".navbar")
+	.selectAll("div")
+		.data(world.objects.countries.geometries).enter()
+	.append("div")
+		.attr("class","nav")
+		.attr("country", function(d){ return d.properties.id })
+		.html(function(d){ return d.properties.name })
+		.on("mouseover", function(){
+			target = d3.select( "#" + d3.select(this).attr("country") );
+			panTo( target.datum() , 250);
+			target.classed("hover", true);
+			target.moveToFront();
+		})
+		.on("mouseout", function(){
+			d3.select( "#" + d3.select(this).attr("country") ).classed("hover", false);
+		});
+	
+	d3.select(".navbar")
+		.transition().duration(1000)
+		.style("opacity", 1)
+		.transition().duration(500)
+		.style("right", "15px");
+	
+	
+	
+	world.objects.countries.geometries.forEach(function(country){
+		
+	});
 	
 	var text = [{'name':'Afghanistan','id':'AFG'},{'name':'Angola','id':'AGO'},{'name':'Albania','id':'ALB'},{'name':'Andorra','id':'AND'},{'name':'United Arab Emirates','id':'ARE'},{'name':'Argentina','id':'ARG'},{'name':'Armenia','id':'ARM'},{'name':'Antarctica','id':'ATA'},{'name':'Fr. S. Antarctic Lands','id':'ATF'},{'name':'Australia','id':'AUS'},{'name':'Austria','id':'AUT'},{'name':'Azerbaijan','id':'AZE'},{'name':'Brussels','id':'BCR'},{'name':'Burundi','id':'BDI'},{'name':'Benin','id':'BEN'},{'name':'Burkina Faso','id':'BFA'},{'name':'Flemish','id':'BFR'},{'name':'Bangladesh','id':'BGD'},{'name':'Bulgaria','id':'BGR'},{'name':'Fed. of Bos. & Herz.','id':'BHF'},{'name':'Bahamas','id':'BHS'},{'name':'Rep. Srpska','id':'BIS'},{'name':'Belarus','id':'BLR'},{'name':'Belize','id':'BLZ'},{'name':'Bolivia','id':'BOL'},{'name':'Brazil','id':'BRA'},{'name':'Brunei','id':'BRN'},{'name':'Bhutan','id':'BTN'},{'name':'Botswana','id':'BWA'},{'name':'Walloon','id':'BWR'},{'name':'Central African Rep.','id':'CAF'},{'name':'Canada','id':'CAN'},{'name':'Switzerland','id':'CHE'},{'name':'Chile','id':'CHL'},{'name':'China','id':'CHN'},{'name':'Côte d\'Ivoire','id':'CIV'},{'name':'Cameroon','id':'CMR'},{'name':'Dem. Rep. Congo','id':'COD'},{'name':'Congo','id':'COG'},{'name':'Colombia','id':'COL'},{'name':'Comoros','id':'COM'},{'name':'Costa Rica','id':'CRI'},{'name':'Cuba','id':'CUB'},{'name':'N. Cyprus','id':'CYN'},{'name':'Cyprus','id':'CYP'},{'name':'Czech Rep.','id':'CZE'},{'name':'Germany','id':'DEU'},{'name':'Djibouti','id':'DJI'},{'name':'Denmark','id':'DNK'},{'name':'Dominican Rep.','id':'DOM'},{'name':'Algeria','id':'DZA'},{'name':'Ecuador','id':'ECU'},{'name':'Egypt','id':'EGY'},{'name':'England','id':'ENG'},{'name':'Eritrea','id':'ERI'},{'name':'Spain','id':'ESP'},{'name':'Estonia','id':'EST'},{'name':'Ethiopia','id':'ETH'},{'name':'Finland','id':'FIN'},{'name':'Fiji','id':'FJI'},{'name':'Falkland Is.','id':'FLK'},{'name':'France','id':'FXX'},{'name':'Gabon','id':'GAB'},{'name':'Gaza','id':'GAZ'},{'name':'Georgia','id':'GEG'},{'name':'Ghana','id':'GHA'},{'name':'Guinea','id':'GIN'},{'name':'Gambia','id':'GMB'},{'name':'Guinea-Bissau','id':'GNB'},{'name':'Eq. Guinea','id':'GNQ'},{'name':'Greece','id':'GRC'},{'name':'Greenland','id':'GRL'},{'name':'Guatemala','id':'GTM'},{'name':'French Guiana','id':'GUF'},{'name':'Guyana','id':'GUY'},{'name':'Hong Kong','id':'HKG'},{'name':'Honduras','id':'HND'},{'name':'Croatia','id':'HRV'},{'name':'Haiti','id':'HTI'},{'name':'Hungary','id':'HUN'},{'name':'Indonesia','id':'IDN'},{'name':'India','id':'IND'},{'name':'Ireland','id':'IRL'},{'name':'Iran','id':'IRN'},{'name':'Iraq','id':'IRQ'},{'name':'Iceland','id':'ISL'},{'name':'Israel','id':'ISR'},{'name':'Italy','id':'ITA'},{'name':'Jamaica','id':'JAM'},{'name':'Jordan','id':'JOR'},{'name':'Japan','id':'JPN'},{'name':'Siachen Glacier','id':'KAS'},{'name':'Kazakhstan','id':'KAZ'},{'name':'Kenya','id':'KEN'},{'name':'Kyrgyzstan','id':'KGZ'},{'name':'Cambodia','id':'KHM'},{'name':'Korea','id':'KOR'},{'name':'Kosovo','id':'KOS'},{'name':'Kuwait','id':'KWT'},{'name':'Lao PDR','id':'LAO'},{'name':'Lebanon','id':'LBN'},{'name':'Liberia','id':'LBR'},{'name':'Libya','id':'LBY'},{'name':'Liechtenstein','id':'LIE'},{'name':'Sri Lanka','id':'LKA'},{'name':'Lesotho','id':'LSO'},{'name':'Lithuania','id':'LTU'},{'name':'Luxembourg','id':'LUX'},{'name':'Latvia','id':'LVA'},{'name':'Macao','id':'MAC'},{'name':'St-Martin','id':'MAF'},{'name':'Morocco','id':'MAR'},{'name':'Monaco','id':'MCO'},{'name':'Moldova','id':'MDA'},{'name':'Madagascar','id':'MDG'},{'name':'Mexico','id':'MEX'},{'name':'Macedonia','id':'MKD'},{'name':'Mali','id':'MLI'},{'name':'Myanmar','id':'MMR'},{'name':'Montenegro','id':'MNE'},{'name':'Mongolia','id':'MNG'},{'name':'Mozambique','id':'MOZ'},{'name':'Mauritania','id':'MRT'},{'name':'Martinique','id':'MTQ'},{'name':'Mauritius','id':'MUS'},{'name':'Malawi','id':'MWI'},{'name':'Malaysia','id':'MYS'},{'name':'Namibia','id':'NAM'},{'name':'New Caledonia','id':'NCL'},{'name':'Niger','id':'NER'},{'name':'Nigeria','id':'NGA'},{'name':'Nicaragua','id':'NIC'},{'name':'N. Ireland','id':'NIR'},{'name':'Netherlands','id':'NLD'},{'name':'Norway','id':'NOR'},{'name':'Nepal','id':'NPL'},{'name':'Svalbard Is.','id':'NSV'},{'name':'New Zealand','id':'NZL'},{'name':'Oman','id':'OMN'},{'name':'Pakistan','id':'PAK'},{'name':'Panama','id':'PAN'},{'name':'Peru','id':'PER'},{'name':'Philippines','id':'PHL'},{'name':'Bougainville','id':'PNB'},{'name':'Papua New Guinea','id':'PNX'},{'name':'Poland','id':'POL'},{'name':'Puerto Rico','id':'PRI'},{'name':'Dem. Rep. Korea','id':'PRK'},{'name':'Portugal','id':'PRX'},{'name':'Paraguay','id':'PRY'},{'name':'Qatar','id':'QAT'},{'name':'Reunion','id':'REU'},{'name':'Romania','id':'ROU'},{'name':'Russia','id':'RUS'},{'name':'Rwanda','id':'RWA'},{'name':'W. Sahara','id':'SAH'},{'name':'Saudi Arabia','id':'SAU'},{'name':'Scotland','id':'SCT'},{'name':'Sudan','id':'SDN'},{'name':'S. Sudan','id':'SDS'},{'name':'Senegal','id':'SEN'},{'name':'S. Geo. and S. Sandw. Is.','id':'SGS'},{'name':'Solomon Is.','id':'SLB'},{'name':'Sierra Leone','id':'SLE'},{'name':'El Salvador','id':'SLV'},{'name':'San Marino','id':'SMR'},{'name':'Somaliland','id':'SOL'},{'name':'Somalia','id':'SOM'},{'name':'Serbia','id':'SRS'},{'name':'Vojvodina','id':'SRV'},{'name':'Suriname','id':'SUR'},{'name':'Slovakia','id':'SVK'},{'name':'Slovenia','id':'SVN'},{'name':'Sweden','id':'SWE'},{'name':'Swaziland','id':'SWZ'},{'name':'Sint Maarten','id':'SXM'},{'name':'Syria','id':'SYR'},{'name':'Chad','id':'TCD'},{'name':'Togo','id':'TGO'},{'name':'Thailand','id':'THA'},{'name':'Tajikistan','id':'TJK'},{'name':'Turkmenistan','id':'TKM'},{'name':'Timor-Leste','id':'TLS'},{'name':'Trinidad and Tobago','id':'TTO'},{'name':'Tunisia','id':'TUN'},{'name':'Turkey','id':'TUR'},{'name':'Taiwan','id':'TWN'},{'name':'Tanzania','id':'TZA'},{'name':'Zanzibar','id':'TZZ'},{'name':'Uganda','id':'UGA'},{'name':'Ukraine','id':'UKR'},{'name':'Uruguay','id':'URY'},{'name':'United States','id':'USA'},{'name':'Uzbekistan','id':'UZB'},{'name':'Venezuela','id':'VEN'},{'name':'Vietnam','id':'VNM'},{'name':'Vanuatu','id':'VUT'},{'name':'West Bank','id':'WEB'},{'name':'Wales','id':'WLS'},{'name':'Samoa','id':'WSM'},{'name':'Yemen','id':'YEM'},{'name':'South Africa','id':'ZAF'},{'name':'Zambia','id':'ZMB'},{'name':'Zimbabwe','id':'ZWE'}];
 	
@@ -270,6 +309,14 @@ function moveAndZoom(newX, newY, endZoom, duration) {
 		});
 	
 } 
+
+// Add prototype to d3 selection moving an svg to the top of the heap
+// so glows will work properly
+d3.selection.prototype.moveToFront = function() {
+  return this.each(function(){
+    this.parentNode.appendChild(this);
+  });
+};
 
 /*
 function numberWithCommas(x) {
