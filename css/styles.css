@@ -127,6 +127,8 @@ opacity:0;
 	text-align:center;
 	font-size:10pt;
 	-webkit-transform:rotate(90deg);
+	-ms-transform:rotate(90deg);
+	transform:rotate(90deg);
 	position:absolute;
 	left: -130px;
 	top: 50%;
