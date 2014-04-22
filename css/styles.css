@@ -98,8 +98,8 @@ z-index:3;
 		.intro button:hover
 		{
 		background-color:#007fd4;
-		color:#00395d;
-		border:1px solid #69b7ea;
+		color:rgba(255,255,255,.9);
+		border:1px solid #007fd4;
 		cursor:pointer;
 		}
 
@@ -219,7 +219,6 @@ transition: all 0.5s;
 	.country:hover , .country.hover
 	{
 		fill:white;
-		box-shadow: 0 0 10 white;
 		filter:url("#countryGlow");
 	}
 	
