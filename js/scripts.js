@@ -83,7 +83,7 @@ d3.json("world.json", function(error, result) {
 		})
 	);
 	
-	//loadStory() //** use this for development so don't have to wait for other things to happen - can just get to story
+	//loadStory(); //** use this for development so don't have to wait for other things to happen - can just get to story
 	
 	// Start the intro ** use this for final **
 	loadIntro(function(){
@@ -232,13 +232,12 @@ function loadVideo(callback) {
 function loadStory(callback) {
 
 	// Insert content below
-	d3.select(".story")
-		.style("display", "block");	
+	//d3.select(".story").style("display", "block");	
 	// Slide up
-	d3.select(".browse").transition().duration(1000)
-		.style("margin-top", -height-15 + "px");
+	//d3.select(".browse").transition().duration(1000)
+		//.style("margin-top", -height-15 + "px");
 	// Re-activate scroll
-	d3.select("body").style("overflow", "scroll")
+	//d3.select("body").style("overflow", "scroll");
 }
 
 // End load story
