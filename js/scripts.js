@@ -83,14 +83,14 @@ d3.json("world.json", function(error, result) {
 		})
 	);
 	
-	//loadStory(); //** use this for development so don't have to wait for other things to happen - can just get to story
+	loadStory(); //** use this for development so don't have to wait for other things to happen - can just get to story
 	
 	// Start the intro ** use this for final **
-	loadIntro(function(){
+	/*loadIntro(function(){
 		d3.select("body")
 			.transition().duration(2000)
 			.style("opacity",1);
-	});
+	});*/
 	
 });
 
@@ -238,11 +238,23 @@ function loadStory(callback) {
 	var mL = width /2;
 	var newW = mL - w;
 	$('.story').css('margin-left', newW + "px"); //center the story - margin-left = half of screen width minus half of story width
+	var storyPosition = $('.story').offset();
+	var storyLeft = storyPosition.left;
+	$('.story #personStats').css('left', storyLeft + 30 + "px");
+	var textPosition = $('.text').position(); //note where the text div is positioned
 	// Slide up
-	d3.select(".browse").transition().duration(1500)
-		.style("margin-top", -height-15 + "px");
+	d3.select(".browse").transition().duration(2500)
+		.style("margin-top", -height-15 + "px")
+		.each("end", myCallback);
+	function myCallback() { //when the transition is done pulling up the story div and getting the browse div out of the way, then show the person's stats
+		$('#personStats').css('top', textPosition.top+ 10 + "px"); //make the top of the stats align with the top of the text
+		$('#personStats').fadeIn();
+	}
+	
 	// Re-activate scroll
 	d3.select("body").style("overflow", "scroll");
+	
+	
 }
 
 // End load story

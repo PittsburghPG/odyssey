@@ -172,44 +172,94 @@ position:absolute;
 
 .story
 {
-width: 70%;
-padding-top:50px;
+width: 50%;
+max-width: 1000px;
+padding-top:70px;
 background-color: white;
 z-index: 5;
 display: none;
-border: 1px solid green;
 position: relative;
-/*margin-left: 50%;*/
+padding-right: 20px;
 }
 	
 	
 	.story h1
 	{
-	font-family:"Arvo", san-serif;
-	font-weight:700px;
-	width:60%;
-	margin: 15px auto;
-	font-size:40pt;
-	background-color:white;
-	line-height:1em;
-	border-bottom: 1px solid lightgray;
-	padding-bottom:15px;
+	font-family:"Lora", "Time New Roman", serif;
+	font-weight: normal;
+	font-size:150%;
+	line-height:1.1em;
+	text-transform: uppercase;
+	margin-bottom: 20px;
+	-webkit-margin-before: 0;
+	-webkit-margin-after: 0;
 	}
 	
 	.story .text
 	{
-	font-family:"Muli", san-serif;
-	width:40%;
-	margin-left:20%;
-	font-size:11pt;
+	font-family:"Muli", sans-serif;
+	width:65%;
+	margin-left:30%;
+	font-size:10pt;
 	line-height:1.7em;
+	display: inline-block;
 	
 	}
+		.story .text  img.portrait {
+			float: left;
+			padding: 5px 10px 0 0;
+			
+		}
+		
+		.story .text  img.personPhoto {
+			float: left;
+			padding-right: 20px;
+			width: 50%;
+			height: auto;
+		}
 	
 	.story #personStats {
-		
+		position: fixed;
+		font-family:"Muli", sans-serif;
+		display:none;
 		
 	}
+		#name {
+			font-weight: bold;
+			font-size: 110%;
+			color: #262626;
+			letter-spacing: .02em;
+		}
+		#country {
+			color: #262626;
+			letter-spacing: .09em;
+			margin-top: 5px;
+			font-size: 80%;
+			text-transform: uppercase;
+			margin-bottom: 40px;
+		}
+		
+		.personSubhead {
+			color: #999;
+			text-transform: uppercase;
+			font-size: 70%;
+		}
+		#age, #origin, #pghHome, #occupation {
+			margin-bottom: 7px;
+		}
+		.personStat {
+			color: #333;
+			font-weight: bold;
+			font-size: 80%;
+		}
+		.countryMap {
+			width: 100%;
+			height: auto;
+			background-color: #999;
+			margin-top: 10px;
+		}
+	
+
 
 #canvas
 {
