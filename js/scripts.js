@@ -83,14 +83,14 @@ d3.json("world.json", function(error, result) {
 		})
 	);
 	
-	loadStory(); //** use this for development so don't have to wait for other things to happen - can just get to story
+	//loadStory(); //** use this for development so don't have to wait for other things to happen - can just get to story
 	
 	// Start the intro ** use this for final **
-	/*loadIntro(function(){
+	loadIntro(function(){
 		d3.select("body")
 			.transition().duration(2000)
 			.style("opacity",1);
-	});*/
+	});
 	
 });
 
