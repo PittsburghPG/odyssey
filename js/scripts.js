@@ -230,14 +230,19 @@ function loadVideo(callback) {
 // Load story
 
 function loadStory(callback) {
-
 	// Insert content below
-	//d3.select(".story").style("display", "block");	
+	d3.select(".story").style("display", "block");	
+	d3.select("body").style("opacity", "1");	
+	var w = $('.story').width();
+	w = w/2;
+	var mL = width /2;
+	var newW = mL - w;
+	$('.story').css('margin-left', newW + "px"); //center the story - margin-left = half of screen width minus half of story width
 	// Slide up
-	//d3.select(".browse").transition().duration(1000)
-		//.style("margin-top", -height-15 + "px");
+	d3.select(".browse").transition().duration(1500)
+		.style("margin-top", -height-15 + "px");
 	// Re-activate scroll
-	//d3.select("body").style("overflow", "scroll");
+	d3.select("body").style("overflow", "scroll");
 }
 
 // End load story

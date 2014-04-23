@@ -172,15 +172,18 @@ position:absolute;
 
 .story
 {
-height:100%;
 width: 70%;
-max-width: 700px;
 padding-top:50px;
-background-color: #e8e8e8;
-display:none;
-}	
+background-color: white;
+z-index: 5;
+display: none;
+border: 1px solid green;
+position: relative;
+/*margin-left: 50%;*/
+}
 	
-	/*.story h1
+	
+	.story h1
 	{
 	font-family:"Arvo", san-serif;
 	font-weight:700px;
@@ -195,12 +198,18 @@ display:none;
 	
 	.story .text
 	{
+	font-family:"Muli", san-serif;
 	width:40%;
 	margin-left:20%;
-	font-family:Georgia, san-serif;
-	font-size:14pt;
-	line-height:1.3em;
-	}*/
+	font-size:11pt;
+	line-height:1.7em;
+	
+	}
+	
+	.story #personStats {
+		
+		
+	}
 
 #canvas
 {
