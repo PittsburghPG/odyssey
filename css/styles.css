@@ -208,7 +208,8 @@ padding-right: 20px;
 		.story .text  img.portrait {
 			float: left;
 			padding: 5px 10px 0 0;
-			
+			max-width: 100px;
+			height: auto;
 		}
 		
 		.story .text  img.personPhoto {
@@ -258,7 +259,9 @@ padding-right: 20px;
 			background-color: #999;
 			margin-top: 10px;
 		}
-	
+		.countryMapHolder {
+			text-align: center;
+		}
 
 
 #canvas

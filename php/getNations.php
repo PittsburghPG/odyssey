@@ -9,10 +9,38 @@ $str = "";
 				}
 				$qNations = "SELECT b.Country, a.CountryCode, a.population, a.GDP, a.Income_level, b.Name, b.Age, b.Occupation, b.Origin, b.Neighborhood, b.FromHome, b.Video, b.PersonImage, b.CountryImage, b.WorldImage, b.Image2, b.Image3, b.Image4, b.Image5, b.Image6, b.Notes FROM countries a, people b where a.CountryID = b.CountryID order by a.Country";
 				$result = $db->query($qNations);
+				
 				$numrecords = mysqli_num_rows ( $result );
 				//$str = "var numrecords = " . $numrecords . ";var results = \"";
-				$strResults = "";
+				$count = 0;
+				$strResults = '{"people": [';
 				while($row = $result->fetch_array(MYSQLI_ASSOC)) {
+					//$rows[] = $row;
+					$count++;
+					//$story = addslashes($row['Notes']);
+					$story = $row['Notes'];
+					$story = preg_replace('/\r\n|\r|\n\r|\n/m', ' ', $story);
+					
+					$strResults .= '
+					{
+						"country":"'.$row['Country'].'",
+						"countryCode":"'.$row['CountryCode'].'",
+						"population":"'.$row['population'].'",
+						"GDP":"'.$row['GDP'].'",
+						"income_level":"'.$row['Income_level'].'",
+						"name":"'.$row['Name'].'",
+						"age":"'.$row['Age'].'",
+						"occupation":"'.$row['Occupation'].'",
+						"origin":"'.$row['Origin'].'",
+						"pghHome":"'.$row['Neighborhood'].'",
+						"story":"'.addslashes($story).'"
+					}'; 
+					if ($count < $numrecords) { //only add a comma if there are more records to go
+						$strResults .= ',';
+					}
+				}
+				$strResults .= ']}';
+				/*while($row = $result->fetch_array(MYSQLI_ASSOC)) {
 						//$str .= "name.push(" .$row["Name"] . ");\n";
 					if ($row["Name"] == "") {
 							$strResults .= "personName.push(' ');\n";
@@ -74,8 +102,9 @@ $str = "";
 						
 						
 				} //end num_rows > 0
-				
+				*/
 				$db->close();
 //$str .= "\";"	;		
 echo $strResults;
+//echo json_encode($rows);
 ?>

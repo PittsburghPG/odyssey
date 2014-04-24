@@ -3,7 +3,6 @@
 // **************************************************
 var world;
 
-
 // **************************************************
 // Loading functions
 // **************************************************
@@ -231,29 +230,69 @@ function loadVideo(callback) {
 
 function loadStory(callback) {
 	// Insert content below
+	$.post("php/getNations.php", function(data){
+		console.log(data);
+		var json = JSON.parse(data);
+		$.each(json, function(key, data) {
+			console.log(key);
+		});
+		/*eval(data);		
+		for (var j=0; j< countryName.length; j++ ) {
+				if (personName[j] != ' ') {
+				
+				}
+		}*/
+	});
+	
+	
 	d3.select(".story").style("display", "block");	
-	d3.select("body").style("opacity", "1");	
+	d3.select("body").style("opacity", "1");
+	//center the story - margin-left = half of screen width minus half of story width
 	var w = $('.story').width();
 	w = w/2;
 	var mL = width /2;
 	var newW = mL - w;
-	$('.story').css('margin-left', newW + "px"); //center the story - margin-left = half of screen width minus half of story width
-	var storyPosition = $('.story').offset();
-	var storyLeft = storyPosition.left;
-	$('.story #personStats').css('left', storyLeft + 30 + "px");
-	var textPosition = $('.text').position(); //note where the text div is positioned
-	// Slide up
-	d3.select(".browse").transition().duration(2500)
-		.style("margin-top", -height-15 + "px")
-		.each("end", myCallback);
-	function myCallback() { //when the transition is done pulling up the story div and getting the browse div out of the way, then show the person's stats
-		$('#personStats').css('top', textPosition.top+ 10 + "px"); //make the top of the stats align with the top of the text
+	$('.story').css('margin-left', newW + "px"); 
+	//if window width is wide (desktop), then show the text and stats side by side
+	if (width >= 1600) {
+		//position the stats in a fixed col on the left
+		var storyPosition = $('.story').offset();
+		var storyLeft = storyPosition.left;
+		$('.story #personStats').css('left', storyLeft + 30 + "px");
+		var textPosition = $('.text').position(); //note where the text div is positioned
+		// Slide up
+		d3.select(".browse").transition().duration(2500)
+			.style("margin-top", -height-15 + "px")
+			.each("end", myCallback);
+		function myCallback() { //when the transition is done pulling up the story div and getting the browse div out of the way, then show the person's stats
+			$('#personStats').css('top', textPosition.top+ 10 + "px"); //make the top of the stats align with the top of the text
+			$('#personStats').fadeIn();
+		}
+		//but if window width isn't wide (ipad, mobile), then show stats and text in 1 column NO!! spread story out to fill whole screen
+	} else { 
+		$('.story #personStats').css({
+			position: 'relative',
+			'padding-left': '20px',
+			'margin-bottom': '20px'
+		});
+		var storyW = $('.story').innerWidth();
+		$('.countryMap').css('width', '196px');
+		$('.story .text').css({
+			width: storyW-40 + 'px',
+			'margin-left': '0',
+			'padding': '0 20px'
+		})
+		//$('#name, #occupation, #country, #origin, #pghHome, #age').css('text-align', 'center');
+		//$( ".countryMap" ).wrap( "<div class='countryMapHolder'></div>" );
+		
+		// Slide up
+		d3.select(".browse").transition().duration(2500)
+			.style("margin-top", -height-15 + "px");
 		$('#personStats').fadeIn();
 	}
 	
 	// Re-activate scroll
 	d3.select("body").style("overflow", "scroll");
-	
 	
 }
 
