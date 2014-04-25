@@ -84,6 +84,7 @@ d3.json("world.json", function(error, result) {
 	
 	//loadStory(); //** use this for development so don't have to wait for other things to happen - can just get to story
 	
+	
 	// Start the intro ** use this for final **
 	loadIntro(function(){
 		d3.select("body")
@@ -98,7 +99,7 @@ d3.json("world.json", function(error, result) {
 
 	
 // --------------------------------------------------
-// Load intro
+// Load intro 
 
 function loadIntro(callback){
 	moveAndZoom(width * 7 / 8, 2 * height + height * .6, 2 * height, 1);		
@@ -116,7 +117,9 @@ function loadIntro(callback){
 	});
 
 	$("#begin").click(function(){ 
-		loadBrowse();
+		loadBrowse(function(){
+			
+		});
 	});
 	
 	if(typeof callback === 'function') callback();
@@ -135,16 +138,20 @@ function loadBrowse(callback) {
 	timer_on = true;																			
 	newZoom = 100;																				
 	sens = 1;	// makes it easier to rotate smaller globe																		
+
+	moveAndZoom(width / 2, height / 2, height / 2 * .8, 1000, function(){
+		panTo(d3.select("#USA").datum(), 250);
+	});
 	
-	moveAndZoom(width / 2, height / 2, height / 2 * .8, 1000);
 	$(".intro").fadeOut(1000); 
 	
 	d3.select("h1#title")
 		.transition().duration(1000)
 		.style({"margin-top":"25px", "font-size":"65px", "padding-left":"10px"});
 	
-	d3.select(".navbar")
-	.selectAll("div")
+	var navBar = d3.select(".navbar")
+	
+	navBar.selectAll("div")
 		.data(world.objects.countries.geometries).enter()
 	.append("div")
 		.attr("class","nav")
@@ -160,11 +167,33 @@ function loadBrowse(callback) {
 			d3.select( "#" + d3.select(this).attr("country") ).classed("hover", false);
 		});
 	
-	d3.select(".navbar")
+	navBar.on("mousewheel", function(){
+		navBar.node().scrollTop += event.deltaY;
+		//navBar.selectAll(".nav").style("top", parseInt(navBar.selectAll(".nav").style("top")) + event.deltaY + "px");
+	});
+	
+	d3.selectAll(".navbarWrapper .fa")
+		.on("mousedown", function(){
+			navBar.node().scrollTop += parseInt(d3.select(this).attr("deltaY"));
+			console.log(navBar.node().scrollTop);
+		});
+		
+	d3.select(".navbarWrapper")
 		.transition().duration(1000)
 		.style("opacity", 1)
-		.transition().duration(500)
-		.style("right", "15px");
+		.each("end", function(){
+			d3.select(this).classed("out", true);
+		});
+	
+	d3.select(".commentsWrapper")
+		.transition().duration(1000)
+		.style("opacity", 1);
+	
+	d3.selectAll(".handle")
+		.on("mouseup", function(){
+			d3.select(this.parentNode).classed("out",!d3.select(this.parentNode).classed("out")); 
+			
+		});
 	
 	if(typeof callback === 'function') callback();
 }
@@ -343,7 +372,7 @@ function panTo(d, duration){
 	if(typeof callback === 'function') callback();
 }
 
-function moveAndZoom(newX, newY, endZoom, duration) {
+function moveAndZoom(newX, newY, endZoom, duration, callback) {
 	// Remove glow temporarily; it slows down transitions.
 	circle.attr("filter", "");
 	
@@ -372,6 +401,7 @@ function moveAndZoom(newX, newY, endZoom, duration) {
 		})
 		.each("end", function(){
 			circle.attr("filter", "url(#glow)");
+			if(typeof callback === 'function') callback();
 		});
 	
 } 

@@ -25,6 +25,16 @@ overflow:hidden;
 opacity:0;
 }
 
+.noselect
+{
+-webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+}
+
 .browse
 {
 overflow:hidden;
@@ -37,7 +47,7 @@ left:0;
 
 h1#title
 {
-font-family:"Lora", Times New Roman, serif;
+font-family:"Cinzel", Times New Roman, serif;
 font-weight:normal;
 font-size:200px;
 //line-height:200px;
@@ -103,55 +113,126 @@ z-index:3;
 		cursor:pointer;
 		}
 
-.navbar
+.navbarWrapper
 {
-width:200px;
-height:100%;
-padding-top:20px;
+transition: right .5s ease;
 position:absolute;
 top:0;
-//right:15px;
-z-index:2;
+height:100%;
+width:200px;
 right:-213px;
 opacity:0;
+z-index:2;
 }
-	
-	.navbar .navHandle
+
+	.navbarWrapper.out
 	{
-	font-family: "Muli", Helvetica, Arial, sans-serif;
-	letter-spacing:.4em;
-	color:white;
-	border-top: 8px solid #007fd4;
-	padding-top:10px;
-	text-transform:uppercase;
-	text-align:center;
-	font-size:10pt;
-	-webkit-transform:rotate(90deg);
-	-ms-transform:rotate(90deg);
-	transform:rotate(90deg);
-	position:absolute;
-	left: -130px;
-	top: 50%;
-	width:200px;
+	right:15px; 
 	}
 
-	.navbar .nav
+.handle
+{
+cursor:pointer;
+transition: all .25s ease;
+font-family: "Muli", Helvetica, Arial, sans-serif;
+letter-spacing:.4em;
+color:rgba(255,255,255,.8);
+border-top: 8px solid #007fd4;
+padding-top:10px;
+text-transform:uppercase;
+text-align:center;
+font-size:10pt;
+position:absolute;
+top: 50%;
+width:200px;
+}
+	.handle:hover
 	{
-	color:gray;
-	font-family: "Muli", Helvetica, Arial, sans-serif;
-	letter-spacing:.12em;
-	font-size:8pt;
-	text-transform:uppercase;
-	margin-bottom:9px;
-	font-weight:bold; 
+	color:white;
 	}
 	
-		.navbar .nav:hover
+	
+	.navbarWrapper .navbar
+	{
+	width:100%;
+	padding-top:20px;
+	overflow:hidden;
+	height:100%;
+	}
+		
+		.navbarWrapper .navHandle
 		{
-		color:white;
-		cursor:pointer;
+		-webkit-transform:rotate(90deg);
+		-ms-transform:rotate(90deg);
+		transform:rotate(90deg);
+		right: 150px;
 		}
 		
+		.navbarWrapper .fa-angle-double-up, .navbarWrapper .fa-angle-double-down
+		{
+			color:#007fd4;
+			position:absolute;
+			right: 227px;
+			font-size: 20pt;
+			opacity:.2;
+			transition: all .25s ease;
+		}
+		
+			.navbarWrapper .fa-angle-double-up:hover, .navbarWrapper .fa-angle-double-down:hover
+			{
+			opacity:1;
+			cursor:pointer;
+			}
+			
+		.navbarWrapper .fa-angle-double-up
+		{
+		top: 10px;
+		}
+		
+		.navbarWrapper .fa-angle-double-down
+		{
+		bottom: 10px;
+		}
+		
+		.navbarWrapper .navbar .nav
+		{
+		color:gray;
+		font-family: "Muli", Helvetica, Arial, sans-serif;
+		letter-spacing:.12em;
+		font-size:8pt;
+		text-transform:uppercase;
+		margin-bottom:9px;
+		font-weight:bold; 
+		position:relative;
+		top:0px;
+		}
+		
+			.navbarWrapper .navbar .nav:hover
+			{
+			color:white;
+			cursor:pointer;
+			}
+
+.commentsWrapper
+{
+position:absolute;
+top:0;
+height:100%;
+width:90%;
+left:-90%;
+opacity:0;
+z-index:2;
+}
+
+	.commentsHandle
+	{
+	-webkit-transform:rotate(270deg);
+	-ms-transform:rotate(270deg);
+	transform:rotate(270deg);
+	right: -117px;
+	letter-spacing:.2em;
+	}
+			
 .videoHolder
 {
 position:absolute;
