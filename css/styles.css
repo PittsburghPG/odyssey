@@ -207,7 +207,7 @@ width:200px;
 		top:0px;
 		}
 		
-			.navbarWrapper .navbar .nav:hover
+			.navbarWrapper .navbar .nav:hover, .navbarWrapper .navbar .nav.hover
 			{
 			color:white;
 			cursor:pointer;

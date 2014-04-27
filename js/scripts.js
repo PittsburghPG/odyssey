@@ -140,7 +140,7 @@ function loadBrowse(callback) {
 	sens = 1;	// makes it easier to rotate smaller globe																		
 
 	moveAndZoom(width / 2, height / 2, height / 2 * .8, 1000, function(){
-		panTo(d3.select("#USA").datum(), 250);
+		panTo(d3.select("#USA").datum(), 500);
 	});
 	
 	$(".intro").fadeOut(1000); 
@@ -156,10 +156,11 @@ function loadBrowse(callback) {
 	.append("div")
 		.attr("class","nav")
 		.attr("country", function(d){ return d.properties.id })
+		.attr("id", function(d){ return "nav_" + d.properties.id })
 		.html(function(d){ return d.properties.name })
 		.on("mouseover", function(){
 			target = d3.select( "#" + d3.select(this).attr("country") );
-			panTo( target.datum() , 250);
+			panTo( target.datum() , 1000);
 			target.classed("hover", true);
 			target.moveToFront();
 		})
@@ -175,7 +176,6 @@ function loadBrowse(callback) {
 	d3.selectAll(".navbarWrapper .fa")
 		.on("mousedown", function(){
 			navBar.node().scrollTop += parseInt(d3.select(this).attr("deltaY"));
-			console.log(navBar.node().scrollTop);
 		});
 		
 	d3.select(".navbarWrapper")
@@ -193,6 +193,25 @@ function loadBrowse(callback) {
 		.on("mouseup", function(){
 			d3.select(this.parentNode).classed("out",!d3.select(this.parentNode).classed("out")); 
 			
+		});
+	
+	// Scroll country list to display hovered nation. 
+	d3.selectAll(".country")
+		.on("mouseover", function(){
+			d3.select(this).moveToFront();
+			endpoint = d3.select( "#nav_" + d3.select(this).attr("id") ).node().offsetTop;
+			d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", true)
+			navBar.transition()
+				.duration(1000)
+				.tween("scrollTop", function() {
+					var r = d3.interpolate(navBar.node().scrollTop, endpoint - (height / 2) );			
+					return function(t) {																
+						navBar.node().scrollTop = r(t);														
+					};
+				});
+		})
+		.on("mouseout", function(){
+			d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", false);
 		});
 	
 	if(typeof callback === 'function') callback();
@@ -258,87 +277,70 @@ function loadVideo(callback) {
 // Load story
 
 function loadStory(callback) {
-	
-	$.post("php/getNations.php", function(data){ //grab data from database via php
-		var json = $.parseJSON(data); //parse the json so we can use it
-		$.each(json, function(key, data) { //iterate through the json object, grabbin the index key and the data that goes with it
-			//console.log(data);
-			if (data.Country == 'Sweden') {//find clicked country's name in the json data pulled from the database
-										   //I'll use Sweden for now until I the clicking part is working
-				//fill in the data from json into the html
-				$('#name').html(data.Name);
-				$('#country').text(data.Country);
-				$('#age .personStat').text(data.Age);
-				$('#origin .personStat').html(data.Origin);
-				$('#pghHome .personStat').html(data.Neighborhood);
-				$('#occupation .personStat').html(data.Occupation);
-				$('.countryMap').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_locator.jpg');//src="./countries/sweden/img/map.png"
-				$('.countryMap').attr('title', 'Map of ' + data.Country);
-				$('.portrait').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_portrait.jpg');//src="./countries/sweden/img/map.png"
-				$('.portrait').attr('title', data.Name);
-				$( ".portrait" ).after( data.Notes );
-				//end filling data into html
-				
-				d3.select(".story").style("display", "block");	
-				d3.select("body").style("opacity", "1");
-				//center the story - margin-left = half of screen width minus half of story width
-				var w = $('.story').width();
-				w = w/2;
-				var mL = width /2;
-				var newW = mL - w;
-				$('.story').css('margin-left', newW + "px"); 
-				//if window width is wide (desktop), then show the text and stats side by side
-				if (width >= 1600) {
-					//position the stats in a fixed col on the left
-					var storyPosition = $('.story').offset();
-					var storyLeft = storyPosition.left;
-					$('.story #personStats').css('left', storyLeft + 30 + "px");
-					var textPosition = $('.text').position(); //note where the text div is positioned
-					// Slide up
-					d3.select(".browse").transition().duration(2500)
-						.style("margin-top", -height-15 + "px")
-						.each("end", handleStats);
-					
-					//but if window width isn't wide (ipad, mobile), then spread story out to fill whole screen
-				} else { 
-					$('.story #personStats').css({
-						position: 'relative',
-						'padding-left': '20px',
-						'margin-bottom': '20px'
-					});
-					
-					$('.countryMap').css('width', '196px');
-					$('.story').css('width', '100%');
-					var storyW = $('.story').width();
-					
-					$('.story').css('margin-left', '0');
-					
-					$('.story .text').css({
-						width: storyW - 40 + 'px',
-						'padding': '20px 40px 20px 20px',
-						'margin-left': '0'
-					});
-							
-					//$('#name, #occupation, #country, #origin, #pghHome, #age').css('text-align', 'center'); //remnants of centering the stats
-					//$( ".countryMap" ).wrap( "<div class='countryMapHolder'></div>" );
-					
-					// Slide up
-					d3.select(".browse").transition().duration(2500)
-						.style("margin-top", -height-15 + "px");
-					$('#personStats').fadeIn();
-				}
-
-				// Re-activate scroll
-				d3.select("body").style("overflow", "scroll");
-			}
-			function handleStats() { //when the transition is done pulling up the story div and getting the browse div out of the way, then show the person's stats
-						$('#personStats').css('top', textPosition.top+ 10 + "px"); //make the top of the stats align with the top of the text
-						$('#personStats').fadeIn();
-			}
+	// Insert content below
+	$.post("php/getNations.php", function(data){
+		console.log(data);
+		var json = JSON.parse(data);
+		$.each(json, function(key, data) {
+			console.log(key);
 		});
-		
+		/*eval(data);		
+		for (var j=0; j< countryName.length; j++ ) {
+				if (personName[j] != ' ') {
+				
+				}
+		}*/
 	});
 	
+	
+	d3.select(".story").style("display", "block");	
+	d3.select("body").style("opacity", "1");
+	//center the story - margin-left = half of screen width minus half of story width
+	var w = $('.story').width();
+	w = w/2;
+	var mL = width /2;
+	var newW = mL - w;
+	$('.story').css('margin-left', newW + "px"); 
+	//if window width is wide (desktop), then show the text and stats side by side
+	if (width >= 1600) {
+		//position the stats in a fixed col on the left
+		var storyPosition = $('.story').offset();
+		var storyLeft = storyPosition.left;
+		$('.story #personStats').css('left', storyLeft + 30 + "px");
+		var textPosition = $('.text').position(); //note where the text div is positioned
+		// Slide up
+		d3.select(".browse").transition().duration(2500)
+			.style("margin-top", -height-15 + "px")
+			.each("end", myCallback);
+		function myCallback() { //when the transition is done pulling up the story div and getting the browse div out of the way, then show the person's stats
+			$('#personStats').css('top', textPosition.top+ 10 + "px"); //make the top of the stats align with the top of the text
+			$('#personStats').fadeIn();
+		}
+		//but if window width isn't wide (ipad, mobile), then show stats and text in 1 column NO!! spread story out to fill whole screen
+	} else { 
+		$('.story #personStats').css({
+			position: 'relative',
+			'padding-left': '20px',
+			'margin-bottom': '20px'
+		});
+		var storyW = $('.story').innerWidth();
+		$('.countryMap').css('width', '196px');
+		$('.story .text').css({
+			width: storyW-40 + 'px',
+			'margin-left': '0',
+			'padding': '0 20px'
+		})
+		//$('#name, #occupation, #country, #origin, #pghHome, #age').css('text-align', 'center');
+		//$( ".countryMap" ).wrap( "<div class='countryMapHolder'></div>" );
+		
+		// Slide up
+		d3.select(".browse").transition().duration(2500)
+			.style("margin-top", -height-15 + "px");
+		$('#personStats').fadeIn();
+	}
+	
+	// Re-activate scroll
+	d3.select("body").style("overflow", "scroll");
 	
 }
 
