@@ -315,7 +315,7 @@ function loadStory(callback) {
 				var newW = mL - w;
 				$('.story').css('margin-left', newW + "px"); 
 				//if window width is wide (desktop), then show the text and stats side by side
-				if (width >= 1600) {
+				//if (width >= 1600) {
 					//position the stats in a fixed col on the left
 					var storyPosition = $('.story').offset();
 					var storyLeft = storyPosition.left;
@@ -327,7 +327,7 @@ function loadStory(callback) {
 						.each("end", handleStats);
 					
 					//but if window width isn't wide (ipad, mobile), then spread story out to fill whole screen
-				} else { 
+				/*} else { 
 					$('.story #personStats').css({
 						position: 'relative',
 						'padding-left': '20px',
@@ -356,7 +356,7 @@ function loadStory(callback) {
 					$('body').animate({'background-color': "#fff"}, 2000);
 					$('html').animate({'background-color': "#fff"}, 2000);
 					$('#personStats').fadeIn();
-				} //end checking for screen size
+				}*/ //end checking for screen size
 				$('body').css('overflow-y', 'scroll');
 			} //end if sweden
 		}); //end each
