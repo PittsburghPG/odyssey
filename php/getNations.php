@@ -8,7 +8,7 @@ require_once ('constants_test.php');
 			printf("Connect failed: %s", mysqli_connect_error());
 			exit;
 	}
-	$qNations = "SELECT b.Country, a.CountryCode, a.population, a.GDP, a.Income_level, b.Name, b.Age, b.Occupation, b.Origin, b.Neighborhood, b.Notes FROM countries a, people b where a.CountryID = b.CountryID order by a.Country";
+	$qNations = "SELECT b.Country, a.CountryCode, a.population, a.GDP, a.Income_level, b.Name, b.Age, b.Occupation, b.Origin, b.Neighborhood, b.Heading, b.Notes FROM countries a, people b where a.CountryID = b.CountryID order by a.Country";
 	$result = $db->query($qNations);
 	
 	//$numrecords = mysqli_num_rows ( $result );

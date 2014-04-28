@@ -300,6 +300,7 @@ function loadStory(callback) {
 				$('.countryMap').attr('title', 'Map of ' + data.Country);
 				$('.portrait').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_portrait.jpg');
 				$('.portrait').attr('title', data.Name);
+				$('.text h1').html(data.Heading);
 				$( ".portrait" ).after( data.Notes );
 				//end filling data into html
 				
@@ -353,6 +354,7 @@ function loadStory(callback) {
 						.style("margin-top", -height-15 + "px");
 						$('body').animate({'background-color': "#fff"}, 2000);
 					$('body').animate({'background-color': "#fff"}, 2000);
+					$('html').animate({'background-color': "#fff"}, 2000);
 					$('#personStats').fadeIn();
 				} //end checking for screen size
 				$('body').css('overflow-y', 'scroll');
@@ -363,6 +365,7 @@ function loadStory(callback) {
 function handleStats() { //when the transition is done pulling up the story div and getting the browse div out of the way, then show the person's stats
 						//$('#personStats').css('top', textPosition.top+ 10 + "px"); //make the top of the stats align with the top of the text
 						$('body').animate({'background-color': "#fff"}, 2000);
+						$('html').animate({'background-color': "#fff"}, 2000);
 						var textPosition = $('.text').position(); //note where the text div is positioned
 						$('#personStats').css('top', textPosition + 'px'); //make the top of the stats align with the top of the text
 						$('#personStats').fadeIn();
