@@ -257,7 +257,7 @@ width: 50%;
 max-width: 1000px;
 padding-top:70px;
 background-color: white;
-z-index: 5;
+z-index: 99;
 display: none;
 position: relative;
 padding-right: 20px;
@@ -295,9 +295,11 @@ padding-right: 20px;
 		
 		.story .text  img.personPhoto {
 			float: left;
-			padding-right: 20px;
+			/*padding-right: 20px;*/
+			margin-right: 20px;
 			width: 50%;
 			height: auto;
+			border: 1px solid lightgray;
 		}
 	
 	.story #personStats {
