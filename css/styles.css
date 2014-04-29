@@ -16,6 +16,7 @@ margin:0px;
 padding:0px;
 width:100%;
 height:100%;
+-webkit-transform: translateZ(0); /*gets rid of Chrome artifacting - when you scroll down on the body, the background used to turn black LMS */
 }
 
 body
@@ -23,6 +24,7 @@ body
 background-color:black;
 overflow:hidden;
 opacity:0;
+
 }
 
 .noselect
@@ -266,48 +268,92 @@ padding-right: 20px;
 	
 	.story h1
 	{
-	font-family:"Lora", "Time New Roman", serif;
+	font-family:"Cinzel", "Time New Roman", serif;
 	font-weight: normal;
-	font-size:150%;
+	font-size:200%;
 	line-height:1.1em;
 	text-transform: uppercase;
-	margin-bottom: 20px;
+	margin-bottom: 40px;
 	-webkit-margin-before: 0;
 	-webkit-margin-after: 0;
 	}
 	
 	.story .text
 	{
+	margin-left: 256px;
 	font-family:"Muli", sans-serif;
-	width:65%;
-	margin-left:30%;
-	font-size:10pt;
+	font-size:12pt;
 	line-height:1.7em;
 	display: inline-block;
+	position: relative;
 	
 	}
-		.story .text  img.portrait {
+		
+		 
+		
+		.text #bio {
+			position: relative;
+			color: #666;
+		}
+		.text #bio .imgWrap_horizontal {
+			width: 100%;
+			padding: 20px 0;
+			border-top: 1px solid #afb0a9;
+			border-bottom: 1px solid #afb0a9;
+			position: relative;
+		}
+		.text #bio .imgWrap_vertical {
+			padding: 20px 0;
+			border-top: 1px solid #afb0a9;
+			border-bottom: 1px solid #afb0a9;
 			float: left;
-			padding: 5px 10px 0 0;
-			max-width: 100px;
-			height: auto;
+			margin-right: 30px;
+			margin-bottom: 20px;
+			position: relative;
 		}
 		
-		.story .text  img.personPhoto {
-			float: left;
-			/*padding-right: 20px;*/
-			margin-right: 20px;
-			width: 50%;
-			height: auto;
-			border: 1px solid lightgray;
+		.caption {
+			font-family:"Muli", sans-serif;
+			font-size: 90%;
+			line-height:1.7em;
+		}
+		
+		.imgWrap_horizontal .caption {
+			position: absolute;
+			bottom: 25px;
+		}
+		
+		#bio .quote {
+			width: 33%;
+			color: lightgray;
+			font-weight: 500;
+			font-size: 110%;
+			color: #333;
+			font-family:"Lora", serif;
+			line-height:1.7em;
+			padding: 20px 10px;
+			border-top: 1px solid #afb0a9;
+			border-bottom: 5px solid #bcd1d9;
+			float: right;
+			display: inline-block;
+			margin-top: 20px;
 		}
 	
 	.story #personStats {
 		position: fixed;
 		font-family:"Muli", sans-serif;
 		display:none;
+		max-width: 196px;
 		
 	}
+		img.portrait {
+			/*padding: 5px 10px 0 0;
+			margin: 20px 20px 0 0;*/
+			margin-bottom: 20px;
+			max-width: 196px;
+			height: auto;
+			border-bottom: 1px solid lightgray;
+		}
 		#name {
 			font-weight: bold;
 			font-size: 110%;
@@ -320,7 +366,7 @@ padding-right: 20px;
 			margin-top: 5px;
 			font-size: 80%;
 			text-transform: uppercase;
-			margin-bottom: 40px;
+			margin-bottom: 30px;
 		}
 		
 		.personSubhead {
@@ -337,7 +383,7 @@ padding-right: 20px;
 			font-size: 80%;
 		}
 		.countryMap {
-			width: 100%;
+			/*width: 100%;*/
 			height: auto;
 			background-color: #999;
 			margin-top: 10px;
@@ -345,8 +391,23 @@ padding-right: 20px;
 		.countryMapHolder {
 			text-align: center;
 		}
-
-
+		#factoid {
+			border-bottom: 5px solid #eceae0;
+			margin-top: 20px;
+			padding-bottom: 20px;
+		}
+		#factoid #didyouknow {
+			font-weight: bold;
+			color: #333;
+			margin-bottom: 10px;
+	
+		}
+		#factoid #factoidtext {
+			font-weight: normal;
+			color: #333;
+			line-height:1.2em;
+	
+		}
 #canvas
 {
 width:100%;

@@ -285,10 +285,11 @@ function loadStory(callback) {
 
 	// Insert content below
 	$.post("php/getNations.php", function(data){ //grab data from database via php
+		//console.log(data);
 		var json = $.parseJSON(data); //parse the json so we can use it
 		$.each(json, function(key, data) { //iterate through the json object, grabbin the index key and the data that goes with it
 			if (data.Country == 'Sweden') {//find clicked country's name in the json data pulled from the database
-										   //I'll use Sweden for now until I the clicking part is working
+										   //I'll use Sweden for now until the clicking part is working
 											//fill in the data from json into the html
 				$('#name').html(data.Name);
 				$('#country').text(data.Country);
@@ -296,13 +297,44 @@ function loadStory(callback) {
 				$('#origin .personStat').html(data.Origin);
 				$('#pghHome .personStat').html(data.Neighborhood);
 				$('#occupation .personStat').html(data.Occupation);
+				$('#factoid #factoidtext').html(data.Factoid);
 				$('.countryMap').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_locator.jpg');
 				$('.countryMap').attr('title', 'Map of ' + data.Country);
 				$('.portrait').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_portrait.jpg');
 				$('.portrait').attr('title', data.Name);
 				$('.text h1').html(data.Heading);
-				$( ".portrait" ).after( data.Notes );
+				//$( ".text h1" ).after( data.Notes );
+				$('.text #bio').html(data.Notes);
+				$('.quote').html('"' + data.Quote + '"');
+				//$('#bio').prepend($('.quote'));
+				$("#bio p:nth-child(3)").append($('.quote'));
 				//end filling data into html
+				
+				//put image wrappers around each image
+				$.each($('#bio img'), function( index, value ) {
+				  //console.log( index + ": " + value );
+				  $(this).load(function() {
+					  //alert('I loaded!');
+					  var imgW = $(this).width();
+					    var imgH = $(this).height();
+					    var imgSrc = $(this).attr('src');
+						var caption = $(this).attr('caption');
+					    if (imgW > imgH) { //if it's a horizontal image
+						  $( this ).wrap( "<div class='imgWrap_horizontal'></div>" );
+						  //$('.imgWrap_horizontal').css('height', imgH + 'px');
+						  $('.imgWrap_horizontal').append('<div class="caption">' + caption + '</div>');
+						  $('.imgWrap_horizontal .caption').css('left', imgW + 20 + 'px');
+					    } else { //if it's a vertical image
+						  $( this ).wrap( "<div class='imgWrap_vertical'></div>" );
+						 $('.imgWrap_vertical').css('width', imgW + 'px');
+						 //$('.imgWrap_vertical').css('height', imgH + 'px');
+						 $('.imgWrap_vertical').append('<div class="caption">' + caption + '</div>');
+						 
+					    }
+					});
+					
+				  
+				});
 				
 				d3.select(".story").style("display", "block");	
 				/*d3.select("body").style({
@@ -314,50 +346,18 @@ function loadStory(callback) {
 				var mL = width /2;
 				var newW = mL - w;
 				$('.story').css('margin-left', newW + "px"); 
-				//if window width is wide (desktop), then show the text and stats side by side
-				//if (width >= 1600) {
-					//position the stats in a fixed col on the left
-					var storyPosition = $('.story').offset();
-					var storyLeft = storyPosition.left;
-					$('.story #personStats').css('left', storyLeft + 30 + "px");
-					
-					// Slide up
-					d3.select(".browse").transition().duration(2500)
-						.style("margin-top", -height-15 + "px")
-						.each("end", handleStats);
-					
-					//but if window width isn't wide (ipad, mobile), then spread story out to fill whole screen
-				/*} else { 
-					$('.story #personStats').css({
-						position: 'relative',
-						'padding-left': '20px',
-						'margin-bottom': '20px'
-					});
-					
-					$('.countryMap').css('width', '196px');
-					$('.story').css('width', '100%');
-					var storyW = $('.story').width();
-					
-					$('.story').css('margin-left', '0');
-					
-					$('.story .text').css({
-						width: storyW - 40 + 'px',
-						'padding': '20px 40px 20px 20px',
-						'margin-left': '0'
-					});
-							
-					//$('#name, #occupation, #country, #origin, #pghHome, #age').css('text-align', 'center'); //remnants of centering the stats
-					//$( ".countryMap" ).wrap( "<div class='countryMapHolder'></div>" );
-					
-					// Slide up
-					d3.select(".browse").transition().duration(2500)
-						.style("margin-top", -height-15 + "px");
-						$('body').animate({'background-color': "#fff"}, 2000);
-					$('body').animate({'background-color': "#fff"}, 2000);
-					$('html').animate({'background-color': "#fff"}, 2000);
-					$('#personStats').fadeIn();
-				}*/ //end checking for screen size
-				$('body').css('overflow-y', 'scroll');
+				
+				//position the stats in a fixed col on the left
+				var storyPosition = $('.story').offset();
+				var storyLeft = storyPosition.left;
+				$('.story #personStats').css('left', storyLeft + 30 + "px");
+				
+				// Slide up
+				d3.select(".browse").transition().duration(2500)
+					.style("margin-top", -height-15 + "px")
+					.each("end", handleStats);
+				
+				$('body').css('overflow-y', 'scroll'); //put the scroll on the body, not the story
 			} //end if sweden
 		}); //end each
 	});//end post
