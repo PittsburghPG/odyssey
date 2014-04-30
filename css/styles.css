@@ -280,7 +280,7 @@ padding-right: 20px;
 	
 	.story .text
 	{
-	margin-left: 256px;
+	margin-left: 276px;
 	font-family:"Muli", sans-serif;
 	font-size:12pt;
 	line-height:1.7em;
@@ -294,6 +294,7 @@ padding-right: 20px;
 		.text #bio {
 			position: relative;
 			color: #666;
+			margin-top: 20px;
 		}
 		.text #bio .imgWrap_horizontal {
 			width: 100%;
@@ -337,6 +338,11 @@ padding-right: 20px;
 			float: right;
 			display: inline-block;
 			margin-top: 20px;
+		}
+		
+		#bio .BrightcoveExperience {
+			width: 100%;
+			height: auto;
 		}
 	
 	.story #personStats {

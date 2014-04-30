@@ -310,7 +310,7 @@ function loadStory(callback) {
 				$("#bio p:nth-child(3)").append($('.quote'));
 				//end filling data into html
 				
-				//put image wrappers around each image
+				//put image wrappers around each image and style images and captions
 				$.each($('#bio img'), function( index, value ) {
 				  //console.log( index + ": " + value );
 				  $(this).load(function() {
@@ -352,24 +352,31 @@ function loadStory(callback) {
 				var storyLeft = storyPosition.left;
 				$('.story #personStats').css('left', storyLeft + 30 + "px");
 				
+				
+						
 				// Slide up
 				d3.select(".browse").transition().duration(2500)
-					.style("margin-top", -height-15 + "px")
-					.each("end", handleStats);
+					.style("margin-top", -height-15 + "px");
+					//.each("end", handleStats);
+				$('body').animate({'background-color': "#fff"}, 2000);
+				//$('html').animate({'background-color': "#fff"}, 2000);
+				var textPosition = $('.text').position(); //note where the text div is positioned
+				$('#personStats').css('top', textPosition + 'px'); //make the top of the stats align with the top of the text
+				$('#personStats').fadeIn();
 				
 				$('body').css('overflow-y', 'scroll'); //put the scroll on the body, not the story
 			} //end if sweden
 		}); //end each
 	});//end post
 }
-function handleStats() { //when the transition is done pulling up the story div and getting the browse div out of the way, then show the person's stats
+/*function handleStats() { //when the transition is done pulling up the story div and getting the browse div out of the way, then show the person's stats
 						//$('#personStats').css('top', textPosition.top+ 10 + "px"); //make the top of the stats align with the top of the text
 						$('body').animate({'background-color': "#fff"}, 2000);
 						$('html').animate({'background-color': "#fff"}, 2000);
 						var textPosition = $('.text').position(); //note where the text div is positioned
 						$('#personStats').css('top', textPosition + 'px'); //make the top of the stats align with the top of the text
 						$('#personStats').fadeIn();
-}	
+}	*/
 
 // End load story
 // --------------------------------------------------
