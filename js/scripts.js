@@ -83,7 +83,7 @@ d3.json("world.json", function(error, result) {
 	);
 	
 	//loadStory(); //** use this for development so don't have to wait for other things to happen - can just get to story
-	
+	//loadComments(); //** use this for development so don't have to wait for other things to happen - can just get to comments
 	
 	// Start the intro ** use this for final **
 	loadIntro(function(){
@@ -214,7 +214,7 @@ function loadBrowse(callback) {
 			d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", false);
 		})
 		.on("mouseup", function(){
-			loadStory();
+			loadStory(this);
 		})
 		
 		
@@ -281,32 +281,48 @@ function loadVideo(callback) {
 // --------------------------------------------------
 // Load story
 
-function loadStory(callback) {
-
+function loadStory(country) {
+	var clickedCountry = country.id;
 	// Insert content below
 	$.post("php/getNations.php", function(data){ //grab data from database via php
 		//console.log(data);
 		var json = $.parseJSON(data); //parse the json so we can use it
 		$.each(json, function(key, data) { //iterate through the json object, grabbin the index key and the data that goes with it
-			if (data.Country == 'Sweden') {//find clicked country's name in the json data pulled from the database
+			//if (data.Country == 'Sweden') {//find clicked country's name in the json data pulled from the database
 										   //I'll use Sweden for now until the clicking part is working
 											//fill in the data from json into the html
+			if (data.CountryCode == clickedCountry) {
 				$('#name').html(data.Name);
 				$('#country').text(data.Country);
 				$('#age .personStat').text(data.Age);
 				$('#origin .personStat').html(data.Origin);
 				$('#pghHome .personStat').html(data.Neighborhood);
 				$('#occupation .personStat').html(data.Occupation);
-				$('#factoid #factoidtext').html(data.Factoid);
+				if (data.Factoid.length > 0) {
+					$('#factoid #factoidtext').html(data.Factoid);
+					$('#factoid').show();
+				} else {
+					$('#factoid').hide();
+				}
 				$('.countryMap').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_locator.jpg');
 				$('.countryMap').attr('title', 'Map of ' + data.Country);
 				$('.portrait').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_portrait.jpg');
 				$('.portrait').attr('title', data.Name);
-				$('.text h1').html(data.Heading);
-				//$( ".text h1" ).after( data.Notes );
 				$('.text #bio').html(data.Notes);
-				$('.quote').html('"' + data.Quote + '"');
-				//$('#bio').prepend($('.quote'));
+				if (data.Heading.length > 0) {
+					$('.text h1').html(data.Heading);
+					$('.text h1').show();
+				} else {
+					$('.text h1').hide();
+					$("#bio").css('margin-top', '0');
+					$("#bio p:nth-child(1)").css('margin-top', '0');//close up space above top paragraph if there's no heading
+				}
+				if (data.Quote.length > 0) {
+					$('.quote').html('"' + data.Quote + '"');
+					$('.quote').show();
+				} else {
+					$('.quote').hide();
+				}
 				$("#bio p:nth-child(3)").append($('.quote'));
 				//end filling data into html
 				
@@ -332,8 +348,6 @@ function loadStory(callback) {
 						 
 					    }
 					});
-					
-				  
 				});
 				
 				d3.select(".story").style("display", "block");	
@@ -351,8 +365,9 @@ function loadStory(callback) {
 				var storyPosition = $('.story').offset();
 				var storyLeft = storyPosition.left;
 				$('.story #personStats').css('left', storyLeft + 30 + "px");
-				
-				
+				var textPosition = $('.text').position(); //note where the text div is positioned
+				$('#personStats').css('top', textPosition + 'px'); //make the top of the stats align with the top of the text
+				$('#personStats').fadeIn();
 						
 				// Slide up
 				d3.select(".browse").transition().duration(2500)
@@ -360,9 +375,7 @@ function loadStory(callback) {
 					//.each("end", handleStats);
 				$('body').animate({'background-color': "#fff"}, 2000);
 				//$('html').animate({'background-color': "#fff"}, 2000);
-				var textPosition = $('.text').position(); //note where the text div is positioned
-				$('#personStats').css('top', textPosition + 'px'); //make the top of the stats align with the top of the text
-				$('#personStats').fadeIn();
+				
 				
 				$('body').css('overflow-y', 'scroll'); //put the scroll on the body, not the story
 			} //end if sweden
@@ -381,7 +394,23 @@ function loadStory(callback) {
 // End load story
 // --------------------------------------------------
 
+//if click arrow up, scroll back to browse
+$('.fa-arrow-circle-up, #title').click(function(){
+	$(".story").fadeOut('slow');
+	// Slide up
+	d3.select(".browse").transition().duration(2500)
+		.style("margin-top", "0px");
+		//.each("end", handleStats);
+	$('body').animate({'background-color': "#000"}, 2000);
+});
+// --------------------------------------------------
+// Load comments
+function loadComments(callback) {
 
+}
+
+// End load comments
+// --------------------------------------------------
 
 // **************************************************
 // Helper functions that get stuff done
@@ -449,6 +478,7 @@ d3.selection.prototype.moveToFront = function() {
     this.parentNode.appendChild(this);
   });
 };
+
 
 /*
 function numberWithCommas(x) {

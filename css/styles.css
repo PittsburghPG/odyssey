@@ -16,7 +16,8 @@ margin:0px;
 padding:0px;
 width:100%;
 height:100%;
--webkit-transform: translateZ(0); /*gets rid of Chrome artifacting - when you scroll down on the body, the background used to turn black LMS */
+/*-webkit-transform: translateZ(0);*/ /*gets rid of Chrome artifacting - when you scroll down on the body, the background used to turn black LMS 
+                                         however - causes fixed positioning not to work in Chrome*/
 }
 
 body
@@ -59,8 +60,13 @@ text-align:left;
 line-height:.8em;
 border-left: 8px solid #007fd4;
 padding-left:50px;
+position: relative; /*LMS*/
+z-index: 5;/*LMS*/
 }
-
+	h1#title:hover {
+		cursor: pointer;
+	}
+	
 .intro
 {
 position:relative;
@@ -264,8 +270,21 @@ display: none;
 position: relative;
 padding-right: 20px;
 }
-	
-	
+	.story #arrowup {
+		position: absolute;
+		top: 20px;
+		right: 20px;
+		padding: 10px;
+		
+	}
+		.story #arrowup .fa-arrow-circle-up {
+			color:#007fd4;
+			opacity: .2;
+		}
+		.story #arrowup .fa-arrow-circle-up:hover {
+			opacity: 1;
+			cursor: pointer;
+		}
 	.story h1
 	{
 	font-family:"Cinzel", "Time New Roman", serif;
