@@ -382,19 +382,10 @@ function loadStory(country) {
 		}); //end each
 	});//end post
 }
-/*function handleStats() { //when the transition is done pulling up the story div and getting the browse div out of the way, then show the person's stats
-						//$('#personStats').css('top', textPosition.top+ 10 + "px"); //make the top of the stats align with the top of the text
-						$('body').animate({'background-color': "#fff"}, 2000);
-						$('html').animate({'background-color': "#fff"}, 2000);
-						var textPosition = $('.text').position(); //note where the text div is positioned
-						$('#personStats').css('top', textPosition + 'px'); //make the top of the stats align with the top of the text
-						$('#personStats').fadeIn();
-}	*/
-
 // End load story
 // --------------------------------------------------
 
-//if click arrow up, scroll back to browse
+//if in bio page and click arrow up, scroll back to browse
 $('.fa-arrow-circle-up, #title').click(function(){
 	$(".story").fadeOut('slow');
 	// Slide up
@@ -405,10 +396,51 @@ $('.fa-arrow-circle-up, #title').click(function(){
 });
 // --------------------------------------------------
 // Load comments
+$('.commentsHandle').click(function(){
+	if ($('.commentsWrapper').css('left') != '0px') {
+		loadComments();
+	} else {
+		unloadComments();
+	}
+	
+});
+
 function loadComments(callback) {
-
+	$('h1#title').fadeOut();
+	$('.commentsWrapper').animate({'left': "0"}, 2000);
+	$('#commentsBg').animate({'left': "0"}, 2000, function(){
+		$('.navbarWrapper .navbar .nav').css('color', '#599ecc');
+		$('h1#title').css({
+		'border-left': 'none',
+		'font-family': '"Lora", Times New Roman, serif',
+		'color'      : '#76a2be',
+		'font-weight': '100'
+		});
+		$('h1#title').text('Tell us a story ...');
+		$('h1#title').fadeIn();
+		var commentsW = $('.comments').width();
+		var commentsWrapperW = $('.commentsWrapper').width();
+		var leftColWidth = commentsWrapperW - 450 - 40 - 10 -40; //minus the width of the commetns, minus the padding on comments, minus the left margin, minus the padding on commentsLeft
+		$('.commentsLeft').css('width', leftColWidth + 'px');
+		setInterval ('cursorAnimation()', 600);
+	});
+	
+	
 }
-
+function cursorAnimation() {
+    $('#cursor').animate({
+        opacity: 0
+    }, 'fast', 'swing').animate({
+        opacity: 1
+    }, 'fast', 'swing');
+}
+function unloadComments(callback) {
+	$('.commentsWrapper').animate({'left': "-70%"}, 2000);
+	$('.navbarWrapper .navbar .nav').css('color', 'gray');
+	$('#commentsBg').animate({'left': "-100%"}, 2000);
+	
+	
+}
 // End load comments
 // --------------------------------------------------
 

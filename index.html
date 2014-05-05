@@ -23,16 +23,20 @@
 		<meta name="viewport" content="initial-scale=1.0, width=device-width, user-scalable=no" />
 		
 		<meta property="og:type"            content="article" /> 
-		<meta property="og:url"             content="http://newsinteractive.post-gazette.com/unitednationhoods" /> 
+		<meta property="og:url"             content="http://newsinteractive.post-gazette.com/odysseys" /> 
 		<meta property="og:title"           content="Odysseys" /> 
 		<meta property="og:description"     content="Almost every country in the United Nations is represented by immigrants in the Pittsburgh metro area" /> 
-		<meta property="og:image"           content="http://newsinteractive.post-gazette.com/unitednationhoods/shale-water.jpg" /> 
+		<meta property="og:image"           content="http://newsinteractive.post-gazette.com/odysseys" /> 
+		
+		<!-- end facebook open graph -->
+
+		
 	
 		<meta name="twitter:card" 			content="summary">
 		<meta name="twitter:site" 			content="@pittsburghpg">
 		<meta name="twitter:title"			content="Odysseys">
 		<meta name="twitter:description"	content="Almost every country in the United Nations is represented by immigrants in the Pittsburgh metro area (via @PittsburghPG)">
-		<meta name="twitter:image" 			content="http://newsinteractive.post-gazette.com/unitednationhoods/shale-water.jpg">
+		<meta name="twitter:image" 			content="http://newsinteractive.post-gazette.com/odysseys">
 		
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 		<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
@@ -50,6 +54,17 @@
 	</head>
 
 	<body>
+	<div id="commentsBg"></div> <!-- transparent blue background behind comments -->
+		<!-- facebook code -->
+		<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>
+		<!-- end facebook code -->
 		<div class="browse">
 			<h1 id="title">ODYSSEYS</h1>
 			<div class="intro">
@@ -106,7 +121,20 @@
 			
 			<div class="commentsWrapper">
 				<div class="handle commentsHandle">Tell your story</div>
-				<div class="comments"></div>
+				
+				
+				<div class="comments">
+					<div class="fb-comments" data-href="http://newsinteractive.post-gazette.com/odysseys" data-width="450" data-numposts="25" data-colorscheme="light"></div>
+				</div>
+				
+				<div class="commentsLeft">
+				<div class="formChatter">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </div>
+				<form id="commentsForm">
+					<textarea id="formStory">
+						
+					</textarea>
+				</form>
+				</div>
 			</div>
 			
 		</div>
