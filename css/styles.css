@@ -281,7 +281,9 @@ z-index:3;
 		width: 100%;
 		border: none;
 		background-color: #f1f0f0;
-		height: 80%;
+		height: 400px;
+		cursor: text;
+		outline: none;
 	}
 			
 .videoHolder
