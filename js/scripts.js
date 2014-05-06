@@ -82,7 +82,7 @@ d3.json("world.json", function(error, result) {
 		})
 	);
 	
-	//loadStory(); //** use this for development so don't have to wait for other things to happen - can just get to story
+	//loadStory("Ukraine"); //** use this for development so don't have to wait for other things to happen - can just get to story
 	//loadComments(); //** use this for development so don't have to wait for other things to happen - can just get to comments
 	
 	// Start the intro ** use this for final **
@@ -149,7 +149,13 @@ function loadBrowse(callback) {
 		.transition().duration(1000)
 		.style({"margin-top":"25px", "font-size":"65px", "padding-left":"10px"});
 	
-	var navBar = d3.select(".navbar")
+	var commentBar = d3.select(".commentsWrapper");
+	
+	commentBar.style("left", function(){
+		return -parseInt(commentBar.node().offsetWidth) + "px";
+	});
+	
+	var navBar = d3.select(".navbar");
 	
 	navBar.selectAll("div")
 		.data(world.objects.countries.geometries).enter()
@@ -166,11 +172,14 @@ function loadBrowse(callback) {
 		})
 		.on("mouseout", function(){
 			d3.select( "#" + d3.select(this).attr("country") ).classed("hover", false);
+		})
+		.on("mousedown", function(){
+			d3.select(".navbarWrapper").classed("out", false);
+			loadVideo(d3.select(this).html().toLowerCase());
 		});
 	
 	navBar.on("mousewheel", function(){
 		navBar.node().scrollTop += event.deltaY;
-		//navBar.selectAll(".nav").style("top", parseInt(navBar.selectAll(".nav").style("top")) + event.deltaY + "px");
 	});
 	
 	d3.selectAll(".navbarWrapper .fa")
@@ -214,7 +223,7 @@ function loadBrowse(callback) {
 			d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", false);
 		})
 		.on("mouseup", function(){
-			loadStory(this);
+			console.log("yo");
 		})
 		
 		
@@ -228,34 +237,20 @@ function loadBrowse(callback) {
 // --------------------------------------------------
 // Load video
 
-function loadVideo(callback) {
-
-	var image = d3.select(".preview");
-	w1 = image.style("width");
-	h1 = image.style("height");
-	l1 = image.style("left");
+function loadVideo(country, callback) {
 	
 	// Slide away globe and text widget
-	moveAndZoom(width + newZoom, height - newZoom / 2 - 100, 100, 500);
-	countryTextBox.transition()
-		.duration(500)
-		.attr("tranform", "translate(-500, 0)");
+	moveAndZoom(width - 85, height - 85, 75, 2000);
 	
 	var video = d3.select(".browse")
 		.append("div")
 			.attr("class", "videoHolder")
 		.append("video")
 			.attr("class", "fullscreen")
-			.attr("src", "video/Germany_DoritBrauer.mp4")
-			.style("width", w1)
-			.style("height", h1)
-			.style("left", l1)
+			.attr("src", "countries/" + country + "/vid/" + country + "_portrait.mp4")
+			.style("width", width)
+			.style("height", height)
 			.style("opacity", 0);
-	
-	d3.select(".preview")
-		.transition().duration(2000)
-		.style("opacity",0);
-			
 			
 	d3.select("body")
 		.transition().duration(2000)
@@ -282,105 +277,97 @@ function loadVideo(callback) {
 // Load story
 
 function loadStory(country) {
-	var clickedCountry = country.id;
 	// Insert content below
-	$.post("php/getNations.php", function(data){ //grab data from database via php
-		//console.log(data);
-		var json = $.parseJSON(data); //parse the json so we can use it
-		$.each(json, function(key, data) { //iterate through the json object, grabbin the index key and the data that goes with it
-			//if (data.Country == 'Sweden') {//find clicked country's name in the json data pulled from the database
-										   //I'll use Sweden for now until the clicking part is working
-											//fill in the data from json into the html
-			if (data.CountryCode == clickedCountry) {
-				$('#name').html(data.Name);
-				$('#country').text(data.Country);
-				$('#age .personStat').text(data.Age);
-				$('#origin .personStat').html(data.Origin);
-				$('#pghHome .personStat').html(data.Neighborhood);
-				$('#occupation .personStat').html(data.Occupation);
-				if (data.Factoid.length > 0) {
-					$('#factoid #factoidtext').html(data.Factoid);
-					$('#factoid').show();
-				} else {
-					$('#factoid').hide();
-				}
-				$('.countryMap').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_locator.jpg');
-				$('.countryMap').attr('title', 'Map of ' + data.Country);
-				$('.portrait').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_portrait.jpg');
-				$('.portrait').attr('title', data.Name);
-				$('.text #bio').html(data.Notes);
-				if (data.Heading.length > 0) {
-					$('.text h1').html(data.Heading);
-					$('.text h1').show();
-				} else {
-					$('.text h1').hide();
-					$("#bio").css('margin-top', '0');
-					$("#bio p:nth-child(1)").css('margin-top', '0');//close up space above top paragraph if there's no heading
-				}
-				if (data.Quote.length > 0) {
-					$('.quote').html('"' + data.Quote + '"');
-					$('.quote').show();
-				} else {
-					$('.quote').hide();
-				}
-				$("#bio p:nth-child(3)").append($('.quote'));
-				//end filling data into html
+	$.getJSON("php/getNations.php?operation=getSingleCountry&country=" + country, function(data){ //grab data from database via php
+		
+		if( data != "") data = data[0];
+		
+		$('#name').html(data.Name);
+		$('#country').text(data.Country);
+		$('#age .personStat').text(data.Age);
+		$('#origin .personStat').html(data.Origin);
+		$('#pghHome .personStat').html(data.Neighborhood);
+		$('#occupation .personStat').html(data.Occupation);
+		if (data.Factoid.length > 0) {
+			$('#factoid #factoidtext').html(data.Factoid);
+			$('#factoid').show();
+		} else {
+			$('#factoid').hide();
+		}
+		$('.countryMap').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_locator.jpg');
+		$('.countryMap').attr('title', 'Map of ' + data.Country);
+		$('.portrait').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_portrait.jpg');
+		$('.portrait').attr('title', data.Name);
+		$('.text #bio').html(data.Notes);
+		if (data.Heading.length > 0) {
+			$('.text h1').html(data.Heading);
+			$('.text h1').show();
+		} else {
+			$('.text h1').hide();
+			$("#bio").css('margin-top', '0');
+			$("#bio p:nth-child(1)").css('margin-top', '0');//close up space above top paragraph if there's no heading
+		}
+		
+		/*
+		if (data.Quote.length > 0) {
+			$('.quote').html('"' + data.Quote + '"');
+			$('.quote').show();
+		} else {
+			$('.quote').hide();
+		}
+		$("#bio p:nth-child(3)").append($('.quote'));
+		//end filling data into html
+		*/
+		
+		//put image wrappers around each image and style images and captions
+		$.each($('#bio img'), function( index, value ) {
+			//console.log( index + ": " + value );
+			$(this).load(function() {
+				//alert('I loaded!');
+				var imgW = $(this).width();
+				var imgH = $(this).height();
+				var imgSrc = $(this).attr('src');
+				var caption = $(this).attr('caption');
+				if (imgW > imgH) { //if it's a horizontal image
+				$( this ).wrap( "<div class='imgWrap_horizontal'></div>" );
+					//$('.imgWrap_horizontal').css('height', imgH + 'px');
+					$('.imgWrap_horizontal').append('<div class="caption">' + caption + '</div>');
+					$('.imgWrap_horizontal .caption').css('left', imgW + 20 + 'px');
+				} else { //if it's a vertical image
+					$( this ).wrap( "<div class='imgWrap_vertical'></div>" );
+					$('.imgWrap_vertical').css('width', imgW + 'px');
+					//$('.imgWrap_vertical').css('height', imgH + 'px');
+					$('.imgWrap_vertical').append('<div class="caption">' + caption + '</div>');
+			    }
+			});
+		});
+			
+		d3.select(".story").style("display", "block");	
+		/*d3.select("body").style({
+			'background-color': '#fff'
+		});*/
+
+		$('.story').css('margin-left', ( $(window).width() - $(".story").width() ) / 2 ); 
+		
+		//position the stats in a fixed col on the left
+		var storyPosition = $('.story').offset();
+		var storyLeft = storyPosition.left;
+		$('.story #personStats').css('left', storyLeft + 30 + "px");
+		var textPosition = $('.text').position(); //note where the text div is positioned
+		$('#personStats').css('top', textPosition + 'px'); //make the top of the stats align with the top of the text
+		$('#personStats').fadeIn();
 				
-				//put image wrappers around each image and style images and captions
-				$.each($('#bio img'), function( index, value ) {
-				  //console.log( index + ": " + value );
-				  $(this).load(function() {
-					  //alert('I loaded!');
-					  var imgW = $(this).width();
-					    var imgH = $(this).height();
-					    var imgSrc = $(this).attr('src');
-						var caption = $(this).attr('caption');
-					    if (imgW > imgH) { //if it's a horizontal image
-						  $( this ).wrap( "<div class='imgWrap_horizontal'></div>" );
-						  //$('.imgWrap_horizontal').css('height', imgH + 'px');
-						  $('.imgWrap_horizontal').append('<div class="caption">' + caption + '</div>');
-						  $('.imgWrap_horizontal .caption').css('left', imgW + 20 + 'px');
-					    } else { //if it's a vertical image
-						  $( this ).wrap( "<div class='imgWrap_vertical'></div>" );
-						 $('.imgWrap_vertical').css('width', imgW + 'px');
-						 //$('.imgWrap_vertical').css('height', imgH + 'px');
-						 $('.imgWrap_vertical').append('<div class="caption">' + caption + '</div>');
-						 
-					    }
-					});
-				});
-				
-				d3.select(".story").style("display", "block");	
-				/*d3.select("body").style({
-					'background-color': '#fff'
-				});*/
-				//center the story - margin-left = half of screen width minus half of story width
-				var w = $('.story').width();
-				w = w/2;
-				var mL = width /2;
-				var newW = mL - w;
-				$('.story').css('margin-left', newW + "px"); 
-				
-				//position the stats in a fixed col on the left
-				var storyPosition = $('.story').offset();
-				var storyLeft = storyPosition.left;
-				$('.story #personStats').css('left', storyLeft + 30 + "px");
-				var textPosition = $('.text').position(); //note where the text div is positioned
-				$('#personStats').css('top', textPosition + 'px'); //make the top of the stats align with the top of the text
-				$('#personStats').fadeIn();
-						
-				// Slide up
-				d3.select(".browse").transition().duration(2500)
-					.style("margin-top", -height-15 + "px");
-					//.each("end", handleStats);
-				$('body').animate({'background-color': "#fff"}, 2000);
-				//$('html').animate({'background-color': "#fff"}, 2000);
-				
-				
-				$('body').css('overflow-y', 'scroll'); //put the scroll on the body, not the story
-			} //end if sweden
-		}); //end each
-	});//end post
+		// Slide up
+		d3.select(".browse").transition().duration(2500)
+			.style("margin-top", -height-15 + "px");
+			//.each("end", handleStats);
+		$('body').animate({'background-color': "#fff"}, 2000);
+		//$('html').animate({'background-color': "#fff"}, 2000);
+		
+		
+		$('body').css('overflow-y', 'scroll'); //put the scroll on the body, not the story
+		
+	});//end getJSON
 }
 // End load story
 // --------------------------------------------------
