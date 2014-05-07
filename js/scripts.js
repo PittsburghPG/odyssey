@@ -434,23 +434,27 @@ function loadComments(callback) {
 		var commentsWrapperW = $('.commentsWrapper').width();
 		var leftColWidth = commentsWrapperW - 450 - 40 - 10 -40; //minus the width of the commetns, minus the padding on comments, minus the left margin, minus the padding on commentsLeft
 		$('.commentsLeft').css('width', leftColWidth + 'px');
-		setInterval ('cursorAnimation()', 600);
+		$("#formStory").resizable();
+		//$("#formStory").focus();
 	});
 	
 	
 }
-function cursorAnimation() {
-    $('#cursor').animate({
-        opacity: 0
-    }, 'fast', 'swing').animate({
-        opacity: 1
-    }, 'fast', 'swing');
-}
+
 function unloadComments(callback) {
 	$('.commentsWrapper').animate({'left': "-70%"}, 2000);
 	$('.navbarWrapper .navbar .nav').css('color', 'gray');
 	$('#commentsBg').animate({'left': "-100%"}, 2000);
+	$('h1#title').fadeOut();
+	$('h1#title').css({
+		'border-left': '8px solid #007fd4',
+		'font-family': '"Cinzel", Times New Roman, serif',
+		'color'      : '#454343',
+		'font-weight': 'normal'
+	});
 	
+	$('h1#title').text('ODYSSEYS');
+	$('h1#title').fadeIn();
 	
 }
 // End load comments
