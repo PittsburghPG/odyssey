@@ -419,8 +419,11 @@ $('.commentsHandle').click(function(){
 
 function loadComments(callback) {
 	$('h1#title').fadeOut();
-	$('.commentsWrapper').animate({'left': "0"}, 2000);
-	$('#commentsBg').animate({'left': "0"}, 2000, function(){
+	$('#commentsBg').css('left', '0');
+	$('#commentsBg').fadeIn('slow');
+	$('.commentsWrapper').animate({'left': "0"}, 2000, function(){
+	//$('#commentsBg').animate({'left': "0"}, 2000, function(){
+		
 		$('.navbarWrapper .navbar .nav').css('color', '#599ecc');
 		$('h1#title').css({
 		'border-left': 'none',
@@ -434,27 +437,36 @@ function loadComments(callback) {
 		var commentsWrapperW = $('.commentsWrapper').width();
 		var leftColWidth = commentsWrapperW - 450 - 40 - 10 -40; //minus the width of the commetns, minus the padding on comments, minus the left margin, minus the padding on commentsLeft
 		$('.commentsLeft').css('width', leftColWidth + 'px');
-		$("#formStory").resizable();
-		//$("#formStory").focus();
+		//$('#formStory').focus();
+		$('#formStory, #blinking_caret').click(function(){
+			$('#blinking_caret').stop( true, true ).fadeOut();
+			//$("#formStory").attr("placeholder","Your story ...");
+		});
+		var rowW = $('.row').width();
+		$('#first, #last').css('width', rowW/2 - 10);
 	});
 	
 	
 }
 
+
 function unloadComments(callback) {
-	$('.commentsWrapper').animate({'left': "-70%"}, 2000);
+	$('#commentsBg').fadeOut('slow');
+	$('#commentsBg').css('left', "-100%");
 	$('.navbarWrapper .navbar .nav').css('color', 'gray');
-	$('#commentsBg').animate({'left': "-100%"}, 2000);
 	$('h1#title').fadeOut();
-	$('h1#title').css({
-		'border-left': '8px solid #007fd4',
-		'font-family': '"Cinzel", Times New Roman, serif',
-		'color'      : '#454343',
-		'font-weight': 'normal'
+	$('.commentsWrapper').animate({'left': "-70%"}, 2000, function(){
+		$('h1#title').css({
+			'border-left': '8px solid #007fd4',
+			'font-family': '"Cinzel", Times New Roman, serif',
+			'color'      : '#454343',
+			'font-weight': 'normal'
+		});
+		
+		$('h1#title').text('ODYSSEYS');
+		$('h1#title').fadeIn();
 	});
 	
-	$('h1#title').text('ODYSSEYS');
-	$('h1#title').fadeIn();
 	
 }
 // End load comments

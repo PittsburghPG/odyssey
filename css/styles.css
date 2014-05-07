@@ -9,6 +9,36 @@
     font-style: normal;
 
 }
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    49% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+/* Chrome, Safari, Opera */
+@-webkit-keyframes blink
+{
+	0% {
+        opacity: 1;
+    }
+    49% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+    }
+}
 
 html,body
 {
@@ -230,6 +260,7 @@ width:200px;
 	left:-100%;
 	top: 0;
 	z-index: 2;
+	display: none;
 }
 
 .commentsWrapper
@@ -244,6 +275,7 @@ left:-70%;
 opacity:0;
 background-color: #fff ;
 z-index:3;
+
 }
 
 	.commentsHandle
@@ -275,15 +307,98 @@ z-index:3;
 		padding-top: 90px;
 	}
 	#commentsForm {
-		padding: 20px 0;
+		padding-top: 20px;
+		border-bottom: 10px solid #006ab0;
 	}
-	#formStory {
-		width: 100%;
-		border: none;
+	#textareaWrap {
+		position: relative;
+	}
+		#blinking_caret {
+			position: absolute;
+			top: 0; left: 0;
+			animation: blink 1s;
+			animation-iteration-count: infinite;
+			-webkit-animation: blink 1s;
+			-webkit-animation-iteration-count: infinite;
+			z-index: 2;
+		}
+		#formStory {
+			width: 100%;
+			border: none;
+			background-color: #f1f0f0;
+			height: 400px;
+			cursor: text;
+			outline: none;
+		}
+	input[type=text] {
+		color: #333;
+		font-family: "futurabold", Arial, Helvetica, sans-serif;
+		text-transform: none;
+		font-weight: 200;
+		font-size: 120%;
+		margin-bottom: 10px;
+		outline-style: none;
+		border: 0 none;
 		background-color: #f1f0f0;
-		height: 400px;
-		cursor: text;
-		outline: none;
+	}
+	::-webkit-input-placeholder {
+	   font-family: "futurabold", Arial, Helvetica, sans-serif;
+		text-transform: uppercase;
+		font-weight: 900;
+		font-size: 120%;color: #4a8fbc;
+	}
+
+	:-moz-placeholder { /* Firefox 18- */
+	   font-family: "futurabold", Arial, Helvetica, sans-serif;
+		text-transform: uppercase;
+		font-weight: 900;
+		font-size: 120%;color: #4a8fbc;  
+	}
+
+	::-moz-placeholder {  /* Firefox 19+ */
+	   font-family: "futurabold", Arial, Helvetica, sans-serif;
+		text-transform: uppercase;
+		font-weight: 900;
+		font-size: 120%;color: #4a8fbc;  
+	}
+
+	:-ms-input-placeholder {  
+	   font-family: "futurabold", Arial, Helvetica, sans-serif;
+		text-transform: uppercase;
+		font-weight: 900;
+		font-size: 120%;color: #4a8fbc;  
+	}
+	
+	#first {
+	float: left;border-right: 2px solid #b5b5b5;}
+	#last {
+	float: right;
+	}
+	#contact, #origin, #neighborhood {
+		width: 100%;
+	}
+	#tellus_submit {
+		background-color: #b5b5b5;
+		color: black;
+		font-family: "futurabold", Arial, Helvetica, sans-serif;
+		font-size: 80%;
+		letter-spacing: .06em;
+		text-transform: uppercase;
+		font-weight: 900;
+		padding: 30px 20px;
+		-moz-border-radius: 15px;
+		-webkit-border-radius: 15px;
+		border-radius: 15px; /* future proofing */
+		-webkit-box-shadow: none;
+		-moz-box-shadow: none;
+		box-shadow: none;
+	
+	}
+	.row {
+		padding: 10px 0;
+		border-top: 1px solid #333;
+		width: 100%;
+		clear: both;
 	}
 			
 .videoHolder
@@ -370,6 +485,11 @@ padding-right: 20px;
 			border-bottom: 1px solid #afb0a9;
 			position: relative;
 		}
+		.text #bio .imgWrap_horizontal img {
+			width: 66%;
+			height: auto;
+		}
+		
 		.text #bio .imgWrap_vertical {
 			padding: 20px 0;
 			border-top: 1px solid #afb0a9;
