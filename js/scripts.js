@@ -1,7 +1,8 @@
 // **************************************************
 // Global variables
 // **************************************************
-var world;
+var world,
+	currentScreen;
 
 // **************************************************
 // Loading functions
@@ -60,7 +61,7 @@ d3.json("world.json", function(error, result) {
 			.attr("d", path)
 			.attr("class", "country")
 			.attr("id", function(d){ return d.properties.id })
-			.on("click", panTo)
+			.attr("country", function(d){ return d.properties.name })
 			.on("mouseover", function(){
 				d3.select(this).moveToFront();
 			});
@@ -147,7 +148,8 @@ function loadBrowse(callback) {
 	
 	d3.select("h1#title")
 		.transition().duration(1000)
-		.style({"margin-top":"25px", "font-size":"65px", "padding-left":"10px"});
+		.style({"margin-top":"25px", "font-size":"65px", "padding-left":"10px"})
+		.each("end", function(){ d3.select(this).style({"position":"fixed", "top":"0px"}) });
 	
 	var commentBar = d3.select(".commentsWrapper");
 	
@@ -174,8 +176,8 @@ function loadBrowse(callback) {
 			d3.select( "#" + d3.select(this).attr("country") ).classed("hover", false);
 		})
 		.on("mousedown", function(){
-			d3.select(".navbarWrapper").classed("out", false);
-			loadVideo(d3.select(this).html().toLowerCase());
+			countryName = d3.select(this).html().toLowerCase();
+			getReadyToLoadVideo(countryName)
 		});
 	
 	navBar.on("mousewheel", function(){
@@ -223,7 +225,8 @@ function loadBrowse(callback) {
 			d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", false);
 		})
 		.on("mouseup", function(){
-			console.log("yo");
+			countryName = d3.select(this).attr("country").toLowerCase();
+			getReadyToLoadVideo(countryName)
 		})
 		
 		
@@ -235,37 +238,63 @@ function loadBrowse(callback) {
 // --------------------------------------------------
 
 // --------------------------------------------------
+// Get ready to load video from browse page
+function getReadyToLoadVideo(countryName) {
+	
+			loadVideo(countryName, function(){
+				loadStory(countryName, function(){
+					// Slide up
+					d3.select(".videoHolder").transition().duration(1000)
+						.style("margin-top", -height-15 + "px");
+						
+				});
+			});	
+}
+			
+// End getting ready to load video from browse page
+// --------------------------------------------------
+
+// --------------------------------------------------
 // Load video
 
-function loadVideo(country, callback) {
+function loadVideo(countryName, callback) {
+	
+	d3.select(".navbarWrapper").classed("out", false);
+	d3.selectAll(".handle").classed("white", true);
 	
 	// Slide away globe and text widget
-	moveAndZoom(width - 85, height - 85, 75, 2000);
-	
-	var video = d3.select(".browse")
-		.append("div")
-			.attr("class", "videoHolder")
-		.append("video")
-			.attr("class", "fullscreen")
-			.attr("src", "countries/" + country + "/vid/" + country + "_portrait.mp4")
-			.style("width", width)
-			.style("height", height)
-			.style("opacity", 0);
-			
-	d3.select("body")
-		.transition().duration(2000)
-		.style("background-color", "white")
-	
-	video.on("ended", function(){
-		if(typeof callback === 'function') callback();
+	moveAndZoom(width - 120, height - 100, 75, 2000, function(){
+		circle.attr("fill", "white")
+			.attr("stroke", "lightgray")
+			.attr("filter", "");
+		d3.selectAll(".country").classed("small", true);
 	});
 	
-	video.transition().duration(2000)
-		.style("opacity", "1")
-		.each("end", function(){
-			video[0][0].play();
+	var video = d3.select("body")
+		.insert("div", ".story")
+			.attr("class", "videoHolder")
+		.append("video")
+			.style("opacity", 0)
+			.attr("class", "fullscreen")
+			.attr("src", "countries/" + countryName + "/vid/" + countryName + "_portrait.mp4")
+			.style("width", width)
+			.style("height", height);
 			
-		});
+	d3.select("body").transition()
+		.duration(500)
+		.style("background-color", "white")
+		.each("end", function(){
+			video.node().play();
+			video.transition().duration(2000)
+				.style("opacity", "1")
+				.each("end", function(){
+					video.on("ended", function(){
+						if(typeof callback === 'function') callback();
+					});
+				});
+			});
+	
+
 	
 }
 
@@ -276,7 +305,7 @@ function loadVideo(country, callback) {
 // --------------------------------------------------
 // Load story
 
-function loadStory(country) {
+function loadStory(country, callback) {
 	// Insert content below
 	$.getJSON("php/getNations.php?operation=getSingleCountry&country=" + country, function(data){ //grab data from database via php
 		
@@ -356,16 +385,12 @@ function loadStory(country) {
 		var textPosition = $('.text').position(); //note where the text div is positioned
 		$('#personStats').css('top', textPosition + 'px'); //make the top of the stats align with the top of the text
 		$('#personStats').fadeIn();
-				
-		// Slide up
-		d3.select(".browse").transition().duration(2500)
-			.style("margin-top", -height-15 + "px");
-			//.each("end", handleStats);
-		$('body').animate({'background-color': "#fff"}, 2000);
-		//$('html').animate({'background-color': "#fff"}, 2000);
+		
+		$('body').css('overflow-y', 'scroll'); //put the scroll on the body, not the story		
+		
+		if(typeof callback === 'function') callback();
 		
 		
-		$('body').css('overflow-y', 'scroll'); //put the scroll on the body, not the story
 		
 	});//end getJSON
 }
