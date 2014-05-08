@@ -418,21 +418,29 @@ $('.commentsHandle').click(function(){
 });
 
 function loadComments(callback) {
+	var options, a;
+		jQuery(function(){
+			options = { serviceUrl:'php/getCountries.php' }; //the php code does the heavy lifting
+			a = $('#origin').autocomplete(options);
+	}); 
+	$('#countryTab').removeClass("out");
 	$('h1#title').fadeOut();
-	$('#commentsBg').css('left', '0');
-	$('#commentsBg').fadeIn('slow');
-	$('.commentsWrapper').animate({'left': "0"}, 2000, function(){
+	$('#commentsBg').css('left', '0'); //position the dimmer to appear
+	$('#commentsBg').fadeIn('slow'); //fade in the dimmer
+	$('.commentsWrapper').animate({'left': "0"}, 1000, function(){ //slide in the comments
 	//$('#commentsBg').animate({'left': "0"}, 2000, function(){
-		
 		$('.navbarWrapper .navbar .nav').css('color', '#599ecc');
 		$('h1#title').css({
 		'border-left': 'none',
 		'font-family': '"Lora", Times New Roman, serif',
 		'color'      : '#76a2be',
-		'font-weight': '100'
+		'font-weight': '100',
+		'letter-spacing': '-.05em'
 		});
+		//change title
 		$('h1#title').text('Tell us a story ...');
 		$('h1#title').fadeIn();
+		//size the width of the part of the page containing the tell us form
 		var commentsW = $('.comments').width();
 		var commentsWrapperW = $('.commentsWrapper').width();
 		var leftColWidth = commentsWrapperW - 450 - 40 - 10 -40; //minus the width of the commetns, minus the padding on comments, minus the left margin, minus the padding on commentsLeft
@@ -442,8 +450,25 @@ function loadComments(callback) {
 			$('#blinking_caret').stop( true, true ).fadeOut();
 			//$("#formStory").attr("placeholder","Your story ...");
 		});
+		//make first and last name fields half of one row
 		var rowW = $('.row').width();
 		$('#first, #last').css('width', rowW/2 - 10);
+		//position submit button
+		var p = $('#contact').position();
+		var buttonTop = p.top;
+		$('#tellus_submit').css('top', buttonTop - 20 + 'px');
+		//give the button some space to the left by shortening the row that the contact textfield is in
+		var buttonW = $('#tellus_submit').width();
+		var contactrowW = $('#contactrow').width();
+		var newcontactrowW = contactrowW - buttonW - 60;
+		$('#contactrow').css('width', newcontactrowW + 'px');
+		$('#tellus_submit').click(function(){
+			$('#commentsForm').submit();
+			$.post( "php/tellus.html", function( data ) {
+			  alert('submitting form')
+			});
+		});
+		
 	});
 	
 	
@@ -455,12 +480,14 @@ function unloadComments(callback) {
 	$('#commentsBg').css('left', "-100%");
 	$('.navbarWrapper .navbar .nav').css('color', 'gray');
 	$('h1#title').fadeOut();
-	$('.commentsWrapper').animate({'left': "-70%"}, 2000, function(){
+	$('#countryTab').addClass("out");
+	$('.commentsWrapper').animate({'left': "-70%"}, 1000, function(){
 		$('h1#title').css({
 			'border-left': '8px solid #007fd4',
 			'font-family': '"Cinzel", Times New Roman, serif',
 			'color'      : '#454343',
-			'font-weight': 'normal'
+			'font-weight': 'normal',
+			'letter-spacing': 'normal'
 		});
 		
 		$('h1#title').text('ODYSSEYS');

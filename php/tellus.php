@@ -1,6 +1,6 @@
 <?php
 require_once ('constants_test.php'); 
-$name = $country = $age = $occupation = $email = $phone = $about = ""; //intialize to empty
+$first = $last = $country = $age = $occupation = $email = $phone = $about = ""; //intialize to empty
  if (isset($_POST)) {
     $name = test_input($_POST['tellName']);
 	$country = test_input($_POST['tellCountry']);

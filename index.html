@@ -27,11 +27,7 @@
 		<meta property="og:title"           content="Odysseys" /> 
 		<meta property="og:description"     content="Almost every country in the United Nations is represented by immigrants in the Pittsburgh metro area" /> 
 		<meta property="og:image"           content="http://newsinteractive.post-gazette.com/odysseys" /> 
-		
-		<!-- end facebook open graph -->
-
-		
-	
+			
 		<meta name="twitter:card" 			content="summary">
 		<meta name="twitter:site" 			content="@pittsburghpg">
 		<meta name="twitter:title"			content="Odysseys">
@@ -40,6 +36,7 @@
 		
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 		<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+		<script type="text/javascript" src="js/jquery.autocomplete.js"></script>
 		
 		<script type='text/javascript' src='http://d3js.org/d3.v3.min.js'></script>
 		<script type='text/javascript' src='http://d3js.org/topojson.v1.min.js'></script>
@@ -114,7 +111,7 @@
 			
 		</div>
 		
-		<div class="navbarWrapper noselect">
+		<div class="navbarWrapper noselect" id="countryTab">
 			<i class="fa fa-angle-double-up" deltaY = -40></i>
 			<div class="handle navHandle">Country</div>
 			<div class="navbar"></div>
@@ -129,7 +126,7 @@
 				
 			<div class="commentsLeft">
 				<div class="formChatter">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </div>
-				<form id="commentsForm">
+				<form id="commentsForm" action="php/tellus.php" method="post">
 					<div id="textareaWrap">
 						<img src="img/caret.png" id="blinking_caret" title="blinking caret" />
 						<textarea id="formStory" placeholder=""></textarea>
@@ -137,8 +134,8 @@
 					<div class="row"><input type="text" id="first" placeholder="FIRST" /> <input type="text" id="last" placeholder="LAST" /> </div>
 					<div class="row"><input type="text" id="origin" placeholder="COUNTRY OF ORIGIN" /> </div>
 					<div class="row"><input type="text" id="neighborhood" placeholder="PITTSBURGH NEIGHBORHOOD" /> </div>
-					<div class="row"><input type="text" id="contact" placeholder="EMAIL OR PHONE" /> </div>
-					<input type="submit" id="tellus_submit" value="SUBMIT" />
+					<div class="row" id="contactrow"><input type="text" id="contact" placeholder="EMAIL OR PHONE" /> </div>
+					<div id="tellus_submit">SUBMIT</div>
 				</form>
 			</div>
 		</div>
