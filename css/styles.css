@@ -55,7 +55,7 @@ body
 background-color:black;
 overflow:hidden;
 opacity:0;
-transition: background-color 2s linear;
+//transition: background-color 2s linear;
 }
 
 .noselect
@@ -144,13 +144,13 @@ z-index:3;
 
 .navbarWrapper
 {
-transition: right .5s ease;
+transition: right .5s ease, opacity 1s linear;
 position:fixed;
 top:0;
 height:100%;
 width:200px;
 right:-233px;
-opacity:0;
+
 z-index:2;
 }
 
@@ -159,6 +159,11 @@ z-index:2;
 	right:15px; 
 	}
 
+	.navbarWrapper.hidden
+	{
+	opacity:0;
+	}
+	
 .handle
 {
 cursor:pointer;
@@ -180,12 +185,12 @@ width:200px;
 	color:white;
 	}
 	
-	.handle.white
+	body.white .handle
 	{
 	color:rgba(0,0,0,.8);
 	}
 		
-		.handle.white:hover
+		body.white .handle:hover
 		{
 		color:black;
 		}
@@ -640,10 +645,17 @@ z-index:1;
 
 .circle 
 {
-fill:"lightblue";
+fill:blue;
 filter:url("#glow");
-fill:url("#gradBlue");
+stroke:none;
 }
+	.circle.small
+	{
+	fill:"";
+	filter:"";
+	fill:"white";
+	stroke:"lightgray"
+	}
 
 .country 
 {

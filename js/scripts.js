@@ -145,6 +145,8 @@ function loadBrowse(callback) {
 	});
 	
 	$(".intro").fadeOut(1000); 
+
+	d3.select("body").classed("white", false);
 	
 	d3.select("h1#title")
 		.transition().duration(1000)
@@ -175,7 +177,7 @@ function loadBrowse(callback) {
 		.on("mouseout", function(){
 			d3.select( "#" + d3.select(this).attr("country") ).classed("hover", false);
 		})
-		.on("mousedown", function(){
+		.on("click", function(){
 			countryName = d3.select(this).html().toLowerCase();
 			getReadyToLoadVideo(countryName)
 		});
@@ -185,23 +187,20 @@ function loadBrowse(callback) {
 	});
 	
 	d3.selectAll(".navbarWrapper .fa")
-		.on("mousedown", function(){
+		.on("click", function(){
 			navBar.node().scrollTop += parseInt(d3.select(this).attr("deltaY"));
 		});
 		
 	d3.select(".navbarWrapper")
-		.transition().duration(1000)
-		.style("opacity", 1)
-		.each("end", function(){
-			d3.select(this).classed("out", true);
-		});
+		.classed("hidden", false);
+	setTimeout(function(){ d3.select(".navbarWrapper").classed("out", true); }, 1000);
 	
 	d3.select(".commentsWrapper")
 		.transition().duration(1000)
 		.style("opacity", 1);
 	
 	d3.selectAll(".handle")
-		.on("mouseup", function(){
+		.on("click", function(){
 			d3.select(this.parentNode).classed("out",!d3.select(this.parentNode).classed("out")); 
 			
 		});
@@ -224,9 +223,9 @@ function loadBrowse(callback) {
 		.on("mouseout", function(){
 			d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", false);
 		})
-		.on("mouseup", function(){
+		.on("click", function(){
 			countryName = d3.select(this).attr("country").toLowerCase();
-			getReadyToLoadVideo(countryName)
+			if( !d3.select("body").classed("white") ) getReadyToLoadVideo(countryName)
 		})
 		
 		
@@ -245,8 +244,10 @@ function getReadyToLoadVideo(countryName) {
 				loadStory(countryName, function(){
 					// Slide up
 					d3.select(".videoHolder").transition().duration(1000)
-						.style("margin-top", -height-15 + "px");
-						
+						.style("margin-top", -height-15 + "px")
+						.each("end", function(){
+							d3.select(".videoHolder").remove();
+						})
 				});
 			});	
 }
@@ -260,10 +261,11 @@ function getReadyToLoadVideo(countryName) {
 function loadVideo(countryName, callback) {
 	
 	d3.select(".navbarWrapper").classed("out", false);
-	d3.selectAll(".handle").classed("white", true);
+	d3.select(".navbarWrapper").classed("hidden", true);
+	d3.select("body").classed("white", true);
 	
 	// Slide away globe and text widget
-	moveAndZoom(width - 120, height - 100, 75, 2000, function(){
+	moveAndZoom(width - 120, height - 100, 75, 1000, function(){
 		circle.attr("fill", "white")
 			.attr("stroke", "lightgray")
 			.attr("filter", "");
@@ -285,7 +287,7 @@ function loadVideo(countryName, callback) {
 		.style("background-color", "white")
 		.each("end", function(){
 			video.node().play();
-			video.transition().duration(2000)
+			video.transition().duration(1000)
 				.style("opacity", "1")
 				.each("end", function(){
 					video.on("ended", function(){
@@ -294,7 +296,9 @@ function loadVideo(countryName, callback) {
 				});
 			});
 	
-
+	globe.on("click", function(){
+		returnToBrowse();
+	});
 	
 }
 
@@ -388,24 +392,43 @@ function loadStory(country, callback) {
 		
 		$('body').css('overflow-y', 'scroll'); //put the scroll on the body, not the story		
 		
+		//if in bio page and click arrow up, scroll back to browse
+		$('.fa-arrow-circle-up, #title').click(function(){
+			if( d3.select("body").classed("white") ) returnToBrowse();
+		});
+			
 		if(typeof callback === 'function') callback();
-		
-		
 		
 	});//end getJSON
 }
 // End load story
 // --------------------------------------------------
 
-//if in bio page and click arrow up, scroll back to browse
-$('.fa-arrow-circle-up, #title').click(function(){
-	$(".story").fadeOut('slow');
-	// Slide up
-	d3.select(".browse").transition().duration(2500)
-		.style("margin-top", "0px");
-		//.each("end", handleStats);
-	$('body').animate({'background-color': "#000"}, 2000);
-});
+// --------------------------------------------------
+// Return from story/video to browse
+function returnToBrowse(callback) {
+	$('body').css('overflow-y', 'hidden'); 
+		d3.select(".story").transition().duration(500)
+			.style("margin-top", height + "px")
+			.each("end", function(){
+				d3.select(".story").style({"margin-top":"0px", "display":"none"});
+				d3.select("body").transition()
+					.duration(500)
+					.style("background-color", "black")
+					.each("end", function(){
+						circle.attr("filter", "url(#glow)")
+							.attr("fill", "url(#gradBlue)")
+							.attr("stroke", "none");
+						d3.selectAll(".country").classed("small", false);
+						loadBrowse();
+					});
+			});		
+}
+
+// End return form story/video to browse
+// --------------------------------------------------
+
+
 // --------------------------------------------------
 // Load comments
 $('.commentsHandle').click(function(){
