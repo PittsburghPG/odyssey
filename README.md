@@ -34,16 +34,14 @@ A Post-Gazette interactive cataloging Pittsburgh's worldwide diversity
 
 - May 12 - May 19 (*updated*)
   - Andrew
-    - -Finish comments page-
-    - -Finish integrating pages together-
+    - ~~Finish comments page~~
+    - ~~Finish integrating pages together~~
 	- Design mobile site
 	- Build formatter for Google Spreadsheets
 	- Build submission-form-to-google-spreadsheets script
 	- Deactivate unfilled countries in country list
   - Laura
-    - -Finish integrating pages together-
+    - ~~Finish integrating pages together~~
 	- Add logo/credits
 	- Add loader symbol
 	- Add go-straight-to-story function
-
-
