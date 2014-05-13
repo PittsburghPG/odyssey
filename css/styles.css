@@ -88,6 +88,11 @@ z-index: 5;/*LMS*/
 		cursor: pointer;
 	}
 	
+#loader {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+}	
 .intro
 {
 position:fixed;
@@ -120,6 +125,8 @@ z-index:3;
 		margin-top:0;
 		
 		}
+	
+	
 	
 	.intro button
 	{
@@ -328,12 +335,11 @@ z-index:5;
 		text-transform:uppercase;	
 		}
 		
-	.formChatter {
-		
-	}
+	
 	#commentsForm {
 		padding-top: 20px;
 		border-bottom: 10px solid #006ab0;
+		
 	}
 	#textareaWrap {
 		position: relative;
@@ -351,9 +357,10 @@ z-index:5;
 			width: 100%;
 			border: none;
 			background-color: #f1f0f0;
-			height: 400px;
+			height: 33%;
 			cursor: text;
 			outline: none;
+			overflow: auto;
 		}
 	input[type=text] {
 		color: #333;
@@ -361,10 +368,13 @@ z-index:5;
 		text-transform: none;
 		font-weight: 200;
 		font-size: 110%;
-		margin-bottom: 10px;
+		/*margin-bottom: 10px;*/
 		outline-style: none;
 		border: 0 none;
 		background-color: #f1f0f0;
+	}
+	#first, #last {
+		margin-bottom: 10px;
 	}
 	::-webkit-input-placeholder {
 	   font-family: "futurabold", Arial, Helvetica, sans-serif;
@@ -696,7 +706,11 @@ letter-spacing:.1em;
 	fill:rgba(255,255,255,1);
 	cursor:pointer;
 	}
-	
+
+#credits {
+	position: fixed;
+	left: 50px; bottom: 50px;
+}	
 .autocomplete-suggestions { border: 1px solid #999; background: #FFF; cursor: default; overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); font-family: Helvetica, Arial, sans-serif;}
 .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
 .autocomplete-selected { background: #F0F0F0; }

@@ -327,7 +327,7 @@ function loadStory(country, callback) {
 		} else {
 			$('#factoid').hide();
 		}
-		$('.countryMap').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_locator.jpg');
+		$('.countryMap').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_map.jpg');
 		$('.countryMap').attr('title', 'Map of ' + data.Country);
 		$('.portrait').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_portrait.jpg');
 		$('.portrait').attr('title', data.Name);
@@ -388,6 +388,20 @@ function loadStory(country, callback) {
 		$('.story #personStats').css('left', storyLeft + 30 + "px");
 		var textPosition = $('.text').position(); //note where the text div is positioned
 		$('#personStats').css('top', textPosition + 'px'); //make the top of the stats align with the top of the text
+		var statsHeight = $('#personStats').height();
+		var statsWidth = $('#personStats').width();
+		var bioLeft = $('#bio').position();
+		bioLeft = bioLeft.left;
+		if ($(window).height() < statsHeight) { //if the window is too short to show the whole stats column, then make the stats column scrollable with the body
+			$('#personStats').css('position', 'absolute');
+			var storytextMargLeft = $('.story .text').css('margin-left');
+			storytextMargLeft = storytextMargLeft.substring(0, storytextMargLeft.length-2);
+			var statsLeft = (storytextMargLeft - $('#personStats').width())/2;
+			$('#personStats').css('left', statsLeft + 'px');
+			var textTop = $('.text').offset().top - $(window).scrollTop();
+			$('#personStats').css('top', textTop + 'px');
+		} 
+		
 		$('#personStats').fadeIn();
 		
 		$('body').css('overflow-y', 'scroll'); //put the scroll on the body, not the story		
@@ -455,6 +469,7 @@ function loadComments(callback) {
 	//size the width of the part of the page containing the tell us form
 	var leftColWidth = $('.commentsWrapper').width() - $(".comments").outerWidth() - parseInt($(".comments").css("margin-left")) - parseInt($(".commentsLeft").css("padding-left")) - parseInt($(".commentsLeft").css("padding-right")); //minus the width of the commetns, minus the padding on comments, minus the left margin, minus the padding on commentsLeft
 	$('.commentsLeft').css('width', leftColWidth + 'px');
+	$(window).resize(myResizeFunction).trigger('resize');
 	
 	$('#formStory, #blinking_caret').click(function(){
 		$('#blinking_caret').stop( true, true ).fadeOut(0);
@@ -482,6 +497,10 @@ function loadComments(callback) {
 	$('.commentsWrapper').animate({'left': "0"}, 1000);
 }
 
+function myResizeFunction() {
+  leftColWidth = $('.commentsWrapper').width() - $(".comments").outerWidth() - parseInt($(".comments").css("margin-left")) - parseInt($(".commentsLeft").css("padding-left")) - parseInt($(".commentsLeft").css("padding-right")); //minus the width of the commetns, minus the padding on comments, minus the left margin, minus the padding on commentsLeft
+	$('.commentsLeft').css('width', leftColWidth + 'px');
+}
 
 function unloadComments(callback) {
 	$('#commentsBg').css('opacity',0);

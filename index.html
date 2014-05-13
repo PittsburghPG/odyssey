@@ -129,10 +129,10 @@
 				<form id="commentsForm" action="php/tellus.php" method="post">
 					<div id="textareaWrap">
 						<img src="img/caret.png" id="blinking_caret" title="blinking caret" />
-						<textarea id="formStory" placeholder=""></textarea>
+						<textarea id="formStory" placeholder="" spellcheck="true" rows="20" cols="50"></textarea>
 					</div>
 					<div class="row"><input type="text" id="first" placeholder="FIRST" /> <input type="text" id="last" placeholder="LAST" /> </div>
-					<div class="row"><input type="text" id="origin" placeholder="COUNTRY OF ORIGIN" /> </div>
+					<div class="row"><input type="text" id="countryofOrigin" placeholder="COUNTRY OF ORIGIN" /> </div>
 					<div class="row"><input type="text" id="neighborhood" placeholder="PITTSBURGH NEIGHBORHOOD" /> </div>
 					<div class="row" id="contactrow"><input type="text" id="contact" placeholder="EMAIL OR PHONE" /> </div>
 					<div id="tellus_submit">SUBMIT</div>
@@ -164,10 +164,11 @@
 				<div class="quote"></div>
 				<div id="bio"></div>
 			</div>
-			
-			
 		</div>
 		
+		<div id="credits">
+		<img src="img/pg.png" title="PG logo" />
+		</div>
 		<script type="text/javascript" src="js/scripts.js"></script>
 	</body>
 </html>
