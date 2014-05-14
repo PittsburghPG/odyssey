@@ -86,55 +86,28 @@ d3.json("world.json", function(error, result) {
 	//loadStory("Ukraine"); //** use this for development so don't have to wait for other things to happen - can just get to story
 	//loadComments(); //** use this for development so don't have to wait for other things to happen - can just get to comments
 	
+	if (window.location.hash == '') {
 	// Start the intro ** use this for final **
-	loadIntro(function(){
-		d3.select("body")
-			.transition().duration(2000)
-			.style("opacity",1);
-	});
-	
+		loadIntro(function(){
+			d3.select("body")
+				.transition().duration(2000)
+				.style("opacity",1);
+		});
+	} else {
+		var countryname = window.location.hash;
+		countryname = countryname.substring(1, countryname.length);
+		enterViaHash(countryname);
+	}
 });
 
 // End universal loading section
 // --------------------------------------------------
 
-	
 // --------------------------------------------------
-// Load intro 
-
-function loadIntro(callback){
-	moveAndZoom(width * 7 / 8, 2 * height + height * .6, 2 * height, 1);		
-	// Start the globe's auto-rotate
-	var rotate = projection.rotate();
-    velocity = [.01, 0],
-    time = Date.now();
-
+// Load if entering via hash 
+function enterViaHash(countryname, callback){
+	$('#credits').animate({'left': "18px"}, 1000);
 	
-	d3.timer(function(){
-		var dt = Date.now() - time;
-		projection.rotate([rotate[0] + velocity[0] * dt, rotate[1]]);
-		globe.attr("d", path);
-		return timer_on;
-	});
-
-	$("#begin").click(function(){ 
-		loadBrowse(function(){
-			
-		});
-	});
-	
-	if(typeof callback === 'function') callback();
-	
-}
-
-// End load intro
-// --------------------------------------------------
-
-
-// --------------------------------------------------
-// Load browse
-
-function loadBrowse(callback) {
 	// turn off rotation (if it's even activated to begin with)
 	timer_on = true;																			
 	newZoom = 100;																				
@@ -225,6 +198,148 @@ function loadBrowse(callback) {
 		})
 		.on("click", function(){
 			countryName = d3.select(this).attr("country").toLowerCase();
+			window.location.hash = countryName;
+			if( !d3.select("body").classed("white") ) getReadyToLoadVideo(countryName)
+		})
+		
+	getReadyToLoadVideo(countryname);	
+	
+	if(typeof callback === 'function') callback();
+	
+}
+// End if entering via hash 
+// --------------------------------------------------
+	
+// --------------------------------------------------
+// Load intro 
+
+function loadIntro(callback){
+	moveAndZoom(width * 7 / 8, 2 * height + height * .6, 2 * height, 1);		
+	// Start the globe's auto-rotate
+	var rotate = projection.rotate();
+    velocity = [.01, 0],
+    time = Date.now();
+
+	
+	d3.timer(function(){
+		var dt = Date.now() - time;
+		projection.rotate([rotate[0] + velocity[0] * dt, rotate[1]]);
+		globe.attr("d", path);
+		return timer_on;
+	});
+
+	$("#begin").click(function(){ 
+		loadBrowse(function(){
+			
+		});
+	});
+	
+	if(typeof callback === 'function') callback();
+	
+}
+
+// End load intro
+// --------------------------------------------------
+
+
+// --------------------------------------------------
+// Load browse
+
+function loadBrowse(callback) {
+	
+	$('#credits').animate({'left': "18px"}, 1000);
+	
+	// turn off rotation (if it's even activated to begin with)
+	timer_on = true;																			
+	newZoom = 100;																				
+	sens = 1;	// makes it easier to rotate smaller globe																		
+
+	moveAndZoom(width / 2, height / 2, height / 2 * .8, 1000, function(){
+		panTo(d3.select("#USA").datum(), 500);
+	});
+	
+	$(".intro").fadeOut(1000); 
+
+	d3.select("body").classed("white", false);
+	
+	d3.select("h1#title")
+		.transition().duration(1000)
+		.style({"margin-top":"25px", "font-size":"65px", "padding-left":"10px"})
+		.each("end", function(){ d3.select(this).style({"position":"fixed", "top":"0px"}) });
+	
+	var commentBar = d3.select(".commentsWrapper");
+	
+	commentBar.style("left", function(){
+		return -parseInt(commentBar.node().offsetWidth) + "px";
+	});
+	
+	var navBar = d3.select(".navbar");
+	
+	navBar.selectAll("div")
+		.data(world.objects.countries.geometries).enter()
+	.append("div")
+		.attr("class","nav")
+		.attr("country", function(d){ return d.properties.id })
+		.attr("id", function(d){ return "nav_" + d.properties.id })
+		.html(function(d){ return d.properties.name })
+		.on("mouseover", function(){
+			target = d3.select( "#" + d3.select(this).attr("country") );
+			panTo( target.datum() , 1000);
+			target.classed("hover", true);
+			target.moveToFront();
+		})
+		.on("mouseout", function(){
+			d3.select( "#" + d3.select(this).attr("country") ).classed("hover", false);
+		})
+		.on("click", function(){
+			countryName = d3.select(this).html().toLowerCase();
+			getReadyToLoadVideo(countryName)
+		});
+	
+	navBar.on("mousewheel", function(){
+		navBar.node().scrollTop += event.deltaY;
+	});
+	
+	d3.selectAll(".navbarWrapper .fa")
+		.on("click", function(){
+			navBar.node().scrollTop += parseInt(d3.select(this).attr("deltaY"));
+		});
+		
+	d3.select(".navbarWrapper")
+		.classed("hidden", false);
+	setTimeout(function(){ d3.select(".navbarWrapper").classed("out", true); }, 1000);
+	
+	d3.select(".commentsWrapper")
+		.transition().duration(1000)
+		.style("opacity", 1);
+	
+	d3.selectAll(".handle")
+		.on("click", function(){
+			d3.select(this.parentNode).classed("out",!d3.select(this.parentNode).classed("out")); 
+			
+		});
+	
+	// Scroll country list to display hovered nation. 
+	d3.selectAll(".country")
+		.on("mouseover", function(){
+			d3.select(this).moveToFront();
+			endpoint = d3.select( "#nav_" + d3.select(this).attr("id") ).node().offsetTop;
+			d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", true)
+			navBar.transition()
+				.duration(1000)
+				.tween("scrollTop", function() {
+					var r = d3.interpolate(navBar.node().scrollTop, endpoint - (height / 2) );			
+					return function(t) {																
+						navBar.node().scrollTop = r(t);														
+					};
+				});
+		})
+		.on("mouseout", function(){
+			d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", false);
+		})
+		.on("click", function(){
+			countryName = d3.select(this).attr("country").toLowerCase();
+			window.location.hash = countryName;
 			if( !d3.select("body").classed("white") ) getReadyToLoadVideo(countryName)
 		})
 		
@@ -239,7 +354,7 @@ function loadBrowse(callback) {
 // --------------------------------------------------
 // Get ready to load video from browse page
 function getReadyToLoadVideo(countryName) {
-	
+			//window.location.hash = countryName; //put countryname in url
 			loadVideo(countryName, function(){
 				loadStory(countryName, function(){
 					// Slide up
@@ -259,6 +374,10 @@ function getReadyToLoadVideo(countryName) {
 // Load video
 
 function loadVideo(countryName, callback) {
+	//make pg logo turn black if background is white
+	$('#pglogo').attr('src', 'img/PGwhite.png');
+	
+	
 	
 	d3.select(".navbarWrapper").classed("out", false);
 	d3.select(".navbarWrapper").classed("hidden", true);
@@ -422,6 +541,7 @@ function loadStory(country, callback) {
 // Return from story/video to browse
 function returnToBrowse(callback) {
 	$('body').css('overflow-y', 'hidden'); 
+		$('#pglogo').css('visibility', 'hidden');
 		d3.select(".story").transition().duration(500)
 			.style("margin-top", height + "px")
 			.each("end", function(){
@@ -434,6 +554,8 @@ function returnToBrowse(callback) {
 							.attr("fill", "url(#gradBlue)")
 							.attr("stroke", "none");
 						d3.selectAll(".country").classed("small", false);
+						$('#pglogo').attr('src', 'img/PGblack.png'); //turn pg logo back to white to contrast with dark bg
+						$('#pglogo').css('visibility', 'visible');
 						loadBrowse();
 					});
 			});		
@@ -490,7 +612,7 @@ function loadComments(callback) {
 	$('#tellus_submit').click(function(){
 		$('#commentsForm').submit();
 		$.post( "php/tellus.html", function( data ) {
-			alert('submitting form')
+			
 		});
 	});
 	

@@ -25,13 +25,13 @@
 		<meta property="og:type"            content="article" /> 
 		<meta property="og:url"             content="http://newsinteractive.post-gazette.com/odysseys" /> 
 		<meta property="og:title"           content="Odysseys" /> 
-		<meta property="og:description"     content="Almost every country in the United Nations is represented by immigrants in the Pittsburgh metro area" /> 
+		<meta property="og:description"     content="From all over the world, people have come to Pittsburgh. Some left because of war; some came because of opportunity. Many started a business. Many started a family. In this project, the Pittsburgh Post-Gazette tells a story of an immigrant to this city from every country in the world." /> 
 		<meta property="og:image"           content="http://newsinteractive.post-gazette.com/odysseys" /> 
 			
 		<meta name="twitter:card" 			content="summary">
 		<meta name="twitter:site" 			content="@pittsburghpg">
 		<meta name="twitter:title"			content="Odysseys">
-		<meta name="twitter:description"	content="Almost every country in the United Nations is represented by immigrants in the Pittsburgh metro area (via @PittsburghPG)">
+		<meta name="twitter:description"	content="From all over the world, people have come to Pittsburgh. Some left because of war; some came because of opportunity. Many started a business. Many started a family. In this project, the Pittsburgh Post-Gazette tells a story of an immigrant to this city from every country in the world. (via @PittsburghPG)">
 		<meta name="twitter:image" 			content="http://newsinteractive.post-gazette.com/odysseys">
 		
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
@@ -61,6 +61,9 @@
 		  fjs.parentNode.insertBefore(js, fjs);
 		}(document, 'script', 'facebook-jssdk'));</script>
 		<!-- end facebook code -->
+		
+		
+		<!--  <i class="fa fa-globe fa-4x fa-spin"></i>-->
 		
 		<svg id="canvas">
 			<defs>
@@ -100,6 +103,9 @@
 		
 		
 		<h1 id="title">ODYSSEYS</h1>
+		<div id="credits">
+		 <a target="_blank" href="http://www.post-gazette.com"><img src="img/PGblack.png" class="social" title="PG logo" id="pglogo" /></a> <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://newsinteractive.post-gazette.com/odysseys" style="border:0"><i class="fa fa-facebook-square fa-2x social"></i></a> <a target="_blank" href="https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fnewsinteractive.post-gazette.com%2Fodysseys%2F&text=Odysseys: From all over the world, people have come to Pittsburgh. (via @PittsburghPG):&:tw_p=tweetbutton&url=http://newsinteractive.post-gazette.com/odysseys"><i class="fa fa-twitter-square fa-2x social"></i></a> <span id="creditslink">Credits</span>
+		</div>
 		<div class="intro">
 			<h2>From all over the world, people have come to Pittsburgh.</h2>
 			<div class="text">
@@ -129,12 +135,12 @@
 				<form id="commentsForm" action="php/tellus.php" method="post">
 					<div id="textareaWrap">
 						<img src="img/caret.png" id="blinking_caret" title="blinking caret" />
-						<textarea id="formStory" placeholder="" spellcheck="true" rows="20" cols="50"></textarea>
+						<textarea id="formStory" name="formStory" placeholder="" spellcheck="true" rows="20" cols="50"></textarea>
 					</div>
-					<div class="row"><input type="text" id="first" placeholder="FIRST" /> <input type="text" id="last" placeholder="LAST" /> </div>
-					<div class="row"><input type="text" id="countryofOrigin" placeholder="COUNTRY OF ORIGIN" /> </div>
-					<div class="row"><input type="text" id="neighborhood" placeholder="PITTSBURGH NEIGHBORHOOD" /> </div>
-					<div class="row" id="contactrow"><input type="text" id="contact" placeholder="EMAIL OR PHONE" /> </div>
+					<div class="row"><input type="text" id="first" name="first" placeholder="FIRST" /> <input type="text" name="last" id="last" placeholder="LAST" /> </div>
+					<div class="row"><input type="text" id="countryofOrigin" name="countryofOrigin" placeholder="COUNTRY OF ORIGIN" /> </div>
+					<div class="row"><input type="text" id="neighborhood" name="neighborhood" placeholder="PITTSBURGH NEIGHBORHOOD" /> </div>
+					<div class="row" id="contactrow"><input type="text" name="contact" id="contact" placeholder="EMAIL OR PHONE" /> </div>
 					<div id="tellus_submit">SUBMIT</div>
 				</form>
 			</div>
@@ -166,9 +172,7 @@
 			</div>
 		</div>
 		
-		<div id="credits">
-		<img src="img/pg.png" title="PG logo" />
-		</div>
+		
 		<script type="text/javascript" src="js/scripts.js"></script>
 	</body>
 </html>
