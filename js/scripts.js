@@ -44,60 +44,87 @@ var path = d3.geo.path()
 d3.json("world.json", function(error, result) {													
 	world = result;
 	
-	// add background circle for aesthetics
-	circle = svg.append("circle")
-		.attr('cx', width / 2)
-        .attr('cy', height / 2)
-        .attr('r', projection.scale())
-		.attr("fill", "lightblue")
-		.attr("filter", "url(#glow)")
-		.attr("fill", "url(#gradBlue)");
-	
-	// Generate globe	
-	countries = topojson.feature(world, world.objects.countries).features;						
-	globe = globe.data(countries)
-		.enter()
-			.append("path")
-			.attr("d", path)
-			.attr("class", "country")
-			.attr("id", function(d){ return d.properties.id })
-			.attr("country", function(d){ return d.properties.name })
-			.on("mouseover", function(){
-				d3.select(this).moveToFront();
-			});
-
-	// Now bind events to the globe
-	
-	// On drag (currently attached to SVG, might want to change this)
-	svg.call(d3.behavior.drag()
-		// Set the origin to the current rotation point, divided by sensitivity
-		.origin(function() { var r = projection.rotate(); return {x: r[0] / sens, y: -r[1] / sens}; })
-		.on("drag", function() {
-			timer_on = true;
-			var rotate = projection.rotate();
-			coord = [d3.event.x, d3.event.y];
-			// This keeps map from being turned upside down.
-			if (coord[1] > projection.scale() / 2) coord[1] = projection.scale() / 2; else if(coord[1] < -projection.scale() / 2 ) coord[1] = -projection.scale() / 2;
-			projection.rotate([coord[0] * sens, -coord[1] * sens, rotate[2]]);
-			globe.attr("d", path);
-		})
-	);
-	
-	//loadStory("Ukraine"); //** use this for development so don't have to wait for other things to happen - can just get to story
-	//loadComments(); //** use this for development so don't have to wait for other things to happen - can just get to comments
-	
-	if (window.location.hash == '') {
-	// Start the intro ** use this for final **
-		loadIntro(function(){
-			d3.select("body")
-				.transition().duration(2000)
-				.style("opacity",1);
+	d3.json("php/getNations.php?operation=getActiveCountries", function(error, results){
+		
+		// Build an associative array of countries from our database
+		// to more easily match with the geometries file
+		associative_results = [];
+		results.forEach(function(item){
+			associative_results[item.Country] = +item.Count;
 		});
-	} else {
-		var countryname = window.location.hash;
-		countryname = countryname.substring(1, countryname.length);
-		enterViaHash(countryname);
-	}
+		
+		// This function adds one or two properties to the geometries file, indicating
+		// whether or not a) a country is involved in the project or b) we have completed
+		// a story for said country. 
+		world.objects.countries.geometries.forEach(function(country,i){
+			if( typeof associative_results[country.properties.name] != "undefined") {
+				world.objects.countries.geometries[i].properties.in_project = true;
+				if( associative_results[country.properties.name] > 1 ) 
+					world.objects.countries.geometries[i].properties.completed = true;
+				else
+					world.objects.countries.geometries[i].properties.completed = false;
+			}
+			else world.objects.countries.geometries[i].properties.in_project = false;
+		});
+	
+		// add background circle for aesthetics
+		circle = svg.append("circle")
+			.attr('cx', width / 2)
+			.attr('cy', height / 2)
+			.attr('r', projection.scale())
+			.attr("fill", "lightblue")
+			.attr("filter", "url(#glow)")
+			.attr("fill", "url(#gradBlue)");
+		
+		// Generate globe	
+		countries = topojson.feature(world, world.objects.countries).features;						
+		globe = globe.data(countries)
+			.enter()
+				.append("path")
+				.attr("d", path)
+				.attr("class", function(d){
+					output = "country";
+					if(d.properties.completed) output += " completed";
+					return output;
+				})
+				.attr("id", function(d){ return d.properties.id })
+				.attr("country", function(d){ return d.properties.name })
+				.on("mouseover", function(){
+					d3.select(this).moveToFront();
+				});
+	
+		// Now bind events to the globe
+		
+		// On drag (currently attached to SVG, might want to change this)
+		svg.call(d3.behavior.drag()
+			// Set the origin to the current rotation point, divided by sensitivity
+			.origin(function() { var r = projection.rotate(); return {x: r[0] / sens, y: -r[1] / sens}; })
+			.on("drag", function() {
+				timer_on = true;
+				var rotate = projection.rotate();
+				coord = [d3.event.x, d3.event.y];
+				// This keeps map from being turned upside down.
+				if (coord[1] > projection.scale() / 2) coord[1] = projection.scale() / 2; else if(coord[1] < -projection.scale() / 2 ) coord[1] = -projection.scale() / 2;
+				projection.rotate([coord[0] * sens, -coord[1] * sens, rotate[2]]);
+				globe.attr("d", path);
+			})
+		);
+		
+		if (window.location.hash == '') {
+		// Start the intro ** use this for final **
+			loadIntro(function(){
+				d3.select("body")
+					.transition().duration(2000)
+					.style("opacity",1);
+			});
+		} else {
+			var countryname = window.location.hash;
+			countryname = countryname.substring(1, countryname.length);
+			enterViaHash(countryname);
+		}
+		
+	});
+
 });
 
 // End universal loading section
@@ -177,29 +204,33 @@ function enterViaHash(countryname, callback){
 			d3.select(this.parentNode).classed("out",!d3.select(this.parentNode).classed("out")); 
 			
 		});
-	
+
 	// Scroll country list to display hovered nation. 
 	d3.selectAll(".country")
-		.on("mouseover", function(){
-			d3.select(this).moveToFront();
-			endpoint = d3.select( "#nav_" + d3.select(this).attr("id") ).node().offsetTop;
-			d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", true)
-			navBar.transition()
-				.duration(1000)
-				.tween("scrollTop", function() {
-					var r = d3.interpolate(navBar.node().scrollTop, endpoint - (height / 2) );			
-					return function(t) {																
-						navBar.node().scrollTop = r(t);														
-					};
-				});
+		.on("mouseover", function(d){
+			if(d.properties.completed) {
+				d3.select(this).moveToFront();
+				endpoint = d3.select( "#nav_" + d3.select(this).attr("id") ).node().offsetTop;
+				d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", true)
+				navBar.transition()
+					.duration(1000)
+					.tween("scrollTop", function() {
+						var r = d3.interpolate(navBar.node().scrollTop, endpoint - (height / 2) );			
+						return function(t) {																
+							navBar.node().scrollTop = r(t);														
+						};
+					});
+			}
 		})
 		.on("mouseout", function(){
 			d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", false);
 		})
-		.on("click", function(){
-			countryName = d3.select(this).attr("country").toLowerCase();
-			window.location.hash = countryName;
-			if( !d3.select("body").classed("white") ) getReadyToLoadVideo(countryName)
+		.on("click", function(d){
+			if(d.properties.completed) {
+				countryName = d3.select(this).attr("country").toLowerCase();
+				window.location.hash = countryName;
+				if( !d3.select("body").classed("white") ) getReadyToLoadVideo(countryName)
+			}
 		})
 		
 	getReadyToLoadVideo(countryname);	
@@ -278,22 +309,31 @@ function loadBrowse(callback) {
 	navBar.selectAll("div")
 		.data(world.objects.countries.geometries).enter()
 	.append("div")
-		.attr("class","nav")
+		.attr("class",function(d){
+			output = "nav";
+			if(!d.properties.in_project) output += " not_in_project";
+			if(d.properties.completed) output += " completed";
+			return output;
+		})
 		.attr("country", function(d){ return d.properties.id })
 		.attr("id", function(d){ return "nav_" + d.properties.id })
 		.html(function(d){ return d.properties.name })
-		.on("mouseover", function(){
-			target = d3.select( "#" + d3.select(this).attr("country") );
-			panTo( target.datum() , 1000);
-			target.classed("hover", true);
-			target.moveToFront();
+		.on("mouseover", function(d){
+			if(d.properties.completed) {
+				target = d3.select( "#" + d3.select(this).attr("country") );
+				panTo( target.datum() , 1000);
+				target.classed("hover", true);
+				target.moveToFront();
+			}
 		})
 		.on("mouseout", function(){
 			d3.select( "#" + d3.select(this).attr("country") ).classed("hover", false);
 		})
-		.on("click", function(){
-			countryName = d3.select(this).html().toLowerCase();
-			getReadyToLoadVideo(countryName)
+		.on("click", function(d){
+			if(d.properties.completed) {
+				countryName = d3.select(this).html().toLowerCase();
+				getReadyToLoadVideo(countryName)
+			}
 		});
 	
 	navBar.on("mousewheel", function(){
@@ -309,6 +349,9 @@ function loadBrowse(callback) {
 		.classed("hidden", false);
 	setTimeout(function(){ d3.select(".navbarWrapper").classed("out", true); }, 1000);
 	
+	d3.select("#credits")
+		.classed("hidden", false);
+	
 	d3.select(".commentsWrapper")
 		.transition().duration(1000)
 		.style("opacity", 1);
@@ -321,27 +364,31 @@ function loadBrowse(callback) {
 	
 	// Scroll country list to display hovered nation. 
 	d3.selectAll(".country")
-		.on("mouseover", function(){
-			d3.select(this).moveToFront();
-			endpoint = d3.select( "#nav_" + d3.select(this).attr("id") ).node().offsetTop;
-			d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", true)
-			navBar.transition()
-				.duration(1000)
-				.tween("scrollTop", function() {
-					var r = d3.interpolate(navBar.node().scrollTop, endpoint - (height / 2) );			
-					return function(t) {																
-						navBar.node().scrollTop = r(t);														
-					};
-				});
+		.on("mouseover", function(d){
+			if(d.properties.completed) {
+				d3.select(this).moveToFront();
+				endpoint = d3.select( "#nav_" + d3.select(this).attr("id") ).node().offsetTop;
+				d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", true)
+				navBar.transition()
+					.duration(1000)
+					.tween("scrollTop", function() {
+						var r = d3.interpolate(navBar.node().scrollTop, endpoint - (height / 2) );			
+						return function(t) {																
+							navBar.node().scrollTop = r(t);														
+						};
+					});
+			}
 		})
 		.on("mouseout", function(){
 			d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", false);
 		})
-		.on("click", function(){
-			countryName = d3.select(this).attr("country").toLowerCase();
-			window.location.hash = countryName;
-			if( !d3.select("body").classed("white") ) getReadyToLoadVideo(countryName)
-		})
+		.on("click", function(d){
+			if(d.properties.completed) {
+				countryName = d3.select(this).attr("country").toLowerCase();
+				window.location.hash = countryName;
+				if( !d3.select("body").classed("white") ) getReadyToLoadVideo(countryName)
+			}
+		});
 		
 		
 	
@@ -440,12 +487,7 @@ function loadStory(country, callback) {
 		$('#origin .personStat').html(data.Origin);
 		$('#pghHome .personStat').html(data.Neighborhood);
 		$('#occupation .personStat').html(data.Occupation);
-		if (data.Factoid.length > 0) {
-			$('#factoid #factoidtext').html(data.Factoid);
-			$('#factoid').show();
-		} else {
-			$('#factoid').hide();
-		}
+		
 		$('.countryMap').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_map.jpg');
 		$('.countryMap').attr('title', 'Map of ' + data.Country);
 		$('.portrait').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_portrait.jpg');
