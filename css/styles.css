@@ -57,6 +57,12 @@ overflow:hidden;
 opacity:0;
 //transition: background-color 2s linear;
 }
+
+.hidden { 
+	visibility:hidden;
+	opacity:0;
+}
+
 .fa-globe {
 	position:absolute;
 	z-index: 999;
@@ -65,6 +71,7 @@ opacity:0;
 }
 .noselect
 {
+cursor:default;
 -webkit-touch-callout: none;
 -webkit-user-select: none;
 -khtml-user-select: none;
@@ -170,11 +177,6 @@ z-index:2;
 	{
 	right:15px; 
 	}
-
-	.navbarWrapper.hidden
-	{
-	opacity:0;
-	}
 	
 .handle
 {
@@ -252,7 +254,7 @@ width:200px;
 		
 		.navbarWrapper .navbar .nav
 		{
-		color:gray;
+		color:#333;
 		font-family: "Muli", Helvetica, Arial, sans-serif;
 		letter-spacing:.12em;
 		font-size:8pt;
@@ -262,8 +264,16 @@ width:200px;
 		position:relative;
 		top:0px;
 		}
-		
-			.navbarWrapper .navbar .nav:hover, .navbarWrapper .navbar .nav.hover
+			
+			.navbarWrapper .navbar .nav.completed {
+			color:gray;
+			}
+			
+			.navbarWrapper .navbar .nav.not_in_project {
+				display:none;
+			}
+			
+			.navbarWrapper .navbar .nav.completed:hover, .navbarWrapper .navbar .nav.completed.hover
 			{
 			color:white;
 			cursor:pointer;
@@ -275,7 +285,7 @@ width: 100%;
 height: 100%;
 background-color: #599ecc;
 opacity: 0;
-position: absolute;
+position: fixed;
 left:0%;
 top: 0;
 z-index: 2;
@@ -474,7 +484,7 @@ width: 50%;
 max-width: 1000px;
 padding-top:70px;
 background-color: white;
-z-index: 99;
+z-index: 2;
 display: none;
 position: relative;
 padding-right: 20px;
@@ -675,13 +685,20 @@ stroke:none;
 
 .country 
 {
-fill: #004674;
+fill: #163d57;
 stroke: rgba(0,130,216,.3);
 stroke-width: 1px;
 transition: all 0.5s;
 }
-	.country:hover , .country.hover
+
+	.country.completed {
+		fill: #004674;
+	}
+	
+	
+	.country.completed:hover , .country.completed.hover
 	{
+		cursor:pointer;
 		fill:white;
 		filter:url("#countryGlow");
 	}
@@ -715,10 +732,19 @@ letter-spacing:.1em;
 
 #credits {
 	position: fixed;
-	left: 70px; bottom: 50px;
+	left: 70px; bottom: 20px;
 	z-index: 5;
-	width: 230px;	
+	font-size:12px;
+	transition: opacity 1s linear;
 }	
+	
+	#credits .socialContainer {
+		border-right: 2px solid #b8b8b8;
+		padding-right:10px;
+		margin-right:10px;
+		display:inline-block;
+	}
+
 	.fa-facebook-square {
 		color: #3b5a9b;
 		
@@ -731,9 +757,6 @@ letter-spacing:.1em;
 	}
 	.fa-twitter-square{
 		color: #2baae1;
-		padding-right: 30px;
-		border-right: 2px solid #b8b8b8;
-		
 	}
 	.social:hover {
 		opacity: 1;
@@ -746,10 +769,10 @@ letter-spacing:.1em;
 		cursor: pointer;
 		color: #b8b8b8;
 		text-transform: uppercase;
-		padding-left: 20px;
+		display:inline-block;
 		font-family: "Muli", Helvetica, Arial;
-		position: absolute;
-		top: 20%;
+		position:relative;
+		top:-3px;
 		right: 0;
 	}
 .autocomplete-suggestions { border: 1px solid #999; background: #FFF; cursor: default; overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); font-family: Helvetica, Arial, sans-serif;}
