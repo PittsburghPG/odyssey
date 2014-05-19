@@ -1,7 +1,6 @@
 <!doctype html>
 <html>
 	<head>
-		<!-- test-->
 		<title>Odysseys</title>
 		<meta charset="utf-8">
 	
@@ -52,7 +51,6 @@
 	</head>
 
 	<body>
-		<div class="loader"><i class=" icon-globe icon-4x icon-spin"></i></div>
 		<!-- facebook code -->
 		<div id="fb-root"></div>
 		<script>(function(d, s, id) {
@@ -101,83 +99,89 @@
 				</filter>
 			</defs>
 		</svg>
-			
 		
+		<div class="loader">
+			<i class="fa fa-globe"></i>
+			<p>Loading</p>
+		</div>
 		
-		<h1 id="title">ODYSSEYS</h1>
-		<div class = "hidden" id="credits">
-			<div class= "socialContainer">
-				<a target="_blank" href="http://www.post-gazette.com"><img src="img/PGblack.png" class="social" title="PG logo" id="pglogo" /></a> <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://newsinteractive.post-gazette.com/odysseys" style="border:0"><i class="fa fa-facebook-square fa-2x social"></i></a> <a target="_blank" href="https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fnewsinteractive.post-gazette.com%2Fodysseys%2F&text=Odysseys: From all over the world, people have come to Pittsburgh. (via @PittsburghPG):&:tw_p=tweetbutton&url=http://newsinteractive.post-gazette.com/odysseys"><i class="fa fa-twitter-square fa-2x social"></i></a>
+		<div class="content hidden">
+			<h1 id="title">ODYSSEYS</h1>
+			<div class = "hidden" id="credits">
+				<div class= "socialContainer">
+					<a target="_blank" href="http://www.post-gazette.com"><img src="img/PGblack.png" class="social" title="PG logo" id="pglogo" /></a> <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://newsinteractive.post-gazette.com/odysseys" style="border:0"><i class="fa fa-facebook-square fa-2x social"></i></a> <a target="_blank" href="https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fnewsinteractive.post-gazette.com%2Fodysseys%2F&text=Odysseys: From all over the world, people have come to Pittsburgh. (via @PittsburghPG):&:tw_p=tweetbutton&url=http://newsinteractive.post-gazette.com/odysseys"><i class="fa fa-twitter-square fa-2x social"></i></a>
+				</div>
+				<div id="creditslink">Credits</div>
 			</div>
-			<div id="creditslink">Credits</div>
-		</div>
-		<div class="intro">
-			<h2>From all over the world, people have come to Pittsburgh.</h2>
-			<div class="text">
-				<p>Some left because of war; some came because of opportunity. Many started a business. Many started a family. In this project, the Pittsburgh Post-Gazette tells a story of an immigrant to this city from every country in the world. </p> 
+			<div class="intro">
+				<h2>People from around the globe have made their way to Pittsburgh.</h2>
+				<div class="text">
+					<p>Join us as we endeavor to meet Pittsburghers from each of the 194 countries in the United Nations. Every day we'll introduce a new story, a new adventure, a new one of us.</p> 
+				</div>
+				
+				<button id="begin">Begin</button>
+				
 			</div>
 			
-			<button id="begin">Begin</button>
+			<div class="navbarWrapper noselect hidden" id="countryTab">
+				<i class="fa fa-angle-double-up" deltaY = -40></i>
+				<div class="handle navHandle">Country</div>
+				<div class="navbar"></div>
+				<i class="fa fa-angle-double-down" deltaY = 40></i>
+			</div>
 			
-		</div>
-		
-		<div class="navbarWrapper noselect hidden" id="countryTab">
-			<i class="fa fa-angle-double-up" deltaY = -40></i>
-			<div class="handle navHandle">Country</div>
-			<div class="navbar"></div>
-			<i class="fa fa-angle-double-down" deltaY = 40></i>
-		</div>
-		
-		<div class="commentsWrapper">
-			<div class="handle commentsHandle">Tell your story</div>
-			<div class="comments">
-				<div class="fb-comments" data-href="http://newsinteractive.post-gazette.com/odysseys" data-width="450" data-numposts="25" data-colorscheme="light"></div>
+			<div class="commentsWrapper">
+				<div class="handle commentsHandle">Tell your story</div>
+				<div class="comments">
+					<div class="fb-comments" data-href="http://newsinteractive.post-gazette.com/odysseys" data-width="450" data-numposts="25" data-colorscheme="light"></div>
+				</div>
+					
+				<div class="commentsLeft">
+					<h1>Tell us your story</h1>
+					<div class="formChatter">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </div>
+					<form id="commentsForm" action="php/tellus.php" method="post">
+						<div id="textareaWrap">
+							<img src="img/caret.png" id="blinking_caret" title="blinking caret" />
+							<textarea id="formStory" name="formStory" placeholder="" spellcheck="true" rows="20" cols="50"></textarea>
+						</div>
+						<div class="row"><input type="text" id="first" name="first" placeholder="FIRST" /> <input type="text" name="last" id="last" placeholder="LAST" /> </div>
+						<div class="row"><input type="text" id="countryofOrigin" name="countryofOrigin" placeholder="COUNTRY OF ORIGIN" /> </div>
+						<div class="row"><input type="text" id="neighborhood" name="neighborhood" placeholder="PITTSBURGH NEIGHBORHOOD" /> </div>
+						<div class="row" id="contactrow"><input type="text" name="contact" id="contact" placeholder="EMAIL OR PHONE" /> </div>
+						<div id="tellus_submit">SUBMIT</div>
+					</form>
+				</div>
 			</div>
 				
-			<div class="commentsLeft">
-				<h1>Tell us your story</h1>
-				<div class="formChatter">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </div>
-				<form id="commentsForm" action="php/tellus.php" method="post">
-					<div id="textareaWrap">
-						<img src="img/caret.png" id="blinking_caret" title="blinking caret" />
-						<textarea id="formStory" name="formStory" placeholder="" spellcheck="true" rows="20" cols="50"></textarea>
-					</div>
-					<div class="row"><input type="text" id="first" name="first" placeholder="FIRST" /> <input type="text" name="last" id="last" placeholder="LAST" /> </div>
-					<div class="row"><input type="text" id="countryofOrigin" name="countryofOrigin" placeholder="COUNTRY OF ORIGIN" /> </div>
-					<div class="row"><input type="text" id="neighborhood" name="neighborhood" placeholder="PITTSBURGH NEIGHBORHOOD" /> </div>
-					<div class="row" id="contactrow"><input type="text" name="contact" id="contact" placeholder="EMAIL OR PHONE" /> </div>
-					<div id="tellus_submit">SUBMIT</div>
-				</form>
-			</div>
-		</div>
+				
 			
 			
-		
-		
-		<div class="story">
-		<div id="arrowup"><i class="fa fa-arrow-circle-up fa-2x"></i></div>
-			<div id="personStats">
-				<img class="portrait"  />
-				<div id="name"></div>
-				<div id="country"></div>
-				<div id="age"><span class="personSubhead">Age: </span><span class="personStat"></span></div>
-				<div id="origin"><span class="personSubhead">Origin: </span><span class="personStat"></span></div>
-				<div id="pghHome"><span class="personSubhead">Pittsburgh home: </span><span class="personStat"></span></div>
-				<div id="occupation"><span class="personSubhead">Occupation: </span><span class="personStat"></span></div>
-				<img class="countryMap" />
+			<div class="story">
+			<div id="arrowup"><i class="fa fa-arrow-circle-up fa-2x"></i></div>
+				<div id="personStats">
+					<img class="portrait"  />
+					<div id="name"></div>
+					<div id="country"></div>
+					<div id="age"><span class="personSubhead">Age: </span><span class="personStat"></span></div>
+					<div id="origin"><span class="personSubhead">Origin: </span><span class="personStat"></span></div>
+					<div id="pghHome"><span class="personSubhead">Pittsburgh home: </span><span class="personStat"></span></div>
+					<div id="occupation"><span class="personSubhead">Occupation: </span><span class="personStat"></span></div>
+					<img class="countryMap" />
+				</div>
+				<div class="text">
+					<h1></h1>
+					<div class="quote"></div>
+					<div id="bio"></div>
+				</div>
 			</div>
-			<div class="text">
-				<h1></h1>
-				<div class="quote"></div>
-				<div id="bio"></div>
+		
+			<div id="creditsbarWrap">
+				<div id="creditsbar">
+					<span class="title">Writing</span> <span class="name">Steve Mellon, Tony Norman, Mila Sanina, Laura Malt Schneiderman</span> <span class="smallsquare">&#9632;</span> <span class="title">Editing</span> <span class="name">Virginia Linn, Bill Lowenberger, Allan Walton</span> <span class="smallsquare">&#9632;</span> <span class="title">Design</span> <span class="name">Dan Marsula</span> <span class="smallsquare">&#9632;</span> <span class="title">Development</span> <span class="name">Andrew McGill, Laura Malt Schneiderman</span> 
+				</div>		
 			</div>
-		</div>
 		
-		<div id="creditsbarWrap">
-			<div id="creditsbar">
-				<span class="title">Writing</span> <span class="name">Steve Mellon, Tony Norman, Mila Sanina, Laura Malt Schneiderman</span> <span class="smallsquare">&#9632;</span> <span class="title">Editing</span> <span class="name">Virginia Linn, Bill Lowenberger, Allan Walton</span> <span class="smallsquare">&#9632;</span> <span class="title">Design</span> <span class="name">Dan Marsula</span> <span class="smallsquare">&#9632;</span> <span class="title">Development</span> <span class="name">Andrew McGill, Laura Malt Schneiderman</span> 
-			</div>		
 		</div>
-		
 		<script type="text/javascript" src="js/scripts.js"></script>
-	
+	</body>
+</html>

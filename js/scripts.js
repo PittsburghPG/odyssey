@@ -2,7 +2,11 @@
 // Global variables
 // **************************************************
 var world,
-	currentScreen;
+	currentScreen,
+	width,
+	height,
+	startscale,
+	which_stage;
 
 // **************************************************
 // Loading functions
@@ -11,6 +15,8 @@ var world,
 // --------------------------------------------------
 // Universal things we'll always want loaded
 
+
+
 var svg = d3.select("#canvas"),
 	globe = svg.selectAll(".country"),
 	sens = .25,
@@ -18,15 +24,7 @@ var svg = d3.select("#canvas"),
 	zoomed = false,
 	timer_on = false;
 	
-// Get width and height of container	
-width = window.innerWidth;													
-height = window.innerHeight;
-
-var startScale = width;
-
-svg
-.attr("width", width)
-.attr("height", height)
+resize();
 
 // Set up globe projection
 var projection = d3.geo.orthographic()
@@ -110,12 +108,88 @@ d3.json("world.json", function(error, result) {
 			})
 		);
 		
+		var navBar = d3.select(".navbar");
+	
+		navBar.selectAll("div")
+			.data(world.objects.countries.geometries).enter()
+		.append("div")
+			.attr("class",function(d){
+				output = "nav";
+				if(!d.properties.in_project) output += " not_in_project";
+				if(d.properties.completed) output += " completed";
+				return output;
+			})
+			.attr("country", function(d){ return d.properties.id })
+			.attr("id", function(d){ return "nav_" + d.properties.id })
+			.html(function(d){ return d.properties.name })
+			.on("mouseover", function(d){
+				if(d.properties.completed) {
+					target = d3.select( "#" + d3.select(this).attr("country") );
+					panTo( target.datum() , 1000);
+					target.classed("hover", true);
+					target.moveToFront();
+				}
+			})
+			.on("mouseout", function(){
+				d3.select( "#" + d3.select(this).attr("country") ).classed("hover", false);
+			})
+			.on("click", function(d){
+				if(d.properties.completed) {
+					countryName = d3.select(this).html().toLowerCase();
+					getReadyToLoadVideo(countryName)
+				}
+			});
+		
+		navBar.on("mousewheel", function(){
+			navBar.node().scrollTop += event.deltaY;
+		});
+		
+		d3.selectAll(".navbarWrapper .fa")
+			.on("click", function(){
+				navBar.node().scrollTop += parseInt(d3.select(this).attr("deltaY"));
+			});
+			
+		// Scroll country list to display hovered nation. 
+		d3.selectAll(".country")
+			.on("mouseover", function(d){
+				if(d.properties.completed) {
+					d3.select(this).moveToFront();
+					endpoint = d3.select( "#nav_" + d3.select(this).attr("id") ).node().offsetTop;
+					d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", true)
+					navBar.transition()
+						.duration(1000)
+						.tween("scrollTop", function() {
+							var r = d3.interpolate(navBar.node().scrollTop, endpoint - (height / 2) );			
+							return function(t) {																
+								navBar.node().scrollTop = r(t);														
+							};
+						});
+				}
+			})
+			.on("mouseout", function(){
+				d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", false);
+			})
+			.on("click", function(d){
+				if(d.properties.completed) {
+					countryName = d3.select(this).attr("country").toLowerCase();
+					window.location.hash = countryName;
+					if( !d3.select("body").classed("white") ) getReadyToLoadVideo(countryName)
+				}
+			});
+		
+		d3.selectAll(".handle")
+			.on("click", function(){
+				d3.select(this.parentNode).classed("out",!d3.select(this.parentNode).classed("out")); 
+				
+			});
+		
 		if (window.location.hash == '') {
 		// Start the intro ** use this for final **
 			loadIntro(function(){
-				d3.select("body")
-					.transition().duration(2000)
-					.style("opacity",1);
+				d3.select(".loader")
+					.classed("hidden",true);
+				d3.select(".content")
+					.classed("hidden",false);
 			});
 		} else {
 			var countryname = window.location.hash;
@@ -133,108 +207,40 @@ d3.json("world.json", function(error, result) {
 // --------------------------------------------------
 // Load if entering via hash 
 function enterViaHash(countryname, callback){
-	$('#credits').animate({'left': "18px"}, 1000);
-	
-	// turn off rotation (if it's even activated to begin with)
-	timer_on = true;																			
-	newZoom = 100;																				
-	sens = 1;	// makes it easier to rotate smaller globe																		
 
-	moveAndZoom(width / 2, height / 2, height / 2 * .8, 1000, function(){
+	moveAndZoom(width / 2, height / 2, height / 2 * .8, 1, function(){
 		panTo(d3.select("#USA").datum(), 500);
-	});
+		d3.select(".intro").style("display","none");
 	
-	$(".intro").fadeOut(1000); 
-
-	d3.select("body").classed("white", false);
-	
-	d3.select("h1#title")
-		.transition().duration(1000)
-		.style({"margin-top":"25px", "font-size":"65px", "padding-left":"10px"})
-		.each("end", function(){ d3.select(this).style({"position":"fixed", "top":"0px"}) });
-	
-	var commentBar = d3.select(".commentsWrapper");
-	
-	commentBar.style("left", function(){
-		return -parseInt(commentBar.node().offsetWidth) + "px";
-	});
-	
-	var navBar = d3.select(".navbar");
-	
-	navBar.selectAll("div")
-		.data(world.objects.countries.geometries).enter()
-	.append("div")
-		.attr("class","nav")
-		.attr("country", function(d){ return d.properties.id })
-		.attr("id", function(d){ return "nav_" + d.properties.id })
-		.html(function(d){ return d.properties.name })
-		.on("mouseover", function(){
-			target = d3.select( "#" + d3.select(this).attr("country") );
-			panTo( target.datum() , 1000);
-			target.classed("hover", true);
-			target.moveToFront();
-		})
-		.on("mouseout", function(){
-			d3.select( "#" + d3.select(this).attr("country") ).classed("hover", false);
-		})
-		.on("click", function(){
-			countryName = d3.select(this).html().toLowerCase();
-			getReadyToLoadVideo(countryName)
-		});
-	
-	navBar.on("mousewheel", function(){
-		navBar.node().scrollTop += event.deltaY;
-	});
-	
-	d3.selectAll(".navbarWrapper .fa")
-		.on("click", function(){
-			navBar.node().scrollTop += parseInt(d3.select(this).attr("deltaY"));
+		d3.select("h1#title")
+			.style({"margin-top":"25px", "font-size":"65px", "padding-left":"10px","position":"fixed", "top":"0px"})
+		
+		var commentBar = d3.select(".commentsWrapper");
+		commentBar.style("left", function(){
+			return -parseInt(commentBar.node().offsetWidth) + "px";
 		});
 		
-	d3.select(".navbarWrapper")
-		.classed("hidden", false);
-	setTimeout(function(){ d3.select(".navbarWrapper").classed("out", true); }, 1000);
-	
-	d3.select(".commentsWrapper")
-		.transition().duration(1000)
-		.style("opacity", 1);
-	
-	d3.selectAll(".handle")
-		.on("click", function(){
-			d3.select(this.parentNode).classed("out",!d3.select(this.parentNode).classed("out")); 
-			
-		});
-
-	// Scroll country list to display hovered nation. 
-	d3.selectAll(".country")
-		.on("mouseover", function(d){
-			if(d.properties.completed) {
-				d3.select(this).moveToFront();
-				endpoint = d3.select( "#nav_" + d3.select(this).attr("id") ).node().offsetTop;
-				d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", true)
-				navBar.transition()
-					.duration(1000)
-					.tween("scrollTop", function() {
-						var r = d3.interpolate(navBar.node().scrollTop, endpoint - (height / 2) );			
-						return function(t) {																
-							navBar.node().scrollTop = r(t);														
-						};
-					});
-			}
-		})
-		.on("mouseout", function(){
-			d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", false);
-		})
-		.on("click", function(d){
-			if(d.properties.completed) {
-				countryName = d3.select(this).attr("country").toLowerCase();
-				window.location.hash = countryName;
-				if( !d3.select("body").classed("white") ) getReadyToLoadVideo(countryName)
-			}
-		})
+		d3.select(".navbarWrapper")
+			.classed("hidden", false)
+			.classed("out", true); 
 		
-	getReadyToLoadVideo(countryname);	
+		d3.select("#credits")
+			.classed("hidden", false);
+		
+		d3.select(".commentsWrapper")
+			.style("opacity", 1);
 	
+		d3.select(".loader")
+			.classed("hidden", true);
+		
+		d3.select(".content")
+			.classed("hidden", false);
+		
+		getReadyToLoadVideo(countryname);	
+	});
+	
+	
+		
 	if(typeof callback === 'function') callback();
 	
 }
@@ -272,13 +278,10 @@ function loadIntro(callback){
 // End load intro
 // --------------------------------------------------
 
-
 // --------------------------------------------------
 // Load browse
 
 function loadBrowse(callback) {
-	
-	$('#credits').animate({'left': "18px"}, 1000);
 	
 	// turn off rotation (if it's even activated to begin with)
 	timer_on = true;																			
@@ -299,52 +302,10 @@ function loadBrowse(callback) {
 		.each("end", function(){ d3.select(this).style({"position":"fixed", "top":"0px"}) });
 	
 	var commentBar = d3.select(".commentsWrapper");
-	
 	commentBar.style("left", function(){
 		return -parseInt(commentBar.node().offsetWidth) + "px";
 	});
 	
-	var navBar = d3.select(".navbar");
-	
-	navBar.selectAll("div")
-		.data(world.objects.countries.geometries).enter()
-	.append("div")
-		.attr("class",function(d){
-			output = "nav";
-			if(!d.properties.in_project) output += " not_in_project";
-			if(d.properties.completed) output += " completed";
-			return output;
-		})
-		.attr("country", function(d){ return d.properties.id })
-		.attr("id", function(d){ return "nav_" + d.properties.id })
-		.html(function(d){ return d.properties.name })
-		.on("mouseover", function(d){
-			if(d.properties.completed) {
-				target = d3.select( "#" + d3.select(this).attr("country") );
-				panTo( target.datum() , 1000);
-				target.classed("hover", true);
-				target.moveToFront();
-			}
-		})
-		.on("mouseout", function(){
-			d3.select( "#" + d3.select(this).attr("country") ).classed("hover", false);
-		})
-		.on("click", function(d){
-			if(d.properties.completed) {
-				countryName = d3.select(this).html().toLowerCase();
-				getReadyToLoadVideo(countryName)
-			}
-		});
-	
-	navBar.on("mousewheel", function(){
-		navBar.node().scrollTop += event.deltaY;
-	});
-	
-	d3.selectAll(".navbarWrapper .fa")
-		.on("click", function(){
-			navBar.node().scrollTop += parseInt(d3.select(this).attr("deltaY"));
-		});
-		
 	d3.select(".navbarWrapper")
 		.classed("hidden", false);
 	setTimeout(function(){ d3.select(".navbarWrapper").classed("out", true); }, 1000);
@@ -355,42 +316,6 @@ function loadBrowse(callback) {
 	d3.select(".commentsWrapper")
 		.transition().duration(1000)
 		.style("opacity", 1);
-	
-	d3.selectAll(".handle")
-		.on("click", function(){
-			d3.select(this.parentNode).classed("out",!d3.select(this.parentNode).classed("out")); 
-			
-		});
-	
-	// Scroll country list to display hovered nation. 
-	d3.selectAll(".country")
-		.on("mouseover", function(d){
-			if(d.properties.completed) {
-				d3.select(this).moveToFront();
-				endpoint = d3.select( "#nav_" + d3.select(this).attr("id") ).node().offsetTop;
-				d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", true)
-				navBar.transition()
-					.duration(1000)
-					.tween("scrollTop", function() {
-						var r = d3.interpolate(navBar.node().scrollTop, endpoint - (height / 2) );			
-						return function(t) {																
-							navBar.node().scrollTop = r(t);														
-						};
-					});
-			}
-		})
-		.on("mouseout", function(){
-			d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", false);
-		})
-		.on("click", function(d){
-			if(d.properties.completed) {
-				countryName = d3.select(this).attr("country").toLowerCase();
-				window.location.hash = countryName;
-				if( !d3.select("body").classed("white") ) getReadyToLoadVideo(countryName)
-			}
-		});
-		
-		
 	
 	if(typeof callback === 'function') callback();
 }
@@ -406,7 +331,7 @@ function getReadyToLoadVideo(countryName) {
 				loadStory(countryName, function(){
 					// Slide up
 					d3.select(".videoHolder").transition().duration(1000)
-						.style("margin-top", -height-15 + "px")
+						.style("opacity", 0)
 						.each("end", function(){
 							d3.select(".videoHolder").remove();
 						})
@@ -423,9 +348,6 @@ function getReadyToLoadVideo(countryName) {
 function loadVideo(countryName, callback) {
 	//make pg logo turn black if background is white
 	$('#pglogo').attr('src', 'img/PGwhite.png');
-	
-	
-	
 	d3.select(".navbarWrapper").classed("out", false);
 	d3.select(".navbarWrapper").classed("hidden", true);
 	d3.select("body").classed("white", true);
@@ -438,7 +360,7 @@ function loadVideo(countryName, callback) {
 		d3.selectAll(".country").classed("small", true);
 	});
 	
-	var video = d3.select("body")
+	var video = d3.select(".content")
 		.insert("div", ".story")
 			.attr("class", "videoHolder")
 		.append("video")
@@ -681,6 +603,18 @@ function unloadComments(callback) {
 // **************************************************
 // Helper functions that get stuff done
 // **************************************************
+
+function resize(){
+	// Get width and height of container	
+	width = window.innerWidth;													
+	height = window.innerHeight;
+	
+	startScale = width;
+	
+	svg.attr("width", width)
+		.attr("height", height);
+
+}
 
 function panTo(d, duration){	
 	

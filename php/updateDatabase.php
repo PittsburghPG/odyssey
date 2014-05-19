@@ -30,15 +30,15 @@ if($content != FALSE) {
 	$db->query("TRUNCATE TABLE `odysseys`");
 	
 	foreach($content as $country){
-		$db->query("INSERT INTO odysseys 
+		$db->query("INSERT INTO people 
 								(`Country`, 
 								`Name`, 
 								`Age`, 
 								`Occupation`, 
 								`Origin`, 
 								`Neighborhood`, 
-								`Story`, 
-								`Title`) 
+								`Notes`, 
+								`Heading`) 
 					VALUES      ('" . $country["Country"] . "',
 								'" . $country["Name"] . "',
 								'" . $country["Age"] . "',
