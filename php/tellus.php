@@ -1,15 +1,14 @@
 <?php
-require_once ('constants_test.php'); 
+require_once ('constants_live.php'); 
 $first = $last = $country = $neighborhood = $contact = $about = ""; //intialize to empty
- if (isset($_POST)) {
-    $first = test_input($_POST['first']);
-	$last = test_input($_POST['last']);
-	$country = test_input($_POST['countryofOrigin']);
-	$neighborhood = test_input($_POST['neighborhood']);
-	$contact = test_input($_POST['contact']);
-	about = test_input($_POST['formStory']);
+
+    if(isset($_POST['first'])){ $first = test_input($_POST['first']); } 
+	if(isset($_POST['last'])){ $last = test_input($_POST['last']); } 
+	if(isset($_POST['country'])){ $country = test_input($_POST['country']); } 
+	if(isset($_POST['neighborhood'])){ $neighborhood = test_input($_POST['neighborhood']); } 
+	if(isset($_POST['contact'])){ $contact = test_input($_POST['contact']); } 
+	if(isset($_POST['about'])){ $about = test_input($_POST['about']); } 
 	
-	//echo json_encode($name . ' ' . $countryname . ' ' . $age . ' ' . $occupation);
 	
 	$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
                 if (mysqli_connect_errno()) {
@@ -17,18 +16,21 @@ $first = $last = $country = $neighborhood = $contact = $about = ""; //intialize 
                         exit;
                 }
 
-    $q = "Insert into tellus(`First`, `Last`, `Country`, `Neighborhood`, `Contact`, `About`) values ('" . $first ."', " . $last . ", '" . $country . "', '" . $neighborhood . "', '" . $contact . "', '"  . $about . "')";
+	
+    $q = "Insert into tellus(`First`, `Last`, `Country`, `Contact`, `Neighborhood`, `About`) values ('" . $first . "', '" . $last . "', '" . $country . "', '" . $neighborhood . "', '" . $contact . "', '" .  $about ."')";
+	echo $q;
     if ($db->query($q)) {
 		$response["message"] = "Loaded data.";
-		//echo json_encode($response);
+		echo json_encode($response);
+		
 		 
 	} else {
 		$response["message"] = "An error occurred.";
-		//echo json_encode($response);
+		echo json_encode($response);
        
 	}
    $db->close();
-} 
+
 function test_input($data)
 	{
 	  $data = trim($data);

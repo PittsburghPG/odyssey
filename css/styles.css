@@ -139,7 +139,7 @@ font-weight:normal;
 font-size:200px;
 /*line-height:200px;*/
 margin:5% 0px 0 0;
-color:#454343;
+color:#706D6D; /*#454343;*/
 text-align:left;
 line-height:.8em;
 border-left: 8px solid #007fd4;
@@ -278,7 +278,7 @@ width:200px;
 			position:absolute;
 			right: 227px;
 			font-size: 20pt;
-			opacity:.2;
+			opacity:.7;
 			transition: all .25s ease;
 		}
 		
@@ -401,10 +401,11 @@ z-index:5;
 	#commentsForm {
 		padding-top: 20px;
 		border-bottom: 10px solid #006ab0;
-		
+		position: relative;
 	}
 	#textareaWrap {
 		position: relative;
+		height: 10%;
 	}
 		#blinking_caret {
 			position: absolute;
@@ -419,7 +420,6 @@ z-index:5;
 			width: 100%;
 			border: none;
 			background-color: #f1f0f0;
-			height: 33%;
 			cursor: text;
 			outline: none;
 			overflow: auto;
@@ -471,10 +471,12 @@ z-index:5;
 	#last {
 	float: right;
 	}
-	#contact, #origin, #neighborhood {
+	#contact, #countryofOrigin, #neighborhood {
 		width: 100%;
 	}
-	
+	#thanks {
+		display:none;
+	}
 	#tellus_submit {
 		background-color: #b5b5b5;
 		color: black;
@@ -490,7 +492,8 @@ z-index:5;
 		width: 80px;
 		text-align: center;
 		position: absolute;
-		right: 20px;
+		right: 0;
+		bottom: 20px;
 		z-index: 2;
 		cursor: pointer;
 	}
@@ -512,8 +515,11 @@ width:100%;
 height:100%;
 top:0;
 left:0;
+z-index: 5;
 }
-
+video {
+	outline: 0;
+}
 .fullscreen
 {
 width:100%;
@@ -522,6 +528,7 @@ top:0;
 left:0;
 position:absolute;
 background-color:white;
+outline: 0;
 }
 
 .story
@@ -536,22 +543,74 @@ position: relative;
 padding-right: 20px;
 
 }
+	.vidclose {
+		/*position: absolute;
+		right: 20px;
+		top: 20px;*/
+		color: lightgray;
+		z-index: 99;
+		position: fixed;
+		top: 20px;
+		right: 75px;
+		padding: 10px;
+	}
+	.vidclose:hover{
+		color: #007fd4;
+		cursor: pointer;
+	}
 	.story #arrowup {
 		position: fixed;
 		top: 20px;
-		right: 25px;
+		right: 75px;
 		padding: 10px;
 		
 	}
-		.story #arrowup .fa-arrow-circle-up {
-			color:#007fd4;
-			opacity: .2;
-			font-size:75px;
+	.story #arrowup .fa-arrow-circle-o-up, .fa-play-circle-o, .story  #facebookside  .fa-facebook-square, .story  #twitterside  .fa-twitter-square, .story  #shareside  .fa-share-alt-square {
+			color: lightgray;
+			
 		}
-		.story #arrowup .fa-arrow-circle-up:hover {
-			opacity: 1;
+		.story #arrowup .fa-arrow-circle-o-up, .fa-play-circle-o {
+			font-size: 35px;
+		}
+		.story  #facebookside  .fa-facebook-square, .story  #twitterside  .fa-twitter-square, .story  #shareside  .fa-share-alt-square {
+			font-size: 31px;
+		}
+		
+		.story #arrowup .fa-arrow-circle-o-up:hover, .fa-play-circle-o:hover, .story  #facebookside  .fa-facebook-square:hover, .story  #twitterside  .fa-twitter-square:hover, .story  #shareside  .fa-share-alt-square:hover {
+			color: #007fd4;
 			cursor: pointer;
 		}
+	.story #replayside {
+		position: fixed;
+		top: 60px;
+		right: 75px;
+		padding: 10px;
+	}
+	.story #facebookside {
+		position: fixed;
+		top: 100px;
+		right: 75px;
+		padding: 10px;
+	}
+	.story #twitterside {
+		position: fixed;
+		top: 138px;
+		right: 75px;
+		padding: 10px;
+	}		
+	.story #shareside {
+		position: fixed;
+		top: 176px;
+		right: 75px;
+		padding: 10px;
+	}
+	.tooltip {
+		display:none;
+		height:70px;
+		width:160px;
+		color:#007fd4;
+		font-family:"Muli", sans-serif;
+	 }	
 	.story h1
 	{
 	font-family:"Cinzel", "Time New Roman", serif;
@@ -650,13 +709,16 @@ padding-right: 20px;
 			max-width: 196px;
 			height: auto;
 			border-bottom: 1px solid lightgray;
+			
 		}
+		
 		#name {
 			font-weight: bold;
 			font-size: 110%;
 			color: #262626;
 			letter-spacing: .02em;
 		}
+		
 		#country {
 			color: #262626;
 			letter-spacing: .09em;
@@ -778,20 +840,11 @@ letter-spacing:.1em;
 
 #credits {
 	position: fixed;
-	left: 18px; bottom: 20px;
-	z-index: 5;
-	font-size:12px;
-	transition: opacity 1s linear;
+	left: 70px; bottom: 50px;
+	z-index: 10;
+	width: 230px;	
 }	
-	
-	#credits .socialContainer {
-		border-right: 2px solid #b8b8b8;
-		padding-right:10px;
-		margin-right:10px;
-		display:inline-block;
-	}
-
-	.fa-facebook-square {
+	#credits .fa-facebook-square {
 		color: #3b5a9b;
 		
 	}
@@ -801,8 +854,11 @@ letter-spacing:.1em;
 		padding-right: 5px;
 		cursor: pointer;
 	}
-	.fa-twitter-square{
+	#credits .fa-twitter-square{
 		color: #2baae1;
+		padding-right: 30px;
+		border-right: 2px solid #b8b8b8;
+		
 	}
 	.social:hover {
 		opacity: 1;
@@ -810,16 +866,60 @@ letter-spacing:.1em;
 	#pglogo {
 		width: 2em;
 		height: auto;
+		border: none;
 	}
 	#creditslink {
 		cursor: pointer;
 		color: #b8b8b8;
 		text-transform: uppercase;
-		display:inline-block;
+		padding-left: 20px;
 		font-family: "Muli", Helvetica, Arial;
-		position:relative;
-		top:-3px;
+		position: absolute;
+		top: 20%;
 		right: 0;
+	}
+#creditsbarWrap {
+	width: 100%;
+	height: 100px;
+	background-color: lightgray;
+	opacity: .8;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	z-index: 9;
+	display: none;
+	cursor: pointer;
+}
+#creditsbar {
+	
+	color: #333;
+	font-family: "Muli", Helvetica, Arial;
+	height: 100px;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	padding-left: 320px;
+	z-index: 3;
+	padding-top: 23px;
+	max-width: 100%;
+	vertical-align: center;
+	box-sizing: border-box;
+	cursor: pointer;
+	
+}
+	
+	#creditsbarWrap #creditsbar .title {
+		text-transform: uppercase;
+		font-size: 80%;
+		font-weight: 600;
+		padding-right: 5px;
+
+	}
+	#creditsbarWrap #creditsbar .name {
+		
+	}
+	#creditsbarWrap #creditsbar .smallsquare {
+		padding: 0 10px;
 	}
 .autocomplete-suggestions { border: 1px solid #999; background: #FFF; cursor: default; overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); font-family: Helvetica, Arial, sans-serif;}
 .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }

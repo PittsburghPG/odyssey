@@ -23,25 +23,27 @@
 		<meta name="viewport" content="initial-scale=1.0, width=device-width, user-scalable=no" />
 		
 		<meta property="og:type"            content="article" /> 
-		<meta property="og:url"             content="http://newsinteractive.post-gazette.com/odysseys" /> 
 		<meta property="og:title"           content="Odysseys" /> 
+		<!--<meta property="og:url"             content="http://newsinteractive.post-gazette.com/odysseys" /> -->
 		<meta property="og:description"     content="From all over the world, people have come to Pittsburgh. Some left because of war; some came because of opportunity. Many started a business. Many started a family. In this project, the Pittsburgh Post-Gazette tells a story of an immigrant to this city from every country in the world." /> 
-		<meta property="og:image"           content="http://newsinteractive.post-gazette.com/odysseys" /> 
+		<meta property="og:image"           content="http://newsinteractive.post-gazette.com/odysseys/img/globe.png" /> 
 			
 		<meta name="twitter:card" 			content="summary">
 		<meta name="twitter:site" 			content="@pittsburghpg">
 		<meta name="twitter:title"			content="Odysseys">
 		<meta name="twitter:description"	content="From all over the world, people have come to Pittsburgh. Some left because of war; some came because of opportunity. Many started a business. Many started a family. In this project, the Pittsburgh Post-Gazette tells a story of an immigrant to this city from every country in the world. (via @PittsburghPG)">
-		<meta name="twitter:image" 			content="http://newsinteractive.post-gazette.com/odysseys">
+		<meta name="twitter:image" 			content="http://newsinteractive.post-gazette.com/odysseys/img/globe.png">
 		
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 		<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 		<script type="text/javascript" src="js/jquery.autocomplete.js"></script>
+		<script type="text/javascript" src="js/zcip.js"></script>
+		<script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
 		
 		<script type='text/javascript' src='http://d3js.org/d3.v3.min.js'></script>
 		<script type='text/javascript' src='http://d3js.org/topojson.v1.min.js'></script>
 			
-		<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+		<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 		
 		<link href='http://fonts.googleapis.com/css?family=Muli:300,400' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Cinzel:400,700' rel='stylesheet' type='text/css'>
@@ -61,9 +63,6 @@
 		  fjs.parentNode.insertBefore(js, fjs);
 		}(document, 'script', 'facebook-jssdk'));</script>
 		<!-- end facebook code -->
-		
-		
-		<!--  <i class="fa fa-globe fa-4x fa-spin"></i>-->
 		
 		<svg id="canvas">
 			<defs>
@@ -109,7 +108,7 @@
 			<h1 id="title">ODYSSEYS</h1>
 			<div class = "hidden" id="credits">
 				<div class= "socialContainer">
-					<a target="_blank" href="http://www.post-gazette.com"><img src="img/PGblack.png" class="social" title="PG logo" id="pglogo" /></a> <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://newsinteractive.post-gazette.com/odysseys" style="border:0"><i class="fa fa-facebook-square fa-2x social"></i></a> <a target="_blank" href="https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fnewsinteractive.post-gazette.com%2Fodysseys%2F&text=Odysseys: From all over the world, people have come to Pittsburgh. (via @PittsburghPG):&:tw_p=tweetbutton&url=http://newsinteractive.post-gazette.com/odysseys"><i class="fa fa-twitter-square fa-2x social"></i></a>
+					<a target="_blank" href="http://www.post-gazette.com"><img src="img/PGblack.png" class="social" id="pglogo" /></a> <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://newsinteractive.post-gazette.com/odysseys" style="border:0"><i class="fa fa-facebook-square fa-2x social"></i></a> <a target="_blank" href="https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fnewsinteractive.post-gazette.com%2Fodysseys%2F&text=Odysseys: From all over the world, people have come to Pittsburgh. (via @PittsburghPG):&:tw_p=tweetbutton&url=http://newsinteractive.post-gazette.com/odysseys"><i class="fa fa-twitter-square fa-2x social"></i></a>
 				</div>
 				<div id="creditslink">Credits</div>
 			</div>
@@ -130,7 +129,7 @@
 				<i class="fa fa-angle-double-down" deltaY = 40></i>
 			</div>
 			
-			<div class="commentsWrapper">
+			<div class="commentsWrapper" id="commentsWrapper">
 				<div class="handle commentsHandle">Tell your story</div>
 				<div class="comments">
 					<div class="fb-comments" data-href="http://newsinteractive.post-gazette.com/odysseys" data-width="450" data-numposts="25" data-colorscheme="light"></div>
@@ -142,11 +141,11 @@
 					<form id="commentsForm" action="php/tellus.php" method="post">
 						<div id="textareaWrap">
 							<img src="img/caret.png" id="blinking_caret" title="blinking caret" />
-							<textarea id="formStory" name="formStory" placeholder="" spellcheck="true" rows="20" cols="50"></textarea>
+							<textarea id="formStory" name="formStory" placeholder="" spellcheck="true" cols="50"></textarea>
 						</div>
 						<div class="row"><input type="text" id="first" name="first" placeholder="FIRST" /> <input type="text" name="last" id="last" placeholder="LAST" /> </div>
 						<div class="row"><input type="text" id="countryofOrigin" name="countryofOrigin" placeholder="COUNTRY OF ORIGIN" /> </div>
-						<div class="row"><input type="text" id="neighborhood" name="neighborhood" placeholder="PITTSBURGH NEIGHBORHOOD" /> </div>
+						<div class="row"><input type="text" id="neighborhood" name="neighborhood" placeholder="PITTSBURGH NEIGHBORHOOD" maxlength="" /> </div>
 						<div class="row" id="contactrow"><input type="text" name="contact" id="contact" placeholder="EMAIL OR PHONE" /> </div>
 						<div id="tellus_submit">SUBMIT</div>
 					</form>
@@ -157,7 +156,11 @@
 			
 			
 			<div class="story">
-			<div id="arrowup"><i class="fa fa-arrow-circle-up fa-2x"></i></div>
+			<div id="arrowup" title="Return to globe"><i class="fa fa-arrow-circle-o-up fa-3x"></i></div>
+			<div id="replayside" title="Replay video"><i class="fa fa-play-circle-o fa-3x"></i></div>
+			<div id="facebookside" title="Facebook"><i class="fa fa-facebook-square fa-3x"></i></div>
+			<div id="twitterside" title="Twitter"><i class="fa fa-twitter-square fa-3x"></i></div>
+			<div id="shareside" title="Copy link"><i class="fa fa-share-alt-square fa-3x"></i></div>
 				<div id="personStats">
 					<img class="portrait"  />
 					<div id="name"></div>
@@ -177,7 +180,7 @@
 		
 			<div id="creditsbarWrap">
 				<div id="creditsbar">
-					<span class="title">Writing</span> <span class="name">Steve Mellon, Tony Norman, Mila Sanina, Laura Malt Schneiderman</span> <span class="smallsquare">&#9632;</span> <span class="title">Editing</span> <span class="name">Virginia Linn, Bill Lowenberger, Allan Walton</span> <span class="smallsquare">&#9632;</span> <span class="title">Design</span> <span class="name">Dan Marsula</span> <span class="smallsquare">&#9632;</span> <span class="title">Development</span> <span class="name">Andrew McGill, Laura Malt Schneiderman</span> 
+					<span class="title">Writing</span> <span class="name">Mila Sanina, Steve Mellon, Tony Norman, Gretchen McKay, Laura Malt Schneiderman</span> <span class="smallsquare">&#9632;</span> <span class="title">Editing</span> <span class="name">Virginia Linn, Bill Lowenberger, Allan Walton</span> <span class="smallsquare">&#9632;</span> <span class="title">Design</span> <span class="name">Dan Marsula</span> <span class="smallsquare">&#9632;</span> <span class="title">Development</span> <span class="name">Andrew McGill, Laura Malt Schneiderman</span> 
 				</div>		
 			</div>
 		

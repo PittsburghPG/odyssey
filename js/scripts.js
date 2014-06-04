@@ -43,7 +43,7 @@ d3.json("world.json", function(error, result) {
 	world = result;
 	
 	d3.json("php/getNations.php?operation=getActiveCountries", function(error, results){
-		
+		//console.log(results);
 		// Build an associative array of countries from our database
 		// to more easily match with the geometries file
 		associative_results = [];
@@ -136,6 +136,7 @@ d3.json("world.json", function(error, result) {
 			.on("click", function(d){
 				if(d.properties.completed) {
 					countryName = d3.select(this).html().toLowerCase();
+					window.location.hash = countryName;
 					getReadyToLoadVideo(countryName)
 				}
 			});
@@ -183,27 +184,121 @@ d3.json("world.json", function(error, result) {
 				
 			});
 		
-		if (window.location.hash == '') {
+		var countrytoLoad = getUrlParameter('country');
+		
+		if ((window.location.hash == '') && (countrytoLoad === undefined)){ //there's no hash variable or url variable
+			
 		// Start the intro ** use this for final **
-			loadIntro(function(){
-				d3.select(".loader")
-					.classed("hidden",true);
-				d3.select(".content")
-					.classed("hidden",false);
-			});
-		} else {
+				loadIntro(function(){//so load the intro
+					d3.select(".loader")
+						.classed("hidden",true);
+					d3.select(".content")
+						.classed("hidden",false);
+				});
+			} 
+		if (countrytoLoad !== undefined) {//there is a url variable, so grab the url variable and redirect to the hash url
+				window.location.replace('http://newsinteractive.post-gazette.com/odysseys#' + countrytoLoad);
+		}
+		
+		if (window.location.hash != '') { //there is a hash variable, so grab the country in the hash and load that country
 			var countryname = window.location.hash;
 			countryname = countryname.substring(1, countryname.length);
 			enterViaHash(countryname);
 		}
 		
 	});
-
+	
+	
+	
+	$("#creditslink").click(function(){ 
+		if ($('#creditsbarWrap').is(":visible")) {
+			$('#creditsbarWrap').fadeOut();
+			$('#creditslink').css('color', '#b8b8b8');
+			$('.fa-twitter-square').css('border-color', '#b8b8b8');
+			if ($('#commentsWrapper').hasClass('out')) {
+				$('#pglogo').attr('src','img/PGwhite.png');
+			} else {
+				$('#pglogo').attr('src','img/PGblack.png');
+			}
+			if (($('#personStats').is(':visible'))) {
+				$('#pglogo').attr('src','img/PGwhite.png');
+			}
+			if ($('.videoHolder').length) { //if the video is present
+			$('#pglogo').attr('src','img/PGwhite.png');
+			}
+		} else {
+			$('#creditsbarWrap').fadeIn();
+			$('#creditslink').css('color', '#333');
+			$('.fa-twitter-square').css('border-color', '#333');
+			$('#pglogo').attr('src','img/PGwhite.png');
+		}
+		
+		
+	});
+	
+	$("#creditsbarWrap").click(function(){ 
+		var video = $('video');
+		var videoElement = video.get(0);
+		
+		$('#creditsbarWrap').fadeOut();
+		$('#creditslink').css('color', '#b8b8b8');
+		$('.fa-twitter-square').css('border-color', '#b8b8b8');
+		if ($('#commentsWrapper').hasClass('out')) {
+			$('#pglogo').attr('src','img/PGwhite.png');
+		} else {
+			$('#pglogo').attr('src','img/PGblack.png');
+		}
+		if (($('#personStats').is(':visible'))) {
+			$('#pglogo').attr('src','img/PGwhite.png');
+		}
+		if ($('.videoHolder').length) { //if the video is present
+			$('#pglogo').attr('src','img/PGwhite.png');
+		}
+	});
+	
+	$("h1#title").click(function(){ 
+		if (!$("video").get(0).paused) { //if video is playing, then stop the video
+			$('video').stop();
+		}
+		d3.select(".videoHolder").transition().duration(1000)
+					.style("opacity", 1)
+					.each("end", function(){
+						setTimeout(function() {
+							  d3.select(".videoHolder").remove();
+							//loadStory(countryName);
+						}, 300);
+					});
+		returnToBrowse();
+	});
+	
+	$("[title]").tooltip({
+         // tweak the position
+          position: "center left",
+		  effect: 'fade',
+		  fadeInSpeed: 300,
+          // make fadeOutSpeed similar to the browser's default
+          fadeOutSpeed: 300,
+		  offset: [22, 40]
+         
+      });
 });
 
 // End universal loading section
 // --------------------------------------------------
-
+//function to get url variable
+		function getUrlParameter(sParam)
+		{
+			var sPageURL = window.location.search.substring(1);
+			var sURLVariables = sPageURL.split('&');
+			for (var i = 0; i < sURLVariables.length; i++)
+			{
+				var sParameterName = sURLVariables[i].split('=');
+				if (sParameterName[0] == sParam)
+				{
+					return sParameterName[1];
+				}
+			}
+		}
 // --------------------------------------------------
 // Load if entering via hash 
 function enterViaHash(countryname, callback){
@@ -217,7 +312,7 @@ function enterViaHash(countryname, callback){
 		
 		var commentBar = d3.select(".commentsWrapper");
 		commentBar.style("left", function(){
-			return -parseInt(commentBar.node().offsetWidth) + "px";
+			return -parseInt(commentBar.node().offsetWidth-10) + "px"; //add 10 so border shows
 		});
 		
 		d3.select(".navbarWrapper")
@@ -282,6 +377,7 @@ function loadIntro(callback){
 // Load browse
 
 function loadBrowse(callback) {
+	$('#credits').animate({'left': "18px"}, 1000);
 	
 	// turn off rotation (if it's even activated to begin with)
 	timer_on = true;																			
@@ -303,7 +399,7 @@ function loadBrowse(callback) {
 	
 	var commentBar = d3.select(".commentsWrapper");
 	commentBar.style("left", function(){
-		return -parseInt(commentBar.node().offsetWidth) + "px";
+		return -parseInt(commentBar.node().offsetWidth) + "px"; //add 10 so border shows
 	});
 	
 	d3.select(".navbarWrapper")
@@ -328,14 +424,16 @@ function loadBrowse(callback) {
 function getReadyToLoadVideo(countryName) {
 			//window.location.hash = countryName; //put countryname in url
 			loadVideo(countryName, function(){
-				loadStory(countryName, function(){
-					// Slide up
-					d3.select(".videoHolder").transition().duration(1000)
-						.style("opacity", 0)
-						.each("end", function(){
-							d3.select(".videoHolder").remove();
-						})
-				});
+				// Slide up
+				d3.select(".videoHolder").transition().duration(1000)
+					//.style("opacity", 0)
+					.each("end", function(){
+						setTimeout(function() {
+							  d3.select(".videoHolder").remove();
+							loadStory(countryName);
+						}, 300);
+					});
+				
 			});	
 }
 			
@@ -366,10 +464,24 @@ function loadVideo(countryName, callback) {
 		.append("video")
 			.style("opacity", 0)
 			.attr("class", "fullscreen")
-			.attr("src", "countries/" + countryName + "/vid/" + countryName + "_portrait.mp4")
+			//.attr("src", "countries/" + countryName + "/vid/" + countryName + "_portrait.mp4")
 			.style("width", width)
 			.style("height", height);
-			
+		
+		var FF = !(window.mozInnerScreenX == null); //detect if Firefox
+		if(FF) {
+			d3.select("video")
+			.append("source")
+				.attr("src", "countries/" + countryName + "/vid/" + countryName + "_portrait.webm") //older versions of Firefox need webm
+				.attr("type", "video/webm");
+		} else { 
+			d3.select("video")
+			.append("source")
+				.attr("src", "countries/" + countryName + "/vid/" + countryName + "_portrait.mp4") //other browsers can use mp4 
+				.attr("type", "video/mp4");
+		}
+		
+				
 	d3.select("body").transition()
 		.duration(500)
 		.style("background-color", "white")
@@ -385,6 +497,18 @@ function loadVideo(countryName, callback) {
 			});
 	
 	globe.on("click", function(){
+		
+		if (!$("video").get(0).paused) { //if video is playing, then stop the video
+			$('video').stop();
+		}
+		d3.select(".videoHolder").transition().duration(1000)
+					.style("opacity", 1)
+					.each("end", function(){
+						setTimeout(function() {
+							  d3.select(".videoHolder").remove();
+							//loadStory(countryName);
+						}, 300);
+					});
 		returnToBrowse();
 	});
 	
@@ -400,6 +524,10 @@ function loadVideo(countryName, callback) {
 function loadStory(country, callback) {
 	// Insert content below
 	$.getJSON("php/getNations.php?operation=getSingleCountry&country=" + country, function(data){ //grab data from database via php
+		var commentBar = d3.select(".commentsWrapper"); //reposition commentBar so border doesn't get cut off
+		commentBar.style("left", function(){
+			return -parseInt(commentBar.node().offsetWidth-10) + "px"; //add 10 so border shows
+		});
 		
 		if( data != "") data = data[0];
 		
@@ -414,6 +542,8 @@ function loadStory(country, callback) {
 		$('.countryMap').attr('title', 'Map of ' + data.Country);
 		$('.portrait').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_portrait.jpg');
 		$('.portrait').attr('title', data.Name);
+		
+		
 		$('.text #bio').html(data.Notes);
 		if (data.Heading.length > 0) {
 			$('.text h1').html(data.Heading);
@@ -423,17 +553,6 @@ function loadStory(country, callback) {
 			$("#bio").css('margin-top', '0');
 			$("#bio p:nth-child(1)").css('margin-top', '0');//close up space above top paragraph if there's no heading
 		}
-		
-		/*
-		if (data.Quote.length > 0) {
-			$('.quote').html('"' + data.Quote + '"');
-			$('.quote').show();
-		} else {
-			$('.quote').hide();
-		}
-		$("#bio p:nth-child(3)").append($('.quote'));
-		//end filling data into html
-		*/
 		
 		//put image wrappers around each image and style images and captions
 		$.each($('#bio img'), function( index, value ) {
@@ -448,7 +567,8 @@ function loadStory(country, callback) {
 				$( this ).wrap( "<div class='imgWrap_horizontal'></div>" );
 					//$('.imgWrap_horizontal').css('height', imgH + 'px');
 					$('.imgWrap_horizontal').append('<div class="caption">' + caption + '</div>');
-					$('.imgWrap_horizontal .caption').css('left', imgW + 20 + 'px');
+					//$('.imgWrap_horizontal .caption').css('left', imgW + 20 + 'px');
+					$('.imgWrap_horizontal .caption').css('right', '0px');
 				} else { //if it's a vertical image
 					$( this ).wrap( "<div class='imgWrap_vertical'></div>" );
 					$('.imgWrap_vertical').css('width', imgW + 'px');
@@ -459,10 +579,7 @@ function loadStory(country, callback) {
 		});
 			
 		d3.select(".story").style("display", "block");	
-		/*d3.select("body").style({
-			'background-color': '#fff'
-		});*/
-
+		
 		$('.story').css('margin-left', ( $(window).width() - $(".story").width() ) / 2 ); 
 		
 		//position the stats in a fixed col on the left
@@ -486,12 +603,101 @@ function loadStory(country, callback) {
 		} 
 		
 		$('#personStats').fadeIn();
+		//position portrait overlay
+		var portraitP = $('.portrait').position();
+		var pW = $('.portrait').width();
+		var pH = $('.portrait').height();
+		var playHW = $('.fa-play-circle').width();
+		$('#replayIcon').css({
+			'left' : 100-(.5*playHW),
+			'top'  : 75-(.5*playHW)
+			
+		});
 		
 		$('body').css('overflow-y', 'scroll'); //put the scroll on the body, not the story		
-		
 		//if in bio page and click arrow up, scroll back to browse
-		$('.fa-arrow-circle-up, #title').click(function(){
-			if( d3.select("body").classed("white") ) returnToBrowse();
+		
+		$('.fa-arrow-circle-o-up').click(function(){
+			if( d3.select("body").classed("white") ) {
+				window.location.hash = '';
+				returnToBrowse();
+			}
+		});
+		
+		$('#replayside').click(function(){ //if click video replay
+			$('#personStats, .story .text').css({
+				'opacity': '0',
+				'z-index': '1'
+			});
+			var countryName = data.Country;
+			countryName = countryName.toLowerCase();
+			
+			$('.story').prepend("<div class='videoHolder'><div id='arrowdown' title='Return to globe'><i class='fa fa-arrow-circle-down fa-2x vidclose'></i><video class='fullscreen' width='" + width + "' height='" + height + "' controls></video></div>");
+			$('video').css({
+				'position' : 'relative',
+				'z-index'  : '5'
+			})
+			var FF = !(window.mozInnerScreenX == null); //detect if Firefox
+			if(FF) {
+				d3.select("video")
+				.append("source")
+					.attr("src", "countries/" + countryName + "/vid/" + countryName + "_portrait.webm") //older versions of Firefox need webm
+					.attr("type", "video/webm");
+			} else { 
+				d3.select("video")
+				.append("source")
+					.attr("src", "countries/" + countryName + "/vid/" + countryName + "_portrait.mp4") //other browsers can use mp4 
+					.attr("type", "video/mp4");
+			}
+			//<i class="fa fa-times-circle"></i>
+			
+			$('video').get(0).play();
+					
+			$('.vidclose').click(function(){ //if click video close
+				 d3.select(".videoHolder").remove();
+				$('#personStats, .story .text').css({
+					'opacity': '1',
+					'z-index': '5'
+				});
+				
+			});
+			
+			
+		});
+		
+		$('#facebookside').click(function(){
+			//<a class="btn" target="_blank" href="http://www.facebook.com/sharer.php?s=100&amp;p[title]=<?php echo urlencode(YOUR_TITLE);?>&amp;p[summary]=<?php echo urlencode(YOUR_PAGE_DESCRIPTION) ?>&amp;p[url]=<?php echo urlencode(YOUR_PAGE_URL); ?>&amp;p[images][0]=<?php echo urlencode(YOUR_LINK_THUMBNAIL); ?>">share on facebook</a>
+			//var url = "https://www.facebook.com/sharer/sharer.php?u=http://newsinteractive.post-gazette.com/odysseys#" + data.Country;
+			//var url = "http://www.facebook.com/sharer.php?s=100&p[title]=Odysseys&p[summary]=The story of Pittsburgh\s immigrants&p[url]=http://newsinteractive.post-gazette.com/odysseys#" + data.Country + "&p[images][0]=http://newsinteractive.post-gazette.com/odysseys/img/globe.png";
+			//var url = "https://www.facebook.com/dialog/share?app_id=145634995501895&display=popup&href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2F&redirect_uri=https://developers.facebook.com/tools/explorer";
+			var facebook_url = 'http://www.facebook.com/sharer.php?'+ 'u='+encodeURIComponent('http://newsinteractive.post-gazette.com/odysseys#' + data.Country.toLowerCase())+ '&amp;t='+encodeURIComponent('Odysseys:' + data.Country.toLowerCase());
+			window.open(facebook_url, '_blank');
+
+
+		});
+		
+		$('#twitterside').click(function(){
+			var url = "https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fnewsinteractive.post-gazette.com%2Fodysseys?country=" + data.Country.toLowerCase() + "%2F&text=Odysseys: From all over the world, people have come to Pittsburgh. (via @PittsburghPG):&:tw_p=tweetbutton&url=http://newsinteractive.post-gazette.com/odysseys?country=" + data.Country.toLowerCase();
+			window.open(url, '_blank');
+			
+		});
+		
+		
+		$('#shareside').click(function(){
+			
+		});
+		
+		//if in bio page and click globe, scroll back to browse
+		globe.on("click", function(){
+			d3.select(".videoHolder").transition().duration(1000)
+						.style("opacity", 1)
+						.each("end", function(){
+							setTimeout(function() {
+								  d3.select(".videoHolder").remove();
+								//loadStory(countryName);
+							}, 300);
+						});
+			returnToBrowse();
 		});
 			
 		if(typeof callback === 'function') callback();
@@ -504,11 +710,11 @@ function loadStory(country, callback) {
 // --------------------------------------------------
 // Return from story/video to browse
 function returnToBrowse(callback) {
-	$('body').css('overflow-y', 'hidden'); 
-		$('#pglogo').css('visibility', 'hidden');
-		d3.select(".story").transition().duration(500)
+	//$('body').css('overflow-y', 'hidden'); 
+$('#pglogo').css('visibility', 'hidden');
+	d3.select(".story").transition().duration(500)
 			.style("margin-top", height + "px")
-			.each("end", function(){
+				.each("end", function(){
 				d3.select(".story").style({"margin-top":"0px", "display":"none"});
 				d3.select("body").transition()
 					.duration(500)
@@ -541,21 +747,35 @@ $('.commentsHandle').click(function(){
 });
 
 function loadComments(callback) {
+	//autocomplete
 	var options, a;
 		jQuery(function(){
 			options = { serviceUrl:'php/getCountries.php' }; //the php code does the heavy lifting
-			a = $('#origin').autocomplete(options);
+			a = $('#countryofOrigin').autocomplete(options);
 	}); 
+	
 	$('#countryTab').removeClass("out");
 	
 	$('body').append("<div id='commentsBg'></div>"); //insert dimmer
 	$("#commentsBg").css("opacity"); // hacky solution to make browser recognize initial state of new element
-	$('#commentsBg').css('opacity', ".5"); //fade in the dsimmer
+	$('#commentsBg').css('opacity', ".5"); //fade in the dimmer
+	$('#pglogo').attr('src', 'img/PGwhite.png');
 	
 	//size the width of the part of the page containing the tell us form
 	var leftColWidth = $('.commentsWrapper').width() - $(".comments").outerWidth() - parseInt($(".comments").css("margin-left")) - parseInt($(".commentsLeft").css("padding-left")) - parseInt($(".commentsLeft").css("padding-right")); //minus the width of the commetns, minus the padding on comments, minus the left margin, minus the padding on commentsLeft
 	$('.commentsLeft').css('width', leftColWidth + 'px');
 	$(window).resize(myResizeFunction).trigger('resize');
+	
+	//resize textarea for story
+	var commentsFormHeight = $('#commentsForm').height();
+	var titleHeight = $('.commentsLeft h1').height();
+	var chatterHeight = $('.formChatter').height();
+	var commentsFormTop = $('#commentsForm').position().top;
+	var remainingForForm = height - 150 - commentsFormTop - titleHeight - chatterHeight; //150 is for the credits
+	var rowHeight = $('input[type=text]').height() + 10;
+	var allRows = rowHeight * 4;
+	var forText = remainingForForm - allRows;
+	$('#formStory').css('height', forText + 'px');
 	
 	$('#formStory, #blinking_caret').click(function(){
 		$('#blinking_caret').stop( true, true ).fadeOut(0);
@@ -564,23 +784,33 @@ function loadComments(callback) {
 	//make first and last name fields half of one row
 	var rowW = $('.row').width();
 	$('#first, #last').css('width', rowW/2 - 10);
-	//position submit button
-	var p = $('#contact').position();
-	var buttonTop = p.top;
-	$('#tellus_submit').css('top', buttonTop - 20 + 'px');
+	
+	
 	//give the button some space to the left by shortening the row that the contact textfield is in
 	var buttonW = $('#tellus_submit').width();
 	var contactrowW = $('#contactrow').width();
 	var newcontactrowW = contactrowW - buttonW - 60;
 	$('#contactrow').css('width', newcontactrowW + 'px');
-	$('#tellus_submit').click(function(){
-		$('#commentsForm').submit();
-		$.post( "php/tellus.html", function( data ) {
-			
+	
+	$('#neighborhood').attr('maxlength', '60'); //make sure neighborhood doesn't go off the screen
+	
+	$('.commentsWrapper').animate({'left': "0"}, 1000); 
+	
+	$("#tellus_submit").click(function(){ 
+		var first = $("#first").val();
+		var last = $("#last").val();
+		var contact = $("#contact").val();
+		var country = $("#countryofOrigin").val();
+		var neighborhood = $("#neighborhood").val();
+		var about = $("#formStory").val();
+		$.post("php/tellus.php", { first: first, last: last, contact: contact, country: country, neighborhood: neighborhood, about: about },
+		   function(data) {
+			 $('#commentsForm').fadeOut();
+			 $('.formChatter').append('<p id="thanks">Lorem ipsum dolor sit amet.</p>');
+			 $('#thanks').fadeIn();
 		});
 	});
 	
-	$('.commentsWrapper').animate({'left': "0"}, 1000);
 }
 
 function myResizeFunction() {
@@ -594,7 +824,13 @@ function unloadComments(callback) {
 	$('.commentsWrapper').animate({'left': $(".commentsWrapper").outerWidth() * -1	}, 1000, function(){
 		$("#commentsBg").remove();
 	});
-	
+	if ($('.videoHolder').is(":visible")) {
+		$('#pglogo').attr('src', 'img/PGwhite.png');
+	} else if ($('#personStats').is(":visible")){
+		$('#pglogo').attr('src', 'img/PGwhite.png');
+	} else {
+		$('#pglogo').attr('src', 'img/PGblack.png');
+	}
 	
 }
 // End load comments
