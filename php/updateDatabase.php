@@ -27,10 +27,10 @@ var_dump($content);
 
 if($content != FALSE) {
 	//clear database
-	$db->query("TRUNCATE TABLE `odysseys`");
+	$db->query("TRUNCATE TABLE people");
 	
 	foreach($content as $country){
-		$db->query("INSERT INTO people 
+		echo $db->query("INSERT INTO people 
 								(`Country`, 
 								`Name`, 
 								`Age`, 
@@ -39,16 +39,34 @@ if($content != FALSE) {
 								`Neighborhood`, 
 								`Notes`, 
 								`Heading`) 
-					VALUES      ('" . $country["Country"] . "',
-								'" . $country["Name"] . "',
-								'" . $country["Age"] . "',
-								'" . $country["Occupation"] . "',
-								'" . $country["Origin"] . "',
-								'" . $country["Current neighborhood"] . "',
-								'" . $country["Story text"] . "',
-								'" . $country["Story title"] . "'
+					VALUES      (\"" . $db -> real_escape_string($country["Country"]) . "\",
+								\"" . $db -> real_escape_string($country["Name"]) . "\",
+								\"" . $country["Age"] . "\",
+								\"" . $db -> real_escape_string($country["Occupation"]) . "\",
+								\"" . $db -> real_escape_string($country["Origin"]) . "\",
+								\"" . $db -> real_escape_string($country["Current neighborhood"]) . "\",
+								\"" . $db -> real_escape_string($country["Story text"]) . "\",
+								\"" . $db -> real_escape_string($country["Story title"]) . "\"
 								)");
 								
+		echo $db -> real_escape_string("INSERT INTO people 
+								(`Country`, 
+								`Name`, 
+								`Age`, 
+								`Occupation`, 
+								`Origin`, 
+								`Neighborhood`, 
+								`Notes`, 
+								`Heading`) 
+					VALUES      (\"" . $country["Country"] . "\",
+								\"" . $country["Name"] . "\",
+								\"" . $country["Age"] . "\",
+								\"" . $country["Occupation"] . "\",
+								\"" . $country["Origin"] . "\",
+								\"" . $country["Current neighborhood"] . "\",
+								\"" . $country["Story text"] . "\",
+								\"" . $country["Story title"] . "\"
+								)");
 		echo "Uploaded " . $country["Country"] . "<br />";
 	}
 	echo $mysqli->error;

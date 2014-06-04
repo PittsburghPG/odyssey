@@ -64,7 +64,16 @@ d3.json("world.json", function(error, result) {
 			}
 			else world.objects.countries.geometries[i].properties.in_project = false;
 		});
-	
+		
+		// This sorts the countries alphabetically
+		world.objects.countries.geometries.sort(function(a, b){
+			if(a.properties.name > b.properties.name) return 1;
+			if(b.properties.name > a.properties.name) return -1;
+			return 0;
+		});
+		
+		
+		
 		// add background circle for aesthetics
 		circle = svg.append("circle")
 			.attr('cx', width / 2)
