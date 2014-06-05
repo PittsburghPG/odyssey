@@ -1,0 +1,100 @@
+body {
+	background-color:black;
+	overflow-x:hidden;
+}
+
+h1 {
+	font-family:"Cinzel", Times New Roman, serif;
+	font-weight:normal;
+	color:#706D6D; /*#454343;*/
+	text-align:center;
+	margin:0;
+	padding:10px 1%;
+	line-height:.8em;
+	font-size:45pt;
+
+	top:0;
+	left:0;
+	width:98%;
+	
+}
+
+.header {
+	font-family:"Cinzel", Times New Roman, serif;
+	font-weight:normal;
+	color:#706D6D; /*#454343;*/
+	text-align:center;
+	margin:0;
+	padding:5px;
+	border-bottom: 1px solid #007fd4;
+	font-size:25pt;
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+
+}
+
+.intro {
+	top:0;
+	right:0;
+	height:100%;
+	position:absolute;
+	transition:all .5s;
+}
+
+	.intro .text {
+		font-family:"Muli", Helvetica, Arial;
+		color:white;
+		font-size:11pt;
+		letter-spacing:.1em;
+		width:80%;
+		margin:auto;
+		text-align:center;
+	}
+	
+		.intro .text p:first-child {
+			margin-top:0;
+		}
+
+	.intro .label {
+		color:#888;
+		font-family:"Muli", Helvetica, Arial;
+		font-size:10pt;
+		font-style:italics;
+		width:50%;
+		margin:10px auto;
+		text-align:center;
+		
+	}
+	
+	.intro .button {
+		text-align:center;
+		width:100%;
+		
+	}
+	
+		.intro .button .fa-globe {
+			font-size:100pt;
+			color:#007fd4;
+			text-shadow:0px 0px 5px #007fd4;
+			opacity:.25;
+			transition:opacity 2s;
+		}
+
+.browse {
+	position:absolute;
+	top:100%;
+	transition:all .5s;
+	width:100%;
+}
+
+.tellUs {
+	position:absolute;
+	top:0;
+	left:100%;
+	width:100%;
+	transition:all .5s;
+	background-color:white;
+	height:100%
+}
