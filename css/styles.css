@@ -516,19 +516,26 @@ height:100%;
 top:0;
 left:0;
 z-index: 5;
+background-color: white;
+display: table;
 }
 video {
 	outline: 0;
+	background-color: white;
+	
 }
 .fullscreen
 {
-width:100%;
+/*width:100%;*/
+width: auto;
 height:100%;
 top:0;
-left:0;
+/*left:0;*/
 position:absolute;
 background-color:white;
 outline: 0;
+display: table-cell;
+text-align: center;
 }
 
 .story
@@ -604,13 +611,49 @@ padding-right: 20px;
 		right: 75px;
 		padding: 10px;
 	}
+	.righticon {
+		position: relative;
+	}
 	.tooltip {
 		display:none;
 		height:70px;
 		width:160px;
 		color:#007fd4;
 		font-family:"Muli", sans-serif;
+		position: fixed;
+		top: 60px;
+		right: 80px;
+		padding: 16px;
+		
 	 }	
+	 
+	 #copylinkbox {
+		position: fixed;
+		top: 110px;
+		right: 135px;
+		width: 400px;
+		height: 110px;
+		-moz-border-radius: 15px;
+		-webkit-border-radius: 15px;
+		border-radius: 15px; /* future proofing */
+		background-color: lightgray;
+		z-index: 10;
+		font-family:"Muli", sans-serif;
+		padding: 20px;
+		display: none;
+	 }
+		#copyfield {
+			width: 90% !important;
+			
+		}
+		 #copylinkbox  p {
+			
+		 }
+	.shadow {
+		-webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.3);
+		-moz-box-shadow:    7px 7px 5px 0px rgba(50, 50, 50, 0.3);
+		box-shadow:         7px 7px 5px 0px rgba(50, 50, 50, 0.3);
+	}
 	.story h1
 	{
 	font-family:"Cinzel", "Time New Roman", serif;
@@ -662,7 +705,10 @@ padding-right: 20px;
 			margin-bottom: 20px;
 			position: relative;
 		}
-		
+		.text #bio .imgWrap_vertical img {
+			width: 100%;
+			height: auto;
+		}
 		.caption {
 			font-family:"Muli", sans-serif;
 			font-size: 90%;

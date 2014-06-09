@@ -64,16 +64,7 @@ d3.json("world.json", function(error, result) {
 			}
 			else world.objects.countries.geometries[i].properties.in_project = false;
 		});
-		
-		// This sorts the countries alphabetically
-		world.objects.countries.geometries.sort(function(a, b){
-			if(a.properties.name > b.properties.name) return 1;
-			if(b.properties.name > a.properties.name) return -1;
-			return 0;
-		});
-		
-		
-		
+	
 		// add background circle for aesthetics
 		circle = svg.append("circle")
 			.attr('cx', width / 2)
@@ -145,6 +136,7 @@ d3.json("world.json", function(error, result) {
 			.on("click", function(d){
 				if(d.properties.completed) {
 					countryName = d3.select(this).html().toLowerCase();
+					if (countryName == 'bosnia and herzegovina') { countryName = 'bosnia';}
 					window.location.hash = countryName;
 					getReadyToLoadVideo(countryName)
 				}
@@ -266,7 +258,7 @@ d3.json("world.json", function(error, result) {
 	});
 	
 	$("h1#title").click(function(){ 
-		if (!$("video").get(0).paused) { //if video is playing, then stop the video
+		if (($('video').length) && (!$("video").get(0).paused)){ //if there is a video on the page and it is playing, then stop the video
 			$('video').stop();
 		}
 		d3.select(".videoHolder").transition().duration(1000)
@@ -277,10 +269,11 @@ d3.json("world.json", function(error, result) {
 							//loadStory(countryName);
 						}, 300);
 					});
+		window.location.hash = '';
 		returnToBrowse();
 	});
 	
-	$("[title]").tooltip({
+	/*$("[title]").tooltip({
          // tweak the position
           position: "center left",
 		  effect: 'fade',
@@ -289,7 +282,7 @@ d3.json("world.json", function(error, result) {
           fadeOutSpeed: 300,
 		  offset: [22, 40]
          
-      });
+      });*/
 });
 
 // End universal loading section
@@ -433,9 +426,9 @@ function loadBrowse(callback) {
 function getReadyToLoadVideo(countryName) {
 			//window.location.hash = countryName; //put countryname in url
 			loadVideo(countryName, function(){
-				// Slide up
+				// Fade out when video done and load story
 				d3.select(".videoHolder").transition().duration(1000)
-					//.style("opacity", 0)
+					.style("opacity", "0")
 					.each("end", function(){
 						setTimeout(function() {
 							  d3.select(".videoHolder").remove();
@@ -458,39 +451,54 @@ function loadVideo(countryName, callback) {
 	d3.select(".navbarWrapper").classed("out", false);
 	d3.select(".navbarWrapper").classed("hidden", true);
 	d3.select("body").classed("white", true);
+	d3.select(".content").classed("white", true);
+	
 	
 	// Slide away globe and text widget
 	moveAndZoom(width - 120, height - 100, 75, 1000, function(){
 		circle.attr("fill", "white")
 			.attr("stroke", "lightgray")
-			.attr("filter", "");
+			.attr("filter", "none");
 		d3.selectAll(".country").classed("small", true);
 	});
 	
+	//push little globe and title to top so they stay visible
+	$('svg').css({
+		'position': 'relative',
+		'z-index': '99'
+	});
+	$('h1#title').css({
+		'z-index': '99'
+	});
+	//put vidholder and video on the page
 	var video = d3.select(".content")
 		.insert("div", ".story")
 			.attr("class", "videoHolder")
 		.append("video")
-			.style("opacity", 0)
+			.style("opacity", "0")
 			.attr("class", "fullscreen")
-			//.attr("src", "countries/" + countryName + "/vid/" + countryName + "_portrait.mp4")
 			.style("width", width)
 			.style("height", height);
 		
 		var FF = !(window.mozInnerScreenX == null); //detect if Firefox
-		if(FF) {
+		if(FF) { //if firefox, use webm
 			d3.select("video")
 			.append("source")
 				.attr("src", "countries/" + countryName + "/vid/" + countryName + "_portrait.webm") //older versions of Firefox need webm
 				.attr("type", "video/webm");
-		} else { 
+		} else { //else use mp4
 			d3.select("video")
 			.append("source")
 				.attr("src", "countries/" + countryName + "/vid/" + countryName + "_portrait.mp4") //other browsers can use mp4 
 				.attr("type", "video/mp4");
 		}
-		
-				
+	
+	//center video using vidholder class so that IE won't have black bars to the right and left of the video
+	//var width = $(window).width();
+	var vidwidth = $('video').width();
+	var newleft = (width - vidwidth) / 2;
+	$('.fullscreen').css('left', newleft + 'px');
+	
 	d3.select("body").transition()
 		.duration(500)
 		.style("background-color", "white")
@@ -511,7 +519,7 @@ function loadVideo(countryName, callback) {
 			$('video').stop();
 		}
 		d3.select(".videoHolder").transition().duration(1000)
-					.style("opacity", 1)
+					.style("opacity", "1")
 					.each("end", function(){
 						setTimeout(function() {
 							  d3.select(".videoHolder").remove();
@@ -537,7 +545,12 @@ function loadStory(country, callback) {
 		commentBar.style("left", function(){
 			return -parseInt(commentBar.node().offsetWidth-10) + "px"; //add 10 so border shows
 		});
-		
+		//remove positioning of svg so that story shows up
+		$('svg').css({
+				'position': '',
+				'z-index': ''
+			});
+		$('.story').css('display', 'block'); //not showing in IE
 		if( data != "") data = data[0];
 		
 		$('#name').html(data.Name);
@@ -566,25 +579,29 @@ function loadStory(country, callback) {
 		//put image wrappers around each image and style images and captions
 		$.each($('#bio img'), function( index, value ) {
 			//console.log( index + ": " + value );
-			$(this).load(function() {
+			//$(this).load(function() {
 				//alert('I loaded!');
-				var imgW = $(this).width();
-				var imgH = $(this).height();
-				var imgSrc = $(this).attr('src');
-				var caption = $(this).attr('caption');
-				if (imgW > imgH) { //if it's a horizontal image
-				$( this ).wrap( "<div class='imgWrap_horizontal'></div>" );
-					//$('.imgWrap_horizontal').css('height', imgH + 'px');
-					$('.imgWrap_horizontal').append('<div class="caption">' + caption + '</div>');
-					//$('.imgWrap_horizontal .caption').css('left', imgW + 20 + 'px');
-					$('.imgWrap_horizontal .caption').css('right', '0px');
-				} else { //if it's a vertical image
-					$( this ).wrap( "<div class='imgWrap_vertical'></div>" );
-					$('.imgWrap_vertical').css('width', imgW + 'px');
-					//$('.imgWrap_vertical').css('height', imgH + 'px');
-					$('.imgWrap_vertical').append('<div class="caption">' + caption + '</div>');
-			    }
-			});
+					var imgW;
+					var imgH = $(this).height();
+					var imgSrc = $(this).attr('src');
+					var caption = $(this).attr('caption');
+					if (imgW > imgH) { //if it's a horizontal image
+						$( this ).wrap( "<div class='imgWrap_horizontal'></div>" );
+						$(this).parent().append('<div class="caption">' + caption + '</div>');
+						imgW = $('#bio').width() * .66;
+						$(this).parent().children('.caption').css('left', imgW + 20);
+						
+					} else { //if it's a vertical image
+						$( this ).wrap( "<div class='imgWrap_vertical'></div>" );
+						imgW = width / 2 -196;
+						$('.imgWrap_vertical').css({
+						'width': imgW + 'px',
+						'height': 'auto'
+						});
+						
+						$(this).parent().append('<div class="caption">' + caption + '</div>');
+					}
+			//});
 		});
 			
 		d3.select(".story").style("display", "block");	
@@ -612,6 +629,7 @@ function loadStory(country, callback) {
 		} 
 		
 		$('#personStats').fadeIn();
+		$('.story').css('opacity', '1');
 		//position portrait overlay
 		var portraitP = $('.portrait').position();
 		var pW = $('.portrait').width();
@@ -638,14 +656,29 @@ function loadStory(country, callback) {
 				'opacity': '0',
 				'z-index': '1'
 			});
+			$('.commentsHandle').hide();
 			var countryName = data.Country;
 			countryName = countryName.toLowerCase();
 			
-			$('.story').prepend("<div class='videoHolder'><div id='arrowdown' title='Return to globe'><i class='fa fa-arrow-circle-down fa-2x vidclose'></i><video class='fullscreen' width='" + width + "' height='" + height + "' controls></video></div>");
-			$('video').css({
-				'position' : 'relative',
-				'z-index'  : '5'
-			})
+			//push little globe to top so visible
+			$('svg').css({
+				'position': 'relative',
+				'z-index': '99'
+			});
+			
+			//$('.content').prepend("<div id='arrowdown' title='Return to globe'><i class='fa fa-arrow-circle-down fa-2x vidclose'></i></div><div class='videoHolder'><video class='fullscreen' width='" + width + "' height='" + height + "' controls></video>");
+			$('.content').prepend("<div id='arrowdown' title='Return to globe'><i class='fa fa-arrow-circle-down fa-2x vidclose'></i></div>");
+			
+			var video = d3.select(".content")
+			.insert("div", ".story")
+				.attr("class", "videoHolder")
+			.append("video")
+				.style("opacity", "0")
+				.attr("class", "fullscreen")
+				.attr("controls", true)
+				.style("width", width)
+				.style("height", height);
+			
 			var FF = !(window.mozInnerScreenX == null); //detect if Firefox
 			if(FF) {
 				d3.select("video")
@@ -658,21 +691,55 @@ function loadStory(country, callback) {
 					.attr("src", "countries/" + countryName + "/vid/" + countryName + "_portrait.mp4") //other browsers can use mp4 
 					.attr("type", "video/mp4");
 			}
-			//<i class="fa fa-times-circle"></i>
+			//center video in a way that IE likes
+			var vidwidth = $('video').width();
+			var newleft = (width - vidwidth) / 2;
+			$('.fullscreen').css('left', newleft + 'px');
 			
-			$('video').get(0).play();
-					
+			d3.select("body").transition()
+			.duration(500)
+			.style("background-color", "white")
+			.each("end", function(){
+				video.node().play();
+				video.transition().duration(1000)
+					.style("opacity", "1")
+					.each("end", function(){
+						video.on("ended", function(){
+							if(typeof callback === 'function') callback();
+						});
+					});
+				});
+			
 			$('.vidclose').click(function(){ //if click video close
+				 $('video').get(0).pause(); //if they click it in the middle of the video, we need to stop the video 
 				 d3.select(".videoHolder").remove();
-				$('#personStats, .story .text').css({
-					'opacity': '1',
+				$('.vidclose').remove();
+				$('.commentsHandle').show();
+				$( "#personStats, .story .text" ).animate({ //fade in the bio
+					'opacity': 1,
 					'z-index': '5'
+				  }, 500);
+				
+				//push little globe back to original DOM order so that story can be seen
+				$('svg').css({
+					'position': '',
+					'z-index': ''
 				});
 				
 			});
 			
 			
 		});
+		
+		$('.righticon')
+		   .mouseenter(function() {
+			$('.tooltip').text($(this).attr('tip'));
+			$('.tooltip').css('top', $(this).css('top') );
+			$('.tooltip').show();
+		  })
+		  .mouseleave(function() {
+			$('.tooltip').hide();
+		  });
 		
 		$('#facebookside').click(function(){
 			//<a class="btn" target="_blank" href="http://www.facebook.com/sharer.php?s=100&amp;p[title]=<?php echo urlencode(YOUR_TITLE);?>&amp;p[summary]=<?php echo urlencode(YOUR_PAGE_DESCRIPTION) ?>&amp;p[url]=<?php echo urlencode(YOUR_PAGE_URL); ?>&amp;p[images][0]=<?php echo urlencode(YOUR_LINK_THUMBNAIL); ?>">share on facebook</a>
@@ -693,8 +760,16 @@ function loadStory(country, callback) {
 		
 		
 		$('#shareside').click(function(){
-			
+			 $('#copylinkbox').show();
+			 $('#copyfield').val(document.URL);
+			 $('#copyfield').focus();
+			 $('#copyfield').select();
+			 
+			 $('#closesharelink').click(function(){
+				$('#copylinkbox').fadeOut();
+			});
 		});
+		
 		
 		//if in bio page and click globe, scroll back to browse
 		globe.on("click", function(){
@@ -722,6 +797,7 @@ function returnToBrowse(callback) {
 	//$('body').css('overflow-y', 'hidden'); 
 $('#pglogo').css('visibility', 'hidden');
 	d3.select(".story").transition().duration(500)
+			.style('opacity', '0')
 			.style("margin-top", height + "px")
 				.each("end", function(){
 				d3.select(".story").style({"margin-top":"0px", "display":"none"});
@@ -756,13 +832,8 @@ $('.commentsHandle').click(function(){
 });
 
 function loadComments(callback) {
-	//autocomplete
-	var options, a;
-		jQuery(function(){
-			options = { serviceUrl:'php/getCountries.php' }; //the php code does the heavy lifting
-			a = $('#countryofOrigin').autocomplete(options);
-	}); 
 	
+	$('h1#title').hide();
 	$('#countryTab').removeClass("out");
 	
 	$('body').append("<div id='commentsBg'></div>"); //insert dimmer
@@ -801,10 +872,16 @@ function loadComments(callback) {
 	var newcontactrowW = contactrowW - buttonW - 60;
 	$('#contactrow').css('width', newcontactrowW + 'px');
 	
-	$('#neighborhood').attr('maxlength', '60'); //make sure neighborhood doesn't go off the screen
+	$('#neighborhood, #countryofOrigin').attr('maxlength', '60'); //make sure neighborhood doesn't go off the screen
 	
 	$('.commentsWrapper').animate({'left': "0"}, 1000); 
 	
+	//autocomplete
+	var options, a;
+	jQuery(function(){
+		options = { serviceUrl:'php/getCountries.php' };
+		a = $('#countryofOrigin').autocomplete(options);
+	}); 
 	$("#tellus_submit").click(function(){ 
 		var first = $("#first").val();
 		var last = $("#last").val();
@@ -832,6 +909,7 @@ function unloadComments(callback) {
 	$('#countryTab').addClass("out");
 	$('.commentsWrapper').animate({'left': $(".commentsWrapper").outerWidth() * -1	}, 1000, function(){
 		$("#commentsBg").remove();
+		$('h1#title').delay(500).show();
 	});
 	if ($('.videoHolder').is(":visible")) {
 		$('#pglogo').attr('src', 'img/PGwhite.png');
@@ -884,7 +962,7 @@ function panTo(d, duration){
 
 function moveAndZoom(newX, newY, endZoom, duration, callback) {
 	// Remove glow temporarily; it slows down transitions.
-	circle.attr("filter", "");
+	circle.attr("filter", "none");
 	
 	var startZoom = projection.scale();
 	var oldX = projection.translate()[0];

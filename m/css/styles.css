@@ -32,7 +32,8 @@ h1 {
 	top:0;
 	left:0;
 	width:100%;
-
+	background-color:black;
+	z-index:2;
 }
 
 .intro {
@@ -83,13 +84,39 @@ h1 {
 		}
 
 .browse {
-	position:absolute;
+	position:fixed;
 	top:100%;
 	transition:all .5s;
 	width:100%;
+	overflow:scroll;
+	height:100%;
 }
 
+	.browse ul {
+		padding:0;
+		margin:0;
+		margin-top:75px;	
+		text-align:center;
+		overflow:scroll;
+	}
+	
+		.browse li {
+			padding:20px 0;
+			margin:0;
+			list-style:none;
+			font-family: "Muli", Helvetica, Arial, sans-serif;
+			letter-spacing: .12em;
+			font-size: 8pt;
+			text-transform: uppercase;
+			margin-bottom: 9px;
+			font-weight: bold;
+			position: relative;
+			top: 0px;
+			color:gray;
+		}
+
 .tellUs {
+	display:none;
 	position:absolute;
 	top:0;
 	left:100%;
@@ -98,3 +125,49 @@ h1 {
 	background-color:white;
 	height:100%
 }
+
+.story {
+	top:0;
+	background-color:white;
+	left:100%;
+	position:absolute;
+	width:100%;
+	transition: all .5s;
+}
+
+
+	.story h1
+	{
+	font-family:"Cinzel", "Time New Roman", serif;
+	font-weight: normal;
+	font-size:20pt
+	line-height:1.1em;
+	text-transform: uppercase;
+	margin-bottom: 10px;
+	-webkit-margin-before: 0;
+	-webkit-margin-after: 0;
+	}
+	
+	.story .text
+	{
+	width:90%;
+	margin:auto;
+	font-family:"Muli", sans-serif;
+	font-size:12pt;
+	line-height:1.7em;
+	display: inline-block;
+	position: relative;
+	display:block;
+	overflow:scroll;
+	}
+	
+		.story .text p{
+			margin:10px auto;
+		}
+	
+	.story video
+	{
+		width:100%;
+		display:block;
+		border-bottom:1px solid gray;
+	}

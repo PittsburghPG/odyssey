@@ -37,8 +37,7 @@
 		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 		<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 		<script type="text/javascript" src="js/jquery.autocomplete.js"></script>
-		<script type="text/javascript" src="js/zclip.js"></script>
-		<script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>
+		<!--<script src="http://cdn.jquerytools.org/1.2.7/full/jquery.tools.min.js"></script>-->
 		
 		<script type='text/javascript' src='http://d3js.org/d3.v3.min.js'></script>
 		<script type='text/javascript' src='http://d3js.org/topojson.v1.min.js'></script>
@@ -156,11 +155,13 @@
 			
 			
 			<div class="story">
-			<div id="arrowup" title="Return to globe"><i class="fa fa-arrow-circle-o-up fa-3x"></i></div>
-			<div id="replayside" title="Replay video"><i class="fa fa-play-circle-o fa-3x"></i></div>
-			<div id="facebookside" title="Facebook"><i class="fa fa-facebook-square fa-3x"></i></div>
-			<div id="twitterside" title="Twitter"><i class="fa fa-twitter-square fa-3x"></i></div>
-			<div id="shareside" title="Copy link"><i class="fa fa-share-alt-square fa-3x"></i></div>
+			<div id="copylinkbox" class="shadow"><input type="text" id="copyfield" /><p>Press Ctrl-C on your keyboard to copy this link.</p><input type="submit" value="Close" id="closesharelink"/></div>
+			<div class="tooltip"></div>
+			<div id="arrowup" tip="Return to globe" class="righticon"><i class="fa fa-arrow-circle-o-up fa-3x"></i></div>
+			<div id="replayside" tip="Replay video" class="righticon"><i class="fa fa-play-circle-o fa-3x"></i></div>
+			<div id="facebookside" tip="Facebook" class="righticon"><i class="fa fa-facebook-square fa-3x"></i></div>
+			<div id="twitterside" tip="Twitter" class="righticon"><i class="fa fa-twitter-square fa-3x"></i></div>
+			<div id="shareside" tip="Copy link" class="righticon"><i class="fa fa-share-alt-square fa-3x"></i></div>
 				<div id="personStats">
 					<img class="portrait"  />
 					<div id="name"></div>
