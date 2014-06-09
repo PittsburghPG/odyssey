@@ -684,19 +684,20 @@ padding-right: 20px;
 			color: #666;
 			margin-top: 20px;
 		}
-		.text #bio .imgWrap_horizontal {
+		.imgWrap_horizontal {
 			width: 100%;
 			padding: 20px 0;
 			border-top: 1px solid #afb0a9;
 			border-bottom: 1px solid #afb0a9;
 			position: relative;
 		}
-		.text #bio .imgWrap_horizontal img {
+		.imgWrap_horizontal img {
 			width: 66%;
 			height: auto;
 		}
 		
-		.text #bio .imgWrap_vertical {
+		.imgWrap_vertical {
+			width: 50%;
 			padding: 20px 0;
 			border-top: 1px solid #afb0a9;
 			border-bottom: 1px solid #afb0a9;
@@ -705,7 +706,7 @@ padding-right: 20px;
 			margin-bottom: 20px;
 			position: relative;
 		}
-		.text #bio .imgWrap_vertical img {
+		.imgWrap_vertical img {
 			width: 100%;
 			height: auto;
 		}
@@ -718,6 +719,10 @@ padding-right: 20px;
 		.imgWrap_horizontal .caption {
 			position: absolute;
 			bottom: 25px;
+			right: 0;
+			padding-left: 20px;
+			width: 30%;
+			text-align: left;
 		}
 		
 		#bio .quote {

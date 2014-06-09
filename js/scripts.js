@@ -496,6 +496,7 @@ function loadVideo(countryName, callback) {
 	//center video using vidholder class so that IE won't have black bars to the right and left of the video
 	//var width = $(window).width();
 	var vidwidth = $('video').width();
+	console.log(vidwidth + " " + width);
 	var newleft = (width - vidwidth) / 2;
 	$('.fullscreen').css('left', newleft + 'px');
 	
@@ -579,29 +580,30 @@ function loadStory(country, callback) {
 		//put image wrappers around each image and style images and captions
 		$.each($('#bio img'), function( index, value ) {
 			//console.log( index + ": " + value );
-			//$(this).load(function() {
+			$(this).load(function() {
 				//alert('I loaded!');
-					var imgW;
+					var imgW = $(this).width();
 					var imgH = $(this).height();
+					console.log("w: " + imgW + " " + "h: " + imgH);
 					var imgSrc = $(this).attr('src');
 					var caption = $(this).attr('caption');
 					if (imgW > imgH) { //if it's a horizontal image
 						$( this ).wrap( "<div class='imgWrap_horizontal'></div>" );
 						$(this).parent().append('<div class="caption">' + caption + '</div>');
-						imgW = $('#bio').width() * .66;
-						$(this).parent().children('.caption').css('left', imgW + 20);
+						//imgW = $('#bio').width() * .66;
+						//$(this).parent().children('.caption').css('left', imgW + 20);
 						
 					} else { //if it's a vertical image
 						$( this ).wrap( "<div class='imgWrap_vertical'></div>" );
-						imgW = width / 2 -196;
+						/*imgW = width / 2 -196;
 						$('.imgWrap_vertical').css({
 						'width': imgW + 'px',
 						'height': 'auto'
-						});
+						});*/
 						
 						$(this).parent().append('<div class="caption">' + caption + '</div>');
 					}
-			//});
+			});
 		});
 			
 		d3.select(".story").style("display", "block");	
