@@ -496,7 +496,6 @@ function loadVideo(countryName, callback) {
 	//center video using vidholder class so that IE won't have black bars to the right and left of the video
 	//var width = $(window).width();
 	var vidwidth = $('video').width();
-	console.log(vidwidth + " " + width);
 	var newleft = (width - vidwidth) / 2;
 	$('.fullscreen').css('left', newleft + 'px');
 	
@@ -584,7 +583,7 @@ function loadStory(country, callback) {
 				//alert('I loaded!');
 					var imgW = $(this).width();
 					var imgH = $(this).height();
-					console.log("w: " + imgW + " " + "h: " + imgH);
+					//console.log("w: " + imgW + " " + "h: " + imgH);
 					var imgSrc = $(this).attr('src');
 					var caption = $(this).attr('caption');
 					if (imgW > imgH) { //if it's a horizontal image
@@ -643,9 +642,13 @@ function loadStory(country, callback) {
 			
 		});
 		
-		$('body').css('overflow-y', 'scroll'); //put the scroll on the body, not the story		
-		//if in bio page and click arrow up, scroll back to browse
+		//append sigil to end of story
+		$("<div align='center'><i class='sigil fa fa-globe'></i></div>").insertAfter('.text #bio p:last');
+		//$('.text #bio p:last').after("<p align='center'><i class='sigil fa fa-globe'></i></p>")
 		
+		$('body').css('overflow-y', 'scroll'); //put the scroll on the body, not the story		
+		
+		//if in bio page and click arrow up, scroll back to browse
 		$('.fa-arrow-circle-o-up').click(function(){
 			if( d3.select("body").classed("white") ) {
 				window.location.hash = '';
