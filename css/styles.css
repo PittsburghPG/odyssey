@@ -526,11 +526,11 @@ video {
 }
 .fullscreen
 {
-/*width:100%;*/
+width:100% !important;
 width: auto;
 height:100%;
 top:0;
-/*left:0;*/
+left:0;
 position:absolute;
 background-color:white;
 outline: 0;
@@ -692,7 +692,7 @@ padding-right: 20px;
 			position: relative;
 		}
 		.imgWrap_horizontal img {
-			width: 66%;
+			width: 100%;
 			height: auto;
 		}
 		
@@ -717,11 +717,6 @@ padding-right: 20px;
 		}
 		
 		.imgWrap_horizontal .caption {
-			position: absolute;
-			bottom: 25px;
-			right: 0;
-			padding-left: 20px;
-			width: 30%;
 			text-align: left;
 		}
 		

@@ -16,7 +16,6 @@ var world,
 // Universal things we'll always want loaded
 
 
-
 var svg = d3.select("#canvas"),
 	globe = svg.selectAll(".country"),
 	sens = .25,
@@ -137,6 +136,7 @@ d3.json("world.json", function(error, result) {
 				if(d.properties.completed) {
 					countryName = d3.select(this).html().toLowerCase();
 					if (countryName == 'bosnia and herzegovina') { countryName = 'bosnia';}
+					if (countryName == 'democratic republic of congo') { countryName = 'democratic_republic_of_congo';}
 					window.location.hash = countryName;
 					getReadyToLoadVideo(countryName)
 				}
@@ -494,10 +494,18 @@ function loadVideo(countryName, callback) {
 		}
 	
 	//center video using vidholder class so that IE won't have black bars to the right and left of the video
-	//var width = $(window).width();
-	var vidwidth = $('video').width();
-	var newleft = (width - vidwidth) / 2;
-	$('.fullscreen').css('left', newleft + 'px');
+	if (navigator.appName == 'Microsoft Internet Explorer');{
+				/*var width = $(window).width();
+				$('video').css({
+					'width': 'auto',
+					'height': '100%',
+					'position': "absolute",
+					'top':0
+				});
+				var vidwidth = $('video').width();
+				var newleft = (width - vidwidth) / 2;
+				$('.fullscreen').css('left', newleft + 'px');*/
+	}
 	
 	d3.select("body").transition()
 		.duration(500)
@@ -539,6 +547,8 @@ function loadVideo(countryName, callback) {
 // Load story
 
 function loadStory(country, callback) {
+	
+	d3.select(".videoHolder").remove();
 	// Insert content below
 	$.getJSON("php/getNations.php?operation=getSingleCountry&country=" + country, function(data){ //grab data from database via php
 		var commentBar = d3.select(".commentsWrapper"); //reposition commentBar so border doesn't get cut off
@@ -565,7 +575,8 @@ function loadStory(country, callback) {
 			$('.countryMap').attr('title', 'Map of ' + data.Country);
 			$('.portrait').attr('src','./countries/bosnia/img/bosnia_portrait.jpg');
 			$('.portrait').attr('title', data.Name);
-		} else {
+		} 
+		else {
 			$('.countryMap').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_map.jpg');
 			$('.countryMap').attr('title', 'Map of ' + data.Country);
 			$('.portrait').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_portrait.jpg');
@@ -668,6 +679,7 @@ function loadStory(country, callback) {
 				'z-index': '1'
 			});
 			$('.commentsHandle').hide();
+			d3.select(".videoHolder").remove();
 			var countryName = data.Country;
 			countryName = countryName.toLowerCase();
 			
@@ -677,7 +689,6 @@ function loadStory(country, callback) {
 				'z-index': '99'
 			});
 			
-			//$('.content').prepend("<div id='arrowdown' title='Return to globe'><i class='fa fa-arrow-circle-down fa-2x vidclose'></i></div><div class='videoHolder'><video class='fullscreen' width='" + width + "' height='" + height + "' controls></video>");
 			$('.content').prepend("<div id='arrowdown' title='Return to globe'><i class='fa fa-arrow-circle-down fa-2x vidclose'></i></div>");
 			
 			var video = d3.select(".content")
@@ -691,21 +702,26 @@ function loadStory(country, callback) {
 				.style("height", height);
 			
 			var FF = !(window.mozInnerScreenX == null); //detect if Firefox
+			
 			if(FF) {
 				d3.select("video")
 				.append("source")
 					.attr("src", "countries/" + countryName + "/vid/" + countryName + "_portrait.webm") //older versions of Firefox need webm
 					.attr("type", "video/webm");
 			} else { 
+				if (countryName == 'bosnia and herzegovina') { countryName = 'bosnia' };
+				console.log(countryName);
 				d3.select("video")
 				.append("source")
 					.attr("src", "countries/" + countryName + "/vid/" + countryName + "_portrait.mp4") //other browsers can use mp4 
 					.attr("type", "video/mp4");
 			}
 			//center video in a way that IE likes
-			var vidwidth = $('video').width();
+			
+			/*var vidwidth = $('video').width();
 			var newleft = (width - vidwidth) / 2;
-			$('.fullscreen').css('left', newleft + 'px');
+			$('.fullscreen').css('left', newleft + 'px');*/
+			
 			
 			d3.select("body").transition()
 			.duration(500)
@@ -807,6 +823,10 @@ function loadStory(country, callback) {
 function returnToBrowse(callback) {
 	//$('body').css('overflow-y', 'hidden'); 
 $('#pglogo').css('visibility', 'hidden');
+$('svg').css({
+		'position': 'relative',
+		'z-index': '1'
+	});
 	d3.select(".story").transition().duration(500)
 			.style('opacity', '0')
 			.style("margin-top", height + "px")
@@ -1004,6 +1024,7 @@ function moveAndZoom(newX, newY, endZoom, duration, callback) {
 		});
 	
 } 
+
 
 // Add prototype to d3 selection moving an svg to the top of the heap
 // so glows will work properly
