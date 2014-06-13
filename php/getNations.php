@@ -9,7 +9,7 @@ if (mysqli_connect_errno()) {
 
 switch($_GET["operation"]) {
 	case "getSingleCountry":
-		$qNations = "SELECT Country, Name, Age, Occupation, Origin, Neighborhood, Heading, Notes FROM people where Country LIKE '" . $_GET["country"] .  "' order by Country";
+		$qNations = "SELECT Country, Name, Age, Occupation, Origin, Neighborhood, Heading, Notes FROM people where Country LIKE '%" . $_GET["country"] .  "%' order by Country";
 	break;
 	
 	case "getActiveCountries":

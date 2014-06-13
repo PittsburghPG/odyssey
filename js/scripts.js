@@ -560,11 +560,17 @@ function loadStory(country, callback) {
 		$('#pghHome .personStat').html(data.Neighborhood);
 		$('#occupation .personStat').html(data.Occupation);
 		
-		$('.countryMap').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_map.jpg');
-		$('.countryMap').attr('title', 'Map of ' + data.Country);
-		$('.portrait').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_portrait.jpg');
-		$('.portrait').attr('title', data.Name);
-		
+		if (data.Country == 'Bosnia and Herzegovina') {
+			$('.countryMap').attr('src','./countries/bosnia/img/bosnia_map.jpg');
+			$('.countryMap').attr('title', 'Map of ' + data.Country);
+			$('.portrait').attr('src','./countries/bosnia/img/bosnia_portrait.jpg');
+			$('.portrait').attr('title', data.Name);
+		} else {
+			$('.countryMap').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_map.jpg');
+			$('.countryMap').attr('title', 'Map of ' + data.Country);
+			$('.portrait').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_portrait.jpg');
+			$('.portrait').attr('title', data.Name);
+		}
 		
 		$('.text #bio').html(data.Notes);
 		if (data.Heading.length > 0) {
