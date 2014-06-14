@@ -34,13 +34,14 @@ h1 {
 	width:100%;
 	background-color:black;
 	z-index:2;
+	transition: all .5s;
 }
 
 .intro {
 	top:0;
 	right:0;
 	height:100%;
-	position:absolute;
+	position:fixed;
 	transition:all .5s;
 }
 
@@ -84,7 +85,7 @@ h1 {
 		}
 
 .browse {
-	position:fixed;
+	position:relative;
 	top:100%;
 	transition:all .5s;
 	width:100%;
@@ -114,6 +115,10 @@ h1 {
 			top: 0px;
 			color:gray;
 		}
+		
+			.browse li.inactive {
+				display:none;
+			}
 
 .tellUs {
 	display:none;
@@ -133,6 +138,7 @@ h1 {
 	position:absolute;
 	width:100%;
 	transition: all .5s;
+	display:none;
 }
 
 
@@ -140,7 +146,7 @@ h1 {
 	{
 	font-family:"Cinzel", "Time New Roman", serif;
 	font-weight: normal;
-	font-size:20pt
+	font-size:20pt;
 	line-height:1.1em;
 	text-transform: uppercase;
 	margin-bottom: 10px;
@@ -148,6 +154,29 @@ h1 {
 	-webkit-margin-after: 0;
 	}
 	
+	.story h2 {
+		font-family: "Muli", Helvetica, Arial, sans-serif;
+		font-weight:bold;
+		padding:0;
+		margin:20px auto 5px;
+		font-size:20pt;
+		width:90%;
+	}
+		.story ul.bio{
+			font-family: "Muli", Helvetica, Arial, sans-serif;
+			padding:0;
+			margin:5px auto;
+			font-size:13pt;
+			width:90%;
+			list-style:none;
+		}
+			
+			.story ul.bio li {
+				padding:0;
+				margin:0 0 5px 0;
+			}
+		
+		
 	.story .text
 	{
 	width:90%;
