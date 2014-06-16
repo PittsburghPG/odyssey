@@ -136,9 +136,11 @@ d3.json("world.json", function(error, result) {
 				if(d.properties.completed) {
 					countryName = d3.select(this).html().toLowerCase();
 					if (countryName == 'bosnia and herzegovina') { countryName = 'bosnia';}
-					if (countryName == 'democratic republic of congo') { countryName = 'democratic_republic_of_congo';}
+					//if (countryName == 'democratic republic of congo') { countryName = 'democratic_republic_of_congo';}
+					//if (countryName == 'new zealand') { countryName = 'democratic_republic_of_congo';}
+					countryName = countryName.split(' ').join('_');
 					window.location.hash = countryName;
-					getReadyToLoadVideo(countryName)
+					getReadyToLoadVideo(countryName);
 				}
 			});
 		
