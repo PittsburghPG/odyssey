@@ -565,13 +565,9 @@ padding-right: 20px;
 		color: #007fd4;
 		cursor: pointer;
 	}
-	.story #arrowup {
-		position: fixed;
-		top: 20px;
-		right: 75px;
-		padding: 10px;
-		
-	}
+	
+	
+	 
 	.story #arrowup .fa-arrow-circle-o-up, .fa-play-circle-o, .story  #facebookside  .fa-facebook-square, .story  #twitterside  .fa-twitter-square, .story  #shareside  .fa-share-alt-square {
 			color: lightgray;
 			
@@ -587,46 +583,28 @@ padding-right: 20px;
 			color: #007fd4;
 			cursor: pointer;
 		}
-	.story #replayside {
-		position: fixed;
-		top: 60px;
-		right: 75px;
-		padding: 10px;
+	
+	.rightbuttons{
+		position:fixed;
+		top:20px;
+		right:37px;
+		width:200px;
+		text-align:right;
 	}
-	.story #facebookside {
-		position: fixed;
-		top: 100px;
-		right: 75px;
-		padding: 10px;
-	}
-	.story #twitterside {
-		position: fixed;
-		top: 138px;
-		right: 75px;
-		padding: 10px;
-	}		
-	.story #shareside {
-		position: fixed;
-		top: 176px;
-		right: 75px;
-		padding: 10px;
-	}
-	.righticon {
-		position: relative;
-	}
-	.tooltip {
-		display:none;
-		height:70px;
-		width:160px;
-		color:#007fd4;
-		font-family:"Muli", sans-serif;
-		position: fixed;
-		top: 60px;
-		right: 80px;
-		padding: 16px;
+	
+		.righticon {
+			margin-bottom:10px
+		}
 		
-	 }	
-	 
+		.righticon:hover:before {
+			content: attr(tip);
+			margin-right: 15px;
+			color: #007fd4;
+			font-family: "Muli", sans-serif;
+			position: relative;
+			top: -6px;
+		}
+	
 	 #copylinkbox {
 		position: fixed;
 		top: 110px;

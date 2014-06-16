@@ -254,17 +254,7 @@ d3.json("world.json", function(error, result) {
 		window.location.hash = '';
 		returnToBrowse();
 	});
-	
-	/*$("[title]").tooltip({
-         // tweak the position
-          position: "center left",
-		  effect: 'fade',
-		  fadeInSpeed: 300,
-          // make fadeOutSpeed similar to the browser's default
-          fadeOutSpeed: 300,
-		  offset: [22, 40]
-         
-      });*/
+
 });
 
 // End universal loading section
@@ -578,6 +568,7 @@ function loadStory(country, callback) {
 		$('.story').css('display', 'block'); //not showing in IE
 		if( data != "") data = data[0];
 		
+		// Fill out biographical information
 		$('#name').html(data.Name);
 		$('#country').text(data.Country);
 		$('#age .personStat').text(data.Age);
@@ -585,12 +576,13 @@ function loadStory(country, callback) {
 		$('#pghHome .personStat').html(data.Neighborhood);
 		$('#occupation .personStat').html(data.Occupation);
 		
+		// Drop in biographical photos
 		$('.countryMap').attr('src','./countries/' + data.Country.toLowerCase().to_underscore() + '/img/' + data.Country.toLowerCase().to_underscore() + '_map.jpg');
 		$('.countryMap').attr('title', 'Map of ' + data.Country);
 		$('.portrait').attr('src','./countries/' + data.Country.toLowerCase().to_underscore() + '/img/' + data.Country.toLowerCase().to_underscore() + '_portrait.jpg');
 		$('.portrait').attr('title', data.Name);
 		
-		
+		// Show headline if there is one; hide it otherwise.
 		$('.text #bio').html(data.Notes);
 		if (data.Heading.length > 0) {
 			$('.text h1').html(data.Heading);
@@ -765,31 +757,15 @@ function loadStory(country, callback) {
 			
 		});
 		
-		$('.righticon')
-		   .mouseenter(function() {
-			$('.tooltip').text($(this).attr('tip'));
-			$('.tooltip').css('top', $(this).css('top') );
-			$('.tooltip').show();
-		  })
-		  .mouseleave(function() {
-			$('.tooltip').hide();
-		  });
 		
 		$('#facebookside').click(function(){
-			//<a class="btn" target="_blank" href="http://www.facebook.com/sharer.php?s=100&amp;p[title]=<?php echo urlencode(YOUR_TITLE);?>&amp;p[summary]=<?php echo urlencode(YOUR_PAGE_DESCRIPTION) ?>&amp;p[url]=<?php echo urlencode(YOUR_PAGE_URL); ?>&amp;p[images][0]=<?php echo urlencode(YOUR_LINK_THUMBNAIL); ?>">share on facebook</a>
-			//var url = "https://www.facebook.com/sharer/sharer.php?u=http://newsinteractive.post-gazette.com/odysseys#" + data.Country;
-			//var url = "http://www.facebook.com/sharer.php?s=100&p[title]=Odysseys&p[summary]=The story of Pittsburgh\s immigrants&p[url]=http://newsinteractive.post-gazette.com/odysseys#" + data.Country + "&p[images][0]=http://newsinteractive.post-gazette.com/odysseys/img/globe.png";
-			//var url = "https://www.facebook.com/dialog/share?app_id=145634995501895&display=popup&href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2F&redirect_uri=https://developers.facebook.com/tools/explorer";
 			var facebook_url = 'http://www.facebook.com/sharer.php?'+ 'u='+encodeURIComponent('http://newsinteractive.post-gazette.com/odysseys#' + data.Country.toLowerCase())+ '&amp;t='+encodeURIComponent('Odysseys:' + data.Country.toLowerCase());
 			window.open(facebook_url, '_blank');
-
-
 		});
 		
 		$('#twitterside').click(function(){
 			var url = "https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fnewsinteractive.post-gazette.com%2Fodysseys?country=" + data.Country.toLowerCase() + "%2F&text=Odysseys: From all over the world, people have come to Pittsburgh. (via @PittsburghPG):&:tw_p=tweetbutton&url=http://newsinteractive.post-gazette.com/odysseys?country=" + data.Country.toLowerCase();
 			window.open(url, '_blank');
-			
 		});
 		
 		
