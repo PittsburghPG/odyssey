@@ -176,6 +176,7 @@ d3.json("world.json", function(error, result) {
 			.on("click", function(d){
 				if(d.properties.completed) {
 					countryName = d3.select(this).attr("country").toLowerCase();
+					countryName = countryName.split(' ').join('_');
 					window.location.hash = countryName;
 					if( !d3.select("body").classed("white") ) getReadyToLoadVideo(countryName)
 				}
@@ -579,9 +580,9 @@ function loadStory(country, callback) {
 			$('.portrait').attr('title', data.Name);
 		} 
 		else {
-			$('.countryMap').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_map.jpg');
+			$('.countryMap').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase() + '_map.jpg');
 			$('.countryMap').attr('title', 'Map of ' + data.Country);
-			$('.portrait').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase()+ '_portrait.jpg');
+			$('.portrait').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase() + '_portrait.jpg');
 			$('.portrait').attr('title', data.Name);
 		}
 		
@@ -712,7 +713,6 @@ function loadStory(country, callback) {
 					.attr("type", "video/webm");
 			} else { 
 				if (countryName == 'bosnia and herzegovina') { countryName = 'bosnia' };
-				console.log(countryName);
 				d3.select("video")
 				.append("source")
 					.attr("src", "countries/" + countryName + "/vid/" + countryName + "_portrait.mp4") //other browsers can use mp4 
