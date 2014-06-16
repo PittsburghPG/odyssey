@@ -497,13 +497,16 @@ function loadVideo(countryName, callback) {
 		}
 	
 	//center video using vidholder class so that IE won't have black bars to the right and left of the video
-	if (navigator.appName == 'Microsoft Internet Explorer');{
+	//alert(detectIE());
+	if (detectIE() != false){
+				//alert('here');
 				/*var width = $(window).width();
-				$('video').css({
-					'width': 'auto',
+				$('.fullscreen').css({
 					'height': '100%',
+					'width' : 'auto',
 					'position': "absolute",
-					'top':0
+					'top':0,
+					'left': ''
 				});
 				var vidwidth = $('video').width();
 				var newleft = (width - vidwidth) / 2;
@@ -685,6 +688,7 @@ function loadStory(country, callback) {
 			d3.select(".videoHolder").remove();
 			var countryName = data.Country;
 			countryName = countryName.toLowerCase();
+			countryName = countryName.split(' ').join('_');//put underscores between words
 			
 			//push little globe to top so visible
 			$('svg').css({
@@ -1026,6 +1030,26 @@ function moveAndZoom(newX, newY, endZoom, duration, callback) {
 		});
 	
 } 
+
+function detectIE() {
+    var ua = window.navigator.userAgent;
+    var msie = ua.indexOf('MSIE ');
+    var trident = ua.indexOf('Trident/');
+
+    if (msie > 0) {
+        // IE 10 or older => return version number
+        return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+    }
+
+    if (trident > 0) {
+        // IE 11 (or newer) => return version number
+        var rv = ua.indexOf('rv:');
+        return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+    }
+
+    // other browser
+    return false;
+}
 
 
 // Add prototype to d3 selection moving an svg to the top of the heap
