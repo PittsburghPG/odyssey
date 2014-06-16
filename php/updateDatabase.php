@@ -30,26 +30,13 @@ if($content != FALSE) {
 	$db->query("TRUNCATE TABLE people");
 	
 	foreach($content as $country){
+		
+		// Normalize database encoding
+		foreach($country as $key => $value) {
+			$country[$key] = $db -> real_escape_string(trim(str_replace("&nbsp;", "", mb_convert_encoding($value, "HTML-ENTITIES", "UTF-8"))));
+		}
+		
 		echo $db->query("INSERT INTO people 
-								(`Country`, 
-								`Name`, 
-								`Age`, 
-								`Occupation`, 
-								`Origin`, 
-								`Neighborhood`, 
-								`Notes`, 
-								`Heading`) 
-					VALUES      (\"" . $db -> real_escape_string($country["Country"]) . "\",
-								\"" . $db -> real_escape_string($country["Name"]) . "\",
-								\"" . $country["Age"] . "\",
-								\"" . $db -> real_escape_string($country["Occupation"]) . "\",
-								\"" . $db -> real_escape_string($country["Origin"]) . "\",
-								\"" . $db -> real_escape_string($country["Current neighborhood"]) . "\",
-								\"" . $db -> real_escape_string($country["Story text"]) . "\",
-								\"" . $db -> real_escape_string($country["Story title"]) . "\"
-								)");
-								
-		echo $db -> real_escape_string("INSERT INTO people 
 								(`Country`, 
 								`Name`, 
 								`Age`, 

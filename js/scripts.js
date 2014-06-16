@@ -41,14 +41,23 @@ var path = d3.geo.path()
 d3.json("world.json", function(error, result) {													
 	world = result;
 	
+	// This sorts the countries alphabetically
+	world.objects.countries.geometries.sort(function(a, b){
+		if(a.properties.name > b.properties.name) return 1;
+		if(b.properties.name > a.properties.name) return -1;
+		return 0;
+	});
+	
 	d3.json("php/getNations.php?operation=getActiveCountries", function(error, results){
-		//console.log(results);
+		
 		// Build an associative array of countries from our database
 		// to more easily match with the geometries file
 		associative_results = [];
 		results.forEach(function(item){
 			associative_results[item.Country] = +item.Count;
 		});
+		
+		
 		
 		// This function adds one or two properties to the geometries file, indicating
 		// whether or not a) a country is involved in the project or b) we have completed
@@ -135,7 +144,6 @@ d3.json("world.json", function(error, result) {
 			.on("click", function(d){
 				if(d.properties.completed) {
 					countryName = d3.select(this).html().toLowerCase();
-					if (countryName == 'bosnia and herzegovina') { countryName = 'bosnia';}
 					//if (countryName == 'democratic republic of congo') { countryName = 'democratic_republic_of_congo';}
 					//if (countryName == 'new zealand') { countryName = 'democratic_republic_of_congo';}
 					countryName = countryName.split(' ').join('_');
@@ -153,35 +161,6 @@ d3.json("world.json", function(error, result) {
 				navBar.node().scrollTop += parseInt(d3.select(this).attr("deltaY"));
 			});
 			
-		// Scroll country list to display hovered nation. 
-		d3.selectAll(".country")
-			.on("mouseover", function(d){
-				if(d.properties.completed) {
-					d3.select(this).moveToFront();
-					endpoint = d3.select( "#nav_" + d3.select(this).attr("id") ).node().offsetTop;
-					d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", true)
-					navBar.transition()
-						.duration(1000)
-						.tween("scrollTop", function() {
-							var r = d3.interpolate(navBar.node().scrollTop, endpoint - (height / 2) );			
-							return function(t) {																
-								navBar.node().scrollTop = r(t);														
-							};
-						});
-				}
-			})
-			.on("mouseout", function(){
-				d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", false);
-			})
-			.on("click", function(d){
-				if(d.properties.completed) {
-					countryName = d3.select(this).attr("country").toLowerCase();
-					countryName = countryName.split(' ').join('_');
-					window.location.hash = countryName;
-					if( !d3.select("body").classed("white") ) getReadyToLoadVideo(countryName)
-				}
-			});
-		
 		d3.selectAll(".handle")
 			.on("click", function(){
 				d3.select(this.parentNode).classed("out",!d3.select(this.parentNode).classed("out")); 
@@ -387,7 +366,36 @@ function loadBrowse(callback) {
 	// turn off rotation (if it's even activated to begin with)
 	timer_on = true;																			
 	newZoom = 100;																				
-	sens = 1;	// makes it easier to rotate smaller globe																		
+	sens = 1;	// makes it easier to rotate smaller globe			
+
+	// Scroll country list to display proper nation when hover on globe. 
+	d3.selectAll(".country")
+		.on("mouseover", function(d){
+			if(d.properties.completed) {
+				d3.select(this).moveToFront();
+				endpoint = d3.select( "#nav_" + d3.select(this).attr("id") ).node().offsetTop;
+				d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", true)
+				navBar.transition()
+					.duration(1000)
+					.tween("scrollTop", function() {
+						var r = d3.interpolate(navBar.node().scrollTop, endpoint - (height / 2) );			
+						return function(t) {																
+							navBar.node().scrollTop = r(t);														
+						};
+					});
+			}
+		})
+		.on("mouseout", function(){
+			d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", false);
+		})
+		.on("click", function(d){
+			if(d.properties.completed) {
+				countryName = d3.select(this).attr("country").toLowerCase();
+				countryName = countryName.split(' ').join('_');
+				window.location.hash = countryName;
+				if( !d3.select("body").classed("white") ) getReadyToLoadVideo(countryName)
+			}
+		});	
 
 	moveAndZoom(width / 2, height / 2, height / 2 * .8, 1000, function(){
 		panTo(d3.select("#USA").datum(), 500);
@@ -529,9 +537,8 @@ function loadVideo(countryName, callback) {
 	
 	globe.on("click", function(){
 		
-		if (!$("video").get(0).paused) { //if video is playing, then stop the video
-			$('video').stop();
-		}
+		$('video').stop(); // stop video
+		
 		d3.select(".videoHolder").transition().duration(1000)
 					.style("opacity", "1")
 					.each("end", function(){
@@ -556,11 +563,13 @@ function loadStory(country, callback) {
 	
 	d3.select(".videoHolder").remove();
 	// Insert content below
-	$.getJSON("php/getNations.php?operation=getSingleCountry&country=" + country, function(data){ //grab data from database via php
+	$.getJSON("php/getNations.php?operation=getSingleCountry&country=" + country.split('_').join(' '), function(data){ //grab data from database via php
+		
 		var commentBar = d3.select(".commentsWrapper"); //reposition commentBar so border doesn't get cut off
 		commentBar.style("left", function(){
 			return -parseInt(commentBar.node().offsetWidth-10) + "px"; //add 10 so border shows
 		});
+		
 		//remove positioning of svg so that story shows up
 		$('svg').css({
 				'position': '',
@@ -576,18 +585,11 @@ function loadStory(country, callback) {
 		$('#pghHome .personStat').html(data.Neighborhood);
 		$('#occupation .personStat').html(data.Occupation);
 		
-		if (data.Country == 'Bosnia and Herzegovina') {
-			$('.countryMap').attr('src','./countries/bosnia/img/bosnia_map.jpg');
-			$('.countryMap').attr('title', 'Map of ' + data.Country);
-			$('.portrait').attr('src','./countries/bosnia/img/bosnia_portrait.jpg');
-			$('.portrait').attr('title', data.Name);
-		} 
-		else {
-			$('.countryMap').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase() + '_map.jpg');
-			$('.countryMap').attr('title', 'Map of ' + data.Country);
-			$('.portrait').attr('src','./countries/' + data.Country.toLowerCase() + '/img/' + data.Country.toLowerCase() + '_portrait.jpg');
-			$('.portrait').attr('title', data.Name);
-		}
+		$('.countryMap').attr('src','./countries/' + data.Country.toLowerCase().to_underscore() + '/img/' + data.Country.toLowerCase().to_underscore() + '_map.jpg');
+		$('.countryMap').attr('title', 'Map of ' + data.Country);
+		$('.portrait').attr('src','./countries/' + data.Country.toLowerCase().to_underscore() + '/img/' + data.Country.toLowerCase().to_underscore() + '_portrait.jpg');
+		$('.portrait').attr('title', data.Name);
+		
 		
 		$('.text #bio').html(data.Notes);
 		if (data.Heading.length > 0) {
@@ -716,7 +718,6 @@ function loadStory(country, callback) {
 					.attr("src", "countries/" + countryName + "/vid/" + countryName + "_portrait.webm") //older versions of Firefox need webm
 					.attr("type", "video/webm");
 			} else { 
-				if (countryName == 'bosnia and herzegovina') { countryName = 'bosnia' };
 				d3.select("video")
 				.append("source")
 					.attr("src", "countries/" + countryName + "/vid/" + countryName + "_portrait.mp4") //other browsers can use mp4 
@@ -1051,6 +1052,11 @@ function detectIE() {
     return false;
 }
 
+
+// Add ability to convert spaces to underscores to String prototype
+String.prototype.to_underscore = function() {
+	return this.split(' ').join('_');
+}
 
 // Add prototype to d3 selection moving an svg to the top of the heap
 // so glows will work properly

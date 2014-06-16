@@ -9,15 +9,7 @@ if (mysqli_connect_errno()) {
 
 switch($_GET["operation"]) {
 	case "getSingleCountry":
-		$mystring = $_GET["country"];
-		$findme   = 'Guinea';
-		$pos = strpos($mystring, $findme);
-		if ($pos === true) { //if the word "Guinea" is in the country name
-			$qNations = "SELECT Country, Name, Age, Occupation, Origin, Neighborhood, Heading, Notes FROM people where Country = '" . $_GET["country"] .  "' order by Country";
-		} else {
-			$qNations = "SELECT Country, Name, Age, Occupation, Origin, Neighborhood, Heading, Notes FROM people where Country LIKE '%" . $_GET["country"] .  "%' order by Country";
-		}
-		
+		$qNations = "SELECT Country, Name, Age, Occupation, Origin, Neighborhood, Heading, Notes FROM people where Country = '" . $_GET["country"] .  "' order by Country";
 	break;
 	
 	case "getActiveCountries":
