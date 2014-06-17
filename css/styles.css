@@ -647,7 +647,7 @@ padding-right: 20px;
 	
 	.story .text
 	{
-	margin-left: 276px;
+	margin-left: 236px;
 	font-family:"Muli", sans-serif;
 	font-size:12pt;
 	line-height:1.7em;
@@ -662,6 +662,9 @@ padding-right: 20px;
 			position: relative;
 			color: #666;
 			margin-top: 20px;
+		}
+		#bio img {
+			display: none;
 		}
 		.imgWrap_horizontal {
 			width: 100%;
@@ -715,9 +718,10 @@ padding-right: 20px;
 			margin-top: 20px;
 		}
 		
-		#bio .BrightcoveExperience {
+		#bio .BrightcoveExperience, #bio iframe {
 			width: 100%;
-			height: auto;
+			/*height: auto;
+			height: calc(100% * 9 / 16);*/
 		}
 	
 	.story #personStats {
