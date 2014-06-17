@@ -16,6 +16,13 @@ var world,
 // --------------------------------------------------
 // Universal things we'll always want loaded
 
+// Hash change
+window.onhashchange = function(){
+	console.log(window.location.hash);
+	if( window.location.hash == "#browse" ){
+		returnToBrowse();
+	}
+}
 
 var svg = d3.select("#canvas"),
 	globe = svg.selectAll(".country"),
@@ -240,18 +247,6 @@ d3.json("world.json", function(error, result) {
 	});
 	
 	$("h1#title").click(function(){ 
-		if (($('video').length) && (!$("video").get(0).paused)){ //if there is a video on the page and it is playing, then stop the video
-			$('video').stop();
-		}
-		d3.select(".videoHolder").transition().duration(1000)
-					.style("opacity", 1)
-					.each("end", function(){
-						setTimeout(function() {
-							  d3.select(".videoHolder").remove();
-							//loadStory(countryName);
-						}, 300);
-					});
-		window.location.hash = '';
 		returnToBrowse();
 	});
 
@@ -261,103 +256,98 @@ d3.json("world.json", function(error, result) {
 
 // End universal loading section
 // --------------------------------------------------
-//function to get url variable
-		function getUrlParameter(sParam)
-		{
-			var sPageURL = window.location.search.substring(1);
-			var sURLVariables = sPageURL.split('&');
-			for (var i = 0; i < sURLVariables.length; i++)
-			{
-				var sParameterName = sURLVariables[i].split('=');
-				if (sParameterName[0] == sParam)
-				{
-					return sParameterName[1];
-				}
-			}
-		}
+
 // --------------------------------------------------
 // Load if entering via hash 
 function enterViaHash(countryname, callback){
-	$.getJSON("php/getNations.php?operation=getSingleCountry&country=" + countryname.split('_').join(' '), function(data){ //grab data from database via php
-		
-		if( data != "") data = data[0];
-		
-		// Change metadata so Facebook/Twitter links refer to this page
-		d3.select("head").selectAll("meta.meta_replace").remove();
-		// Facebook title
-		d3.select("head").append("meta")
-			.attr("class", "meta_replace")
-			.attr("property", "og:title")
-			.attr("content", "Odysseys: " + data.Name + "'s story, from " + data.Country + " to Pittsburgh.");			
-		// Facebook description
-		d3.select("head").append("meta")
-			.attr("class", "meta_replace")
-			.attr("property", "og:description")
-			.attr("content", data.Name + " left " + data.Country + " and moved to Pittsburgh. This is what happened next. (Part of the Pittsburgh Post-Gazette's \"Odysseys\" project, sharing stories of immigrants to Pittsburgh.");
-		// Facebook image
-		d3.select("head").append("meta")
-			.attr("class", "meta_replace")
-			.attr("property", "og:image")
-			.attr("content", './countries/' + data.Country.toLowerCase().to_underscore() + '/img/' + data.Country.toLowerCase().to_underscore() + '_portrait.jpg');
-		// Facebook url
-		d3.select("head").append("meta")
-			.attr("class", "meta_replace")
-			.attr("property", "og:url")
-			.attr("content", 'http://newsinteractive.post-gazette.com/odysseys/countries/' + data.Country.toLowerCase().to_underscore());
-		// Twitter title
-		d3.select("head").append("meta")
-			.attr("class", "meta_replace")
-			.attr("property", "twitter:title")
-			.attr("content", "Odysseys: " + data.Name + "'s story, from " + data.Country + " to Pittsburgh.");
-		// Twitter description
-		d3.select("head").append("meta")
-			.attr("class", "meta_replace")
-			.attr("property", "twitter:description")
-			.attr("content", data.Name + " left " + data.Country + " and moved to Pittsburgh. This is what happened next.");
-		// Twitter image
-		d3.select("head").append("meta")
-			.attr("class", "meta_replace")
-			.attr("property", "twitter:image")
-			.attr("content", 'http://newsinteractive.post-gazette.com/odysseys/countries/' + data.Country.toLowerCase().to_underscore() + '/img/' + data.Country.toLowerCase().to_underscore() + '_portrait.jpg');
-		
-		//Send all this to Facebook
-		//d3.xhr("http://graph.facebook.com/v2.0/").post({id: "http://newsinteractive.post-gazette.com/odysseys/countries/#" + data.Country.toLowerCase().to_underscore(), scrape:"true" });
-			
-
-		moveAndZoom(width / 2, height / 2, height / 2 * .8, 1, function(){
-			panTo(d3.select("#USA").datum(), 500);
-			d3.select(".intro").style("display","none");
-		
-			d3.select("h1#title")
-				.style({"margin-top":"25px", "font-size":"65px", "padding-left":"10px","position":"fixed", "top":"0px"})
-			
-			var commentBar = d3.select(".commentsWrapper");
-			commentBar.style("left", function(){
-				return -parseInt(commentBar.node().offsetWidth-10) + "px"; //add 10 so border shows
-			});
-			
-			d3.select(".navbarWrapper")
-				.classed("hidden", false)
-				.classed("out", true); 
-			
-			d3.select("#credits")
-				.classed("hidden", false);
-			
-			d3.select(".commentsWrapper")
-				.style("opacity", 1);
-		
-			d3.select(".loader")
-				.classed("hidden", true);
-			
-			d3.select(".content")
-				.classed("hidden", false);
-			
-			getReadyToLoadVideo(countryname);	
-			if(typeof callback === 'function') callback();
-		});
 	
+	d3.select("h1#title")
+		.style({"margin-top":"25px", "font-size":"65px", "padding-left":"10px","position":"fixed", "top":"0px"})
+	
+	var commentBar = d3.select(".commentsWrapper");
+	commentBar.style("left", function(){
+		return -parseInt(commentBar.node().offsetWidth-10) + "px"; //add 10 so border shows
 	});
+	
+	d3.select(".navbarWrapper")
+		.classed("hidden", false)
+		.classed("out", true); 
+	
+	d3.select("#credits")
+		.classed("hidden", false);
+	
+	d3.select(".commentsWrapper")
+		.style("opacity", 1);
+			
+	d3.select(".loader")
+		.classed("hidden", true);
+	
+	d3.select(".content")
+		.classed("hidden", false);
+	
+	if( countryname == "browse" ) {
+		loadBrowse();
+	}
+	else {
+	
+		$.getJSON("php/getNations.php?operation=getSingleCountry&country=" + countryname.split('_').join(' '), function(data){ //grab data from database via php
+			
+			if( data != "") data = data[0];
+			
+			// Change metadata so Facebook/Twitter links refer to this page
+			d3.select("head").selectAll("meta.meta_replace").remove();
+			// Facebook title
+			d3.select("head").append("meta")
+				.attr("class", "meta_replace")
+				.attr("property", "og:title")
+				.attr("content", "Odysseys: " + data.Name + "'s story, from " + data.Country + " to Pittsburgh.");			
+			// Facebook description
+			d3.select("head").append("meta")
+				.attr("class", "meta_replace")
+				.attr("property", "og:description")
+				.attr("content", data.Name + " left " + data.Country + " and moved to Pittsburgh. This is what happened next. (Part of the Pittsburgh Post-Gazette's \"Odysseys\" project, sharing stories of immigrants to Pittsburgh.");
+			// Facebook image
+			d3.select("head").append("meta")
+				.attr("class", "meta_replace")
+				.attr("property", "og:image")
+				.attr("content", './countries/' + data.Country.toLowerCase().to_underscore() + '/img/' + data.Country.toLowerCase().to_underscore() + '_portrait.jpg');
+			// Facebook url
+			d3.select("head").append("meta")
+				.attr("class", "meta_replace")
+				.attr("property", "og:url")
+				.attr("content", 'http://newsinteractive.post-gazette.com/odysseys/countries/' + data.Country.toLowerCase().to_underscore());
+			// Twitter title
+			d3.select("head").append("meta")
+				.attr("class", "meta_replace")
+				.attr("property", "twitter:title")
+				.attr("content", "Odysseys: " + data.Name + "'s story, from " + data.Country + " to Pittsburgh.");
+			// Twitter description
+			d3.select("head").append("meta")
+				.attr("class", "meta_replace")
+				.attr("property", "twitter:description")
+				.attr("content", data.Name + " left " + data.Country + " and moved to Pittsburgh. This is what happened next.");
+			// Twitter image
+			d3.select("head").append("meta")
+				.attr("class", "meta_replace")
+				.attr("property", "twitter:image")
+				.attr("content", 'http://newsinteractive.post-gazette.com/odysseys/countries/' + data.Country.toLowerCase().to_underscore() + '/img/' + data.Country.toLowerCase().to_underscore() + '_portrait.jpg');
+			
+			//Send all this to Facebook
+			//d3.xhr("http://graph.facebook.com/v2.0/").post({id: "http://newsinteractive.post-gazette.com/odysseys/countries/#" + data.Country.toLowerCase().to_underscore(), scrape:"true" });
+				
+	
+			moveAndZoom(width / 2, height / 2, height / 2 * .8, 1, function(){
+				panTo(d3.select("#USA").datum(), 500);
+				d3.select(".intro").style("display","none");
+			
+				
+				
+				getReadyToLoadVideo(countryname);	
+				if(typeof callback === 'function') callback();
+			});
 		
+		});
+	}
 	
 	
 }
@@ -399,6 +389,10 @@ function loadIntro(callback){
 // Load browse
 
 function loadBrowse(callback) {
+
+	// Change hash
+	window.location.hash = "browse";
+	
 	$('#credits').animate({'left': "18px"}, 1000);
 	
 	// turn off rotation (if it's even activated to begin with)
@@ -866,12 +860,17 @@ function loadStory(country, callback) {
 // --------------------------------------------------
 // Return from story/video to browse
 function returnToBrowse(callback) {
-	//$('body').css('overflow-y', 'hidden'); 
-$('#pglogo').css('visibility', 'hidden');
-$('svg').css({
+	//Turn off video
+	d3.select(".videoHolder").remove();
+	
+	
+	$('body').css('overflow-y', 'hidden'); 
+	$('#pglogo').css('visibility', 'hidden');
+	$('svg').css({
 		'position': 'relative',
 		'z-index': '1'
 	});
+		
 	d3.select(".story").transition().duration(500)
 			.style('opacity', '0')
 			.style("margin-top", height + "px")
@@ -1002,6 +1001,22 @@ function unloadComments(callback) {
 // **************************************************
 // Helper functions that get stuff done
 // **************************************************
+
+
+//function to get url variable
+function getUrlParameter(sParam)
+{
+	var sPageURL = window.location.search.substring(1);
+	var sURLVariables = sPageURL.split('&');
+	for (var i = 0; i < sURLVariables.length; i++)
+	{
+		var sParameterName = sURLVariables[i].split('=');
+		if (sParameterName[0] == sParam)
+		{
+			return sParameterName[1];
+		}
+	}
+}
 
 function resize(){
 	// Get width and height of container	
