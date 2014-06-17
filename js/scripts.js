@@ -2,6 +2,7 @@
 // Global variables
 // **************************************************
 var world,
+	navbar,
 	currentScreen,
 	width,
 	height,
@@ -54,7 +55,7 @@ d3.json("world.json", function(error, result) {
 		// to more easily match with the geometries file
 		associative_results = [];
 		results.forEach(function(item){
-			associative_results[item.Country] = +item.Count;
+			associative_results[item.Country] = {"count": +item.Count, "active": item.Activated};
 		});
 		
 		
@@ -63,9 +64,10 @@ d3.json("world.json", function(error, result) {
 		// whether or not a) a country is involved in the project or b) we have completed
 		// a story for said country. 
 		world.objects.countries.geometries.forEach(function(country,i){
+			console.log(associative_results[country.properties.name]);
 			if( typeof associative_results[country.properties.name] != "undefined") {
 				world.objects.countries.geometries[i].properties.in_project = true;
-				if( associative_results[country.properties.name] > 1 ) 
+				if( associative_results[country.properties.name].count > 1 && associative_results[country.properties.name].active == 1 ) 
 					world.objects.countries.geometries[i].properties.completed = true;
 				else
 					world.objects.countries.geometries[i].properties.completed = false;
@@ -116,7 +118,7 @@ d3.json("world.json", function(error, result) {
 			})
 		);
 		
-		var navBar = d3.select(".navbar");
+		navBar = d3.select(".navbar");
 	
 		navBar.selectAll("div")
 			.data(world.objects.countries.geometries).enter()
@@ -166,7 +168,6 @@ d3.json("world.json", function(error, result) {
 				d3.select(this.parentNode).classed("out",!d3.select(this.parentNode).classed("out")); 
 				
 			});
-		
 		var countrytoLoad = getUrlParameter('country');
 		
 		if ((window.location.hash == '') && (countrytoLoad === undefined)){ //there's no hash variable or url variable
@@ -255,6 +256,8 @@ d3.json("world.json", function(error, result) {
 		returnToBrowse();
 	});
 
+	
+	
 });
 
 // End universal loading section
@@ -364,7 +367,8 @@ function loadBrowse(callback) {
 			if(d.properties.completed) {
 				d3.select(this).moveToFront();
 				endpoint = d3.select( "#nav_" + d3.select(this).attr("id") ).node().offsetTop;
-				d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", true)
+				d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", true);
+				 
 				navBar.transition()
 					.duration(1000)
 					.tween("scrollTop", function() {
@@ -386,7 +390,12 @@ function loadBrowse(callback) {
 				if( !d3.select("body").classed("white") ) getReadyToLoadVideo(countryName)
 			}
 		});	
-
+		
+	// Make sure clicking on the circle doesn't do anything
+	circle.on("click", function(){
+		
+	});
+	
 	moveAndZoom(width / 2, height / 2, height / 2 * .8, 1000, function(){
 		panTo(d3.select("#USA").datum(), 500);
 	});
@@ -783,17 +792,25 @@ function loadStory(country, callback) {
 		
 		//if in bio page and click globe, scroll back to browse
 		globe.on("click", function(){
-			d3.select(".videoHolder").transition().duration(1000)
-						.style("opacity", 1)
-						.each("end", function(){
-							setTimeout(function() {
-								  d3.select(".videoHolder").remove();
-								//loadStory(countryName);
-							}, 300);
-						});
-			returnToBrowse();
+			clickGlobeOnBioPage();
 		});
-			
+		
+		circle.on("click", function(){
+			clickGlobeOnBioPage();
+		});
+		
+		// Putting this in a function just to keep DRY (don't repeat yourself) alive
+		function clickGlobeOnBioPage() {
+			d3.select(".videoHolder").transition().duration(1000)
+				.style("opacity", 1)
+				.each("end", function(){
+					setTimeout(function() {
+						d3.select(".videoHolder").remove();
+						//loadStory(countryName);
+					}, 300);
+				});
+			returnToBrowse();
+		}
 		if(typeof callback === 'function') callback();
 		
 	});//end getJSON

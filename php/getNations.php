@@ -13,7 +13,7 @@ switch($_GET["operation"]) {
 	break;
 	
 	case "getActiveCountries":
-		$qNations = "SELECT Country, LENGTH(Notes) as Count from people ORDER BY Country";
+		$qNations = "SELECT Country, Activated, LENGTH(Notes) as Count from people ORDER BY Country";
 	break;
 	
 	default:

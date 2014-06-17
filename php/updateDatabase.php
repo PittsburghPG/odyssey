@@ -44,7 +44,8 @@ if($content != FALSE) {
 								`Origin`, 
 								`Neighborhood`, 
 								`Notes`, 
-								`Heading`) 
+								`Heading`,
+								`Activated`) 
 					VALUES      (\"" . $country["Country"] . "\",
 								\"" . $country["Name"] . "\",
 								\"" . $country["Age"] . "\",
@@ -52,7 +53,8 @@ if($content != FALSE) {
 								\"" . $country["Origin"] . "\",
 								\"" . $country["Current neighborhood"] . "\",
 								\"" . $country["Story text"] . "\",
-								\"" . $country["Story title"] . "\"
+								\"" . $country["Story title"] . "\",
+								\"" . ($country["Active?"] == "" ? "0" : "1") . "\"
 								)");
 		echo "Uploaded " . $country["Country"] . "<br />";
 	}
