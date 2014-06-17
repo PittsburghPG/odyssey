@@ -64,7 +64,6 @@ d3.json("world.json", function(error, result) {
 		// whether or not a) a country is involved in the project or b) we have completed
 		// a story for said country. 
 		world.objects.countries.geometries.forEach(function(country,i){
-			console.log(associative_results[country.properties.name]);
 			if( typeof associative_results[country.properties.name] != "undefined") {
 				world.objects.countries.geometries[i].properties.in_project = true;
 				if( associative_results[country.properties.name].count > 1 && associative_results[country.properties.name].active == 1 ) 
@@ -279,41 +278,87 @@ d3.json("world.json", function(error, result) {
 // --------------------------------------------------
 // Load if entering via hash 
 function enterViaHash(countryname, callback){
+	$.getJSON("php/getNations.php?operation=getSingleCountry&country=" + countryname.split('_').join(' '), function(data){ //grab data from database via php
+		
+		if( data != "") data = data[0];
+		
+		// Change metadata so Facebook/Twitter links refer to this page
+		d3.select("head").selectAll("meta.meta_replace").remove();
+		// Facebook title
+		d3.select("head").append("meta")
+			.attr("class", "meta_replace")
+			.attr("property", "og:title")
+			.attr("content", "Odysseys: " + data.Name + "'s story, from " + data.Country + " to Pittsburgh.");			
+		// Facebook description
+		d3.select("head").append("meta")
+			.attr("class", "meta_replace")
+			.attr("property", "og:description")
+			.attr("content", data.Name + " left " + data.Country + " and moved to Pittsburgh. This is what happened next. (Part of the Pittsburgh Post-Gazette's \"Odysseys\" project, sharing stories of immigrants to Pittsburgh.");
+		// Facebook image
+		d3.select("head").append("meta")
+			.attr("class", "meta_replace")
+			.attr("property", "og:image")
+			.attr("content", './countries/' + data.Country.toLowerCase().to_underscore() + '/img/' + data.Country.toLowerCase().to_underscore() + '_portrait.jpg');
+		// Facebook url
+		d3.select("head").append("meta")
+			.attr("class", "meta_replace")
+			.attr("property", "og:url")
+			.attr("content", 'http://newsinteractive.post-gazette.com/odysseys/countries/' + data.Country.toLowerCase().to_underscore());
+		// Twitter title
+		d3.select("head").append("meta")
+			.attr("class", "meta_replace")
+			.attr("property", "twitter:title")
+			.attr("content", "Odysseys: " + data.Name + "'s story, from " + data.Country + " to Pittsburgh.");
+		// Twitter description
+		d3.select("head").append("meta")
+			.attr("class", "meta_replace")
+			.attr("property", "twitter:description")
+			.attr("content", data.Name + " left " + data.Country + " and moved to Pittsburgh. This is what happened next.");
+		// Twitter image
+		d3.select("head").append("meta")
+			.attr("class", "meta_replace")
+			.attr("property", "twitter:image")
+			.attr("content", 'http://newsinteractive.post-gazette.com/odysseys/countries/' + data.Country.toLowerCase().to_underscore() + '/img/' + data.Country.toLowerCase().to_underscore() + '_portrait.jpg');
+		
+		//Send all this to Facebook
+		//d3.xhr("http://graph.facebook.com/v2.0/").post({id: "http://newsinteractive.post-gazette.com/odysseys/countries/#" + data.Country.toLowerCase().to_underscore(), scrape:"true" });
+			
 
-	moveAndZoom(width / 2, height / 2, height / 2 * .8, 1, function(){
-		panTo(d3.select("#USA").datum(), 500);
-		d3.select(".intro").style("display","none");
-	
-		d3.select("h1#title")
-			.style({"margin-top":"25px", "font-size":"65px", "padding-left":"10px","position":"fixed", "top":"0px"})
+		moveAndZoom(width / 2, height / 2, height / 2 * .8, 1, function(){
+			panTo(d3.select("#USA").datum(), 500);
+			d3.select(".intro").style("display","none");
 		
-		var commentBar = d3.select(".commentsWrapper");
-		commentBar.style("left", function(){
-			return -parseInt(commentBar.node().offsetWidth-10) + "px"; //add 10 so border shows
+			d3.select("h1#title")
+				.style({"margin-top":"25px", "font-size":"65px", "padding-left":"10px","position":"fixed", "top":"0px"})
+			
+			var commentBar = d3.select(".commentsWrapper");
+			commentBar.style("left", function(){
+				return -parseInt(commentBar.node().offsetWidth-10) + "px"; //add 10 so border shows
+			});
+			
+			d3.select(".navbarWrapper")
+				.classed("hidden", false)
+				.classed("out", true); 
+			
+			d3.select("#credits")
+				.classed("hidden", false);
+			
+			d3.select(".commentsWrapper")
+				.style("opacity", 1);
+		
+			d3.select(".loader")
+				.classed("hidden", true);
+			
+			d3.select(".content")
+				.classed("hidden", false);
+			
+			getReadyToLoadVideo(countryname);	
+			if(typeof callback === 'function') callback();
 		});
-		
-		d3.select(".navbarWrapper")
-			.classed("hidden", false)
-			.classed("out", true); 
-		
-		d3.select("#credits")
-			.classed("hidden", false);
-		
-		d3.select(".commentsWrapper")
-			.style("opacity", 1);
 	
-		d3.select(".loader")
-			.classed("hidden", true);
-		
-		d3.select(".content")
-			.classed("hidden", false);
-		
-		getReadyToLoadVideo(countryname);	
 	});
-	
-	
 		
-	if(typeof callback === 'function') callback();
+	
 	
 }
 // End if entering via hash 
@@ -564,6 +609,9 @@ function loadStory(country, callback) {
 	// Insert content below
 	$.getJSON("php/getNations.php?operation=getSingleCountry&country=" + country.split('_').join(' '), function(data){ //grab data from database via php
 		
+		if( data != "") data = data[0];
+		
+		
 		var commentBar = d3.select(".commentsWrapper"); //reposition commentBar so border doesn't get cut off
 		commentBar.style("left", function(){
 			return -parseInt(commentBar.node().offsetWidth-10) + "px"; //add 10 so border shows
@@ -575,7 +623,6 @@ function loadStory(country, callback) {
 				'z-index': ''
 			});
 		$('.story').css('display', 'block'); //not showing in IE
-		if( data != "") data = data[0];
 		
 		// Fill out biographical information
 		$('#name').html(data.Name);
@@ -604,12 +651,10 @@ function loadStory(country, callback) {
 		
 		//put image wrappers around each image and style images and captions
 		$.each($('#bio img'), function( index, value ) {
-			//console.log( index + ": " + value );
 			$(this).load(function() {
 				//alert('I loaded!');
 					var imgW = $(this).width();
 					var imgH = $(this).height();
-					//console.log("w: " + imgW + " " + "h: " + imgH);
 					var imgSrc = $(this).attr('src');
 					var caption = $(this).attr('caption');
 					if (imgW > imgH) { //if it's a horizontal image
