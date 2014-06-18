@@ -687,7 +687,7 @@ function loadStory(country, callback) {
 		
 		
 		//append sigil to end of story
-		$("<div align='center'><i class='sigil fa fa-globe'></i></div>").insertAfter('.text #bio p:last');
+		$("<div class='sigil'><i class='fa fa-globe'></i> Odysseys</div>").insertAfter('.text #bio p:last');
 		
 		$('body').css('overflow-y', 'scroll'); //put the scroll on the body, not the story		
 		

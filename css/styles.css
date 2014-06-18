@@ -793,6 +793,10 @@ padding-right: 20px;
 	
 		}
 .sigil {
+	font-family: "Muli", sans-serif;
+	font-size: 10pt;
+	line-height: 1.7em;
+	color: #666;
 	
 }
 #canvas
