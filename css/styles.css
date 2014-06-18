@@ -825,10 +825,11 @@ stroke:none;
 
 .country 
 {
-fill: #163d57;
-stroke: rgba(0,130,216,.3);
-stroke-width: 1px;
-transition: all 0.5s;
+	fill: #163d57;
+	stroke: rgba(0,130,216,.3);
+	stroke-width: 1px;
+	transition: all 0.5s;
+	pointer-events: all;
 }
 
 	.country.completed {
@@ -839,7 +840,7 @@ transition: all 0.5s;
 	.country.completed:hover , .country.completed.hover
 	{
 		cursor:pointer;
-		fill:#fff; 
+		fill:#fff !important; 
 		filter:url("#countryGlow");
 	}
 	

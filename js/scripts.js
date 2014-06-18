@@ -144,8 +144,9 @@ d3.json("world.json", function(error, result) {
 				if(d.properties.completed) {
 					target = d3.select( "#" + d3.select(this).attr("country") );
 					panTo( target.datum() , 1000);
-					target.classed("hover", true);
 					target.moveToFront();
+					target.classed("hover", true);
+					
 				}
 			})
 			.on("mouseout", function(){
@@ -879,9 +880,9 @@ function loadStory(country, callback) {
 function returnToBrowse(callback) {
 	//Turn off video
 	d3.select(".videoHolder").remove();
+	$('.story').css('display', 'none');
 	
-	
-	$('body').css('overflow-y', 'hidden'); 
+	$('body').css('overflow-y', 'hidden'); //hide scroll 
 	$('#pglogo').css('visibility', 'hidden');
 	$('svg').css({
 		'position': 'relative',
@@ -1105,7 +1106,7 @@ function moveAndZoom(newX, newY, endZoom, duration, callback) {
 // Center portrait video dynamically
 function centerVideo(){
 	//center video using vidholder class so that IE won't have black bars to the right and left of the video
-	//console.log($('video').width());
+	console.log($('video').width());
 	var newleft = ($(window).width() - $('video').width()) / 2;
 	$('.fullscreen').css('margin-left', newleft + 'px');
 	
