@@ -341,7 +341,7 @@ z-index: 2;
 {
 position:fixed;
 top:0;
-left:-100%;
+left:-70%;
 height:100%;
 width:70%;
 min-width: 1000px;
@@ -600,7 +600,6 @@ padding-right: 20px;
 			font-family: "Muli", sans-serif;
 			position: relative;
 			top: -6px;
-			transition:all .5s;
 		}
 	
 	 #copylinkbox {
@@ -836,7 +835,7 @@ transition: all 0.5s;
 	.country.completed:hover , .country.completed.hover
 	{
 		cursor:pointer;
-		fill:white;
+		fill:#fff; 
 		filter:url("#countryGlow");
 	}
 	

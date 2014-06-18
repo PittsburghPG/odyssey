@@ -19,7 +19,7 @@ var world,
 
 // Hash change
 window.onhashchange = function(){
-	console.log(window.location.hash);
+	//console.log(window.location.hash);
 	if( window.location.hash == "#browse" ){
 		returnToBrowse();
 	}
@@ -106,6 +106,7 @@ d3.json("world.json", function(error, result) {
 				.attr("country", function(d){ return d.properties.name })
 				.on("mouseover", function(){
 					d3.select(this).moveToFront();
+					
 				});
 	
 		// Now bind events to the globe
@@ -149,12 +150,11 @@ d3.json("world.json", function(error, result) {
 			})
 			.on("mouseout", function(){
 				d3.select( "#" + d3.select(this).attr("country") ).classed("hover", false);
+				
 			})
 			.on("click", function(d){
 				if(d.properties.completed) {
 					countryName = d3.select(this).html().toLowerCase();
-					//if (countryName == 'democratic republic of congo') { countryName = 'democratic_republic_of_congo';}
-					//if (countryName == 'new zealand') { countryName = 'democratic_republic_of_congo';}
 					countryName = countryName.split(' ').join('_');
 					window.location.hash = countryName;
 					getReadyToLoadVideo(countryName);
@@ -1076,30 +1076,10 @@ function moveAndZoom(newX, newY, endZoom, duration, callback) {
 	
 } 
 
-function detectIE() {
-    var ua = window.navigator.userAgent;
-    var msie = ua.indexOf('MSIE ');
-    var trident = ua.indexOf('Trident/');
-
-    if (msie > 0) {
-        // IE 10 or older => return version number
-        return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
-    }
-
-    if (trident > 0) {
-        // IE 11 (or newer) => return version number
-        var rv = ua.indexOf('rv:');
-        return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
-    }
-
-    // other browser
-    return false;
-}
-
-// Cemter portrait video dynamically
+// Center portrait video dynamically
 function centerVideo(){
 	//center video using vidholder class so that IE won't have black bars to the right and left of the video
-	console.log($('video').width());
+	//console.log($('video').width());
 	var newleft = ($(window).width() - $('video').width()) / 2;
 	$('.fullscreen').css('margin-left', newleft + 'px');
 	
