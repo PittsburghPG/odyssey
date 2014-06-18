@@ -693,6 +693,9 @@ function loadStory(country, callback) {
 		
 		//show bio
 		d3.select(".story").style("display", "block");
+		d3.select(".story, .story .text, .story #personStats").transition().duration(500)
+			.style('opacity', '1'); //make story visible
+		
 		//$('.imgWrap_vertical img, .imgWrap_horizontal img, #bio img').fadeIn();
 		$('#personStats').fadeIn();
 		$('.story').css('opacity', '1');
@@ -775,6 +778,22 @@ function loadStory(country, callback) {
 					});
 				});
 			
+			globe.on("click", function(){		
+				/*$('video').stop(); // stop video
+				$('#arrowdown').fadeOut('fast');
+			
+				d3.select(".videoHolder").transition().duration(1000)
+							.style("opacity", "1")
+							.each("end", function(){
+								setTimeout(function() {
+									  d3.select(".videoHolder").remove();
+									//loadStory(countryName);
+								}, 300);
+							});
+				returnToBrowse();*/
+				clickGlobeOnBioPage();
+			});
+			
 			$('.vidclose').click(function(){ //if click video close
 				 $('video').get(0).pause(); //if they click it in the middle of the video, we need to stop the video 
 				 d3.select(".videoHolder").remove();
@@ -831,6 +850,8 @@ function loadStory(country, callback) {
 		
 		// Putting this in a function just to keep DRY (don't repeat yourself) alive
 		function clickGlobeOnBioPage() {
+			$('video').stop(); // stop video
+			$('#arrowdown').fadeOut('fast');
 			d3.select(".videoHolder").transition().duration(1000)
 				.style("opacity", 1)
 				.each("end", function(){
