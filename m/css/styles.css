@@ -121,16 +121,7 @@ h1 {
 				display:none;
 			}
 
-.tellUs {
-	display:none;
-	position:absolute;
-	top:0;
-	left:100%;
-	width:100%;
-	transition:all .5s;
-	background-color:white;
-	height:100%
-}
+
 
 .story {
 	top:0;
@@ -159,10 +150,20 @@ h1 {
 		font-family: "Muli", Helvetica, Arial, sans-serif;
 		font-weight:bold;
 		padding:0;
-		margin:20px auto 5px;
+		margin:0px auto 5px;
 		font-size:20pt;
 		width:90%;
 	}
+	
+	.story .superscript {
+		font-family:"Cinzel", "Time New Roman", serif;
+		font-size:12pt;
+		color: #007fd4;
+		text-transform:uppercase;
+		width:90%;
+		margin:20px auto 0px;
+	}
+	
 		.story ul.bio{
 			font-family: "Muli", Helvetica, Arial, sans-serif;
 			padding:0;
@@ -176,14 +177,18 @@ h1 {
 				padding:0;
 				margin:0 0 5px 0;
 			}
+			
+			.story ul.bio li .fa{
+				margin-right:10px;
+			}
 		
 		
 	.story .text
 	{
-	width:90%;
+	width:80%;
 	margin:auto;
 	font-family:"Muli", sans-serif;
-	font-size:12pt;
+	font-size:11pt;
 	line-height:1.7em;
 	display: inline-block;
 	position: relative;
@@ -197,7 +202,95 @@ h1 {
 	
 	.story video
 	{
+		margin-top:60px;
 		width:100%;
 		display:block;
 		border-bottom:1px solid gray;
 	}
+	
+.socialBar {
+	position:fixed;
+	text-align:center;
+	top:0;
+	left:0;
+	width:100%;
+	padding:10px 0;
+	border-bottom:1px lightgray;
+	box-shadow:0px 2px 5px lightgray;
+	background-color:white;
+	z-index:2;
+}
+	.socialButton {
+		display:inline-block;
+		height: 40px;
+		width: 40px;
+		border-radius:20px;
+		color:white;
+		background-color:darkred;
+		margin-right:15px;
+		font-size:18px;
+		line-height:40px;
+	}
+		.socialButton:last-child {
+			margin-right:0;
+		}
+		
+	.socialButton#facebook { background-color:#3B5998; }
+	.socialButton#twitter { background-color:#4099FF; }
+	.socialButton#share { background-color:seagreen; }
+	.socialButton #back{ background-color:darkred; }	
+	.socialButton #twitter { background-color:#4099FF; }
+
+	
+.tellUs {
+	display:none;
+	position:absolute;
+	top:0;
+	left:100%;
+	width:100%;
+	transition:all .5s;
+	background-color:white;
+	font-family:"Muli", sans-serif;
+}
+	.tellUs .text
+	{
+	width:90%;
+	margin:auto;
+	}
+	
+	.tellUs form {
+		width:90%;
+		margin:auto;
+	}
+	
+	.tellUs .divider {
+		width:95%;
+		background-color:#007fd4;
+		height:5px;
+		margin:10px 0px 20px;
+	}
+	
+	.tellUs input, .tellUs select {
+		min-height:30px;
+		width:95%;
+		margin-bottom:15px;
+	}
+	
+	.tellUs .label
+	{
+	text-transform:uppercase;
+	color:gray;
+	font-size:10pt;
+	}
+	
+	.tellUs input.button, #return {
+		padding:10px;
+		height:50px;
+		border:1px solid lightgray;
+		text-align:center;
+		font-family:sans-serif;
+		text-transform:uppercase;
+		background-color:#007fd4;
+	}
+	
+	

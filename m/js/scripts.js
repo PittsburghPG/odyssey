@@ -14,24 +14,45 @@ window.onhashchange = function(){ hashChange(); }
 // Hash event behavior
 
 function hashChange(){
-	console.log("changed");
+
 	if( window.location.hash == "") {
 		loadIntro();
 	}
 	else if( window.location.hash == "#countries" ) {
 		loadBrowse(function(){
 			d3.select(".browse")
+				.style("display", "block");
+			
+			d3.select(".browse")
 				.style("top", "0")
+				.style("display", "block")
 				.style("right", "0");
 			d3.select(".browse .header").style("display", "block")
 				
 			d3.select(".intro").style("top", "-100%");
 			
+			d3.select(".tellUs").style("display", "none");
+			
 			d3.select(".story")
 				.style({"left":"100%"})
 				.style("display", "none");	
+				
+			
 		});
 		
+	}
+	else if( window.location.hash == "#tellUs" ){
+		loadTellUs(function(){ 
+			d3.select(".intro").style("left", "-100%");
+			d3.select(".intro").style("opacity", "0");
+			d3.select(".tellUs").style("display", "block");
+			d3.select(".tellUs").style("left", "0");
+			d3.select(".story")
+				.style({"left":"100%"})
+				.style("display", "none");	
+			d3.select(".browse")
+				.style("display", "none");	
+		});
 	}
 	else {
 		d3.select(".intro").style("top", "-100%");
@@ -42,6 +63,7 @@ function hashChange(){
 			window.scrollTo(0,0);
 			d3.select(".browse").style("right", "100%");
 			d3.select(".header").style("display", "none");
+			
 		});
 	}
 
@@ -84,12 +106,8 @@ function loadIntro(callback) {
 				
 				if( d3.event.changedTouches[0].clientX - swipeX0 < -50)
 				{
+					window.location.hash = "tellUs";
 					
-					d3.select(".intro")
-						.style({"right":"100%", "opacity":0});
-		
-					d3.select(".tellUs")
-						.style("left", "0");
 				}
 		});
 		if(typeof callback === 'function') callback();
@@ -97,12 +115,46 @@ function loadIntro(callback) {
 // End Intro behavior 
 // *****************************************
 
+// *****************************************
+// Start tell us behavior
+
+function loadTellUs(callback) {
+	d3.json("../php/getNations.php?operation=getInactiveCountries", function(error, results){
+
+		d3.selectAll("select").selectAll("option")
+			.data(results).enter()
+		.append("option")
+			.attr("value", function(d){ return d.Country })
+			.text(function(d){ return d.Country });
+			
+		// Activate back button
+		d3.select("#return")
+			.on("click", function(){
+				window.location.hash = "countries";
+			});
+			
+		// Activate submit button
+		d3.select("#submit")
+			.on("click", function(){
+				form = d3.select("form").node();
+				$.post("../php/tellus.php", { first: form.first.value, last: form.last.value, contact: form.contact.value, country: form.country.value, neighborhood: form.neighborhood.value, about: "" }, function(data) {
+					alert("Thanks for submitting!");
+					window.location.hash = "countries";
+				});
+				
+			});
+	
+		if(typeof callback === 'function') callback();
+	});
+}
+
+// End tell us behavior
+// *****************************************
 
 
 // *****************************************
 // Start browse behavior 
 function loadBrowse(callback) {
-	
 	if(d3.selectAll(".browse li").node() == null) {
 		d3.json("../php/getNations.php?operation=getActiveCountries", function(error, results){
 			d3.select(".browse").append("ul")
@@ -117,6 +169,7 @@ function loadBrowse(callback) {
 			.on("click", function(d){
 				window.location.hash = d.Country;
 			});
+		if(typeof callback === 'function') callback();
 		});
 	}
 	if(typeof callback === 'function') callback();
@@ -146,18 +199,36 @@ function loadStory(country, callback) {
 		
 		bio = d3.select(".story ul.bio");
 		bio.selectAll("li").remove();
-		bio.append("li").html("<strong>Origin:</strong> " + data[0].Origin);
-		bio.append("li").html("<strong>Occupation:</strong> " + data[0].Occupation);
-		bio.append("li").html("<strong>New neighborhood:</strong> " + data[0].Neighborhood);
+		bio.append("li").html("<i class='fa fa-globe'></i><strong>Origin:</strong> " + data[0].Origin);
+		bio.append("li").html("<i class='fa fa-briefcase'></i><strong>Occupation:</strong> " + data[0].Occupation);
+		bio.append("li").html("<i class='fa fa-plane'></i><strong>New neighborhood:</strong> " + data[0].Neighborhood);
 		
 		text = d3.select(".story .text");
 		text.selectAll("p").remove();
 		text.html(data[0].Notes)
 		
-		
-		console.log(formattedName);
-		d3.select(".story").insert("video", "h2")
+		d3.select(".story").insert("video", ".superscript")
 			.attr("src", "../countries/" + formattedName + "/vid/" + formattedName + "_portrait.mp4");
+		
+		// Activate buttons
+		d3.selectAll(".socialButton")
+			.on("click", function(){
+				switch( d3.select(this).attr("id") ){
+					case "facebook":
+						window.location = "https://www.facebook.com/sharer/sharer.php?u=http://newsinteractive.post-gazette.com/odysseys";
+					break;
+					case "twitter":
+						window.location = "https://twitter.com/intent/tweet?original_referer=http://newsinteractive.post-gazette.com/odysseys&text=This new Pittsburgher came from " + data[0].Origin + " -- " + data[0].Name + " (via @PittsburghPG):&:tw_p=tweetbutton&url=http://newsinteractive.post-gazette.com/odysseys/%23" + formattedName;
+					break;
+					case "tellUs":
+						window.location.hash = "tellUs"
+					break;
+					
+					case "back":
+						window.location.hash = "countries";	
+					break;
+				}
+			})
 		
 		// Activate swipe to go back to browse page
 		d3.select(".story")

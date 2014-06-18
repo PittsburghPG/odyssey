@@ -16,6 +16,10 @@ switch($_GET["operation"]) {
 		$qNations = "SELECT Country, Activated, LENGTH(Notes) as Count from people ORDER BY Country";
 	break;
 	
+	case "getInactiveCountries":
+		$qNations = "SELECT Country from people WHERE Activated = '' ORDER BY Country";
+	break;
+	
 	default:
 		$qNations = "SELECT Country, Name, Age, Occupation, Origin, Neighborhood, Heading, Notes FROM people order by Country";
 	break;
