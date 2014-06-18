@@ -503,6 +503,7 @@ function loadVideo(countryName, callback) {
 	d3.select("body").classed("white", true);
 	d3.select(".content").classed("white", true);
 	
+	$('body').css('overflow-y', 'hidden'); //disable scrolling
 	
 	// Slide away globe and text widget
 	moveAndZoom(width - 120, height - 100, 75, 1000, function(){
@@ -730,6 +731,9 @@ function loadStory(country, callback) {
 			countryName = countryName.toLowerCase();
 			countryName = countryName.split(' ').join('_');//put underscores between words
 			
+			//disable scrolling
+			$('body').css('overflow-y', 'hidden'); 
+			
 			//push little globe to top so visible
 			$('svg').css({
 				'position': 'relative',
@@ -797,6 +801,7 @@ function loadStory(country, callback) {
 			$('.vidclose').click(function(){ //if click video close
 				 $('video').get(0).pause(); //if they click it in the middle of the video, we need to stop the video 
 				 d3.select(".videoHolder").remove();
+				 $('body').css('overflow-y','scroll'); //put back the scroll
 				$('.vidclose').remove();
 				$('.commentsHandle').show();
 				$( "#personStats, .story .text" ).animate({ //fade in the bio
