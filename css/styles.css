@@ -519,6 +519,7 @@ z-index: 5;
 background-color: white;
 display: table;
 }
+
 video {
 	outline: 0;
 	background-color: white;
@@ -526,16 +527,12 @@ video {
 }
 .fullscreen
 {
-width:100% !important;
-width: auto;
 height:100%;
 top:0;
 left:0;
 position:absolute;
 background-color:white;
 outline: 0;
-display: table-cell;
-text-align: center;
 }
 
 .story
@@ -646,7 +643,7 @@ padding-right: 20px;
 	
 	.story .text
 	{
-	margin-left: 276px;
+	margin-left: 236px;
 	font-family:"Muli", sans-serif;
 	font-size:12pt;
 	line-height:1.7em;
@@ -661,6 +658,9 @@ padding-right: 20px;
 			position: relative;
 			color: #666;
 			margin-top: 20px;
+		}
+		#bio img {
+			display: none;
 		}
 		.imgWrap_horizontal {
 			width: 100%;
@@ -714,9 +714,10 @@ padding-right: 20px;
 			margin-top: 20px;
 		}
 		
-		#bio .BrightcoveExperience {
+		#bio .BrightcoveExperience, #bio iframe {
 			width: 100%;
-			height: auto;
+			/*height: auto;
+			height: calc(100% * 9 / 16);*/
 		}
 	
 	.story #personStats {

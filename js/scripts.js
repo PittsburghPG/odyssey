@@ -1,6 +1,7 @@
 // **************************************************
 // Global variables
 // **************************************************
+
 var world,
 	navbar,
 	currentScreen,
@@ -531,9 +532,7 @@ function loadVideo(countryName, callback) {
 			.attr("class", "videoHolder")
 		.append("video")
 			.style("opacity", "0")
-			.attr("class", "fullscreen")
-			.style("width", width)
-			.style("height", height);
+			.attr("class", "fullscreen");
 		
 		var FF = !(window.mozInnerScreenX == null); //detect if Firefox
 		if(FF) { //if firefox, use webm
@@ -548,27 +547,13 @@ function loadVideo(countryName, callback) {
 				.attr("type", "video/mp4");
 		}
 	
-	//center video using vidholder class so that IE won't have black bars to the right and left of the video
-	//alert(detectIE());
-	if (detectIE() != false){
-				//alert('here');
-				/*var width = $(window).width();
-				$('.fullscreen').css({
-					'height': '100%',
-					'width' : 'auto',
-					'position': "absolute",
-					'top':0,
-					'left': ''
-				});
-				var vidwidth = $('video').width();
-				var newleft = (width - vidwidth) / 2;
-				$('.fullscreen').css('left', newleft + 'px');*/
-	}
 	
 	d3.select("body").transition()
 		.duration(500)
 		.style("background-color", "white")
 		.each("end", function(){
+			// Center video dynamically
+			centerVideo();
 			video.node().play();
 			video.transition().duration(1000)
 				.style("opacity", "1")
@@ -579,10 +564,9 @@ function loadVideo(countryName, callback) {
 				});
 			});
 	
-	globe.on("click", function(){
-		
+	globe.on("click", function(){		
 		$('video').stop(); // stop video
-		
+	
 		d3.select(".videoHolder").transition().duration(1000)
 					.style("opacity", "1")
 					.each("end", function(){
@@ -593,7 +577,7 @@ function loadVideo(countryName, callback) {
 					});
 		returnToBrowse();
 	});
-	
+
 }
 
 // End load video
@@ -606,6 +590,13 @@ function loadVideo(countryName, callback) {
 function loadStory(country, callback) {
 	
 	d3.select(".videoHolder").remove();
+	
+	//calculate width of story text so that personStats gets placed correctly
+	var storyWidth = width/2 -196;
+	$('.story .text').css('width', storyWidth + 'px');
+	
+	
+	
 	// Insert content below
 	$.getJSON("php/getNations.php?operation=getSingleCountry&country=" + country.split('_').join(' '), function(data){ //grab data from database via php
 		
@@ -649,6 +640,10 @@ function loadStory(country, callback) {
 			$("#bio p:nth-child(1)").css('margin-top', '0');//close up space above top paragraph if there's no heading
 		}
 		
+		//calculate height of story videos; the width is 100%
+		var iframeHeight = storyWidth * 315 / 560;
+		$('iframe').css('height', iframeHeight + 'px');
+		
 		//put image wrappers around each image and style images and captions
 		$.each($('#bio img'), function( index, value ) {
 			$(this).load(function() {
@@ -660,30 +655,25 @@ function loadStory(country, callback) {
 					if (imgW > imgH) { //if it's a horizontal image
 						$( this ).wrap( "<div class='imgWrap_horizontal'></div>" );
 						$(this).parent().append('<div class="caption">' + caption + '</div>');
-						//imgW = $('#bio').width() * .66;
-						//$(this).parent().children('.caption').css('left', imgW + 20);
+						
 						
 					} else { //if it's a vertical image
 						$( this ).wrap( "<div class='imgWrap_vertical'></div>" );
-						/*imgW = width / 2 -196;
-						$('.imgWrap_vertical').css({
-						'width': imgW + 'px',
-						'height': 'auto'
-						});*/
+						
 						
 						$(this).parent().append('<div class="caption">' + caption + '</div>');
 					}
+					$( this ).fadeIn();
 			});
 		});
 			
-		d3.select(".story").style("display", "block");	
 		
 		$('.story').css('margin-left', ( $(window).width() - $(".story").width() ) / 2 ); 
 		
 		//position the stats in a fixed col on the left
 		var storyPosition = $('.story').offset();
 		var storyLeft = storyPosition.left;
-		$('.story #personStats').css('left', storyLeft + 30 + "px");
+		//$('.story #personStats').css('left', storyLeft + 30 + "px");
 		var textPosition = $('.text').position(); //note where the text div is positioned
 		$('#personStats').css('top', textPosition + 'px'); //make the top of the stats align with the top of the text
 		var statsHeight = $('#personStats').height();
@@ -700,6 +690,16 @@ function loadStory(country, callback) {
 			$('#personStats').css('top', textTop + 'px');
 		} 
 		
+		
+		
+		//append sigil to end of story
+		$("<div align='center'><i class='sigil fa fa-globe'></i></div>").insertAfter('.text #bio p:last');
+		
+		$('body').css('overflow-y', 'scroll'); //put the scroll on the body, not the story		
+		
+		//show bio
+		d3.select(".story").style("display", "block");
+		//$('.imgWrap_vertical img, .imgWrap_horizontal img, #bio img').fadeIn();
 		$('#personStats').fadeIn();
 		$('.story').css('opacity', '1');
 		//position portrait overlay
@@ -713,12 +713,6 @@ function loadStory(country, callback) {
 			
 		});
 		
-		//append sigil to end of story
-		$("<div align='center'><i class='sigil fa fa-globe'></i></div>").insertAfter('.text #bio p:last');
-		//$('.text #bio p:last').after("<p align='center'><i class='sigil fa fa-globe'></i></p>")
-		
-		$('body').css('overflow-y', 'scroll'); //put the scroll on the body, not the story		
-		
 		//if in bio page and click arrow up, scroll back to browse
 		$('.fa-arrow-circle-o-up').click(function(){
 			if( d3.select("body").classed("white") ) {
@@ -728,6 +722,7 @@ function loadStory(country, callback) {
 		});
 		
 		$('#replayside').click(function(){ //if click video replay
+			
 			$('#personStats, .story .text').css({
 				'opacity': '0',
 				'z-index': '1'
@@ -744,7 +739,7 @@ function loadStory(country, callback) {
 				'z-index': '99'
 			});
 			
-			$('.content').prepend("<div id='arrowdown' title='Return to globe'><i class='fa fa-arrow-circle-down fa-2x vidclose'></i></div>");
+			$('.content').prepend("<div id='arrowdown' title='Return to story'><i class='fa fa-arrow-circle-down fa-2x vidclose'></i></div>");
 			
 			var video = d3.select(".content")
 			.insert("div", ".story")
@@ -769,17 +764,13 @@ function loadStory(country, callback) {
 					.attr("src", "countries/" + countryName + "/vid/" + countryName + "_portrait.mp4") //other browsers can use mp4 
 					.attr("type", "video/mp4");
 			}
-			//center video in a way that IE likes
-			
-			/*var vidwidth = $('video').width();
-			var newleft = (width - vidwidth) / 2;
-			$('.fullscreen').css('left', newleft + 'px');*/
-			
-			
+						
+
 			d3.select("body").transition()
 			.duration(500)
 			.style("background-color", "white")
 			.each("end", function(){
+				centerVideo();
 				video.node().play();
 				video.transition().duration(1000)
 					.style("opacity", "1")
@@ -968,7 +959,7 @@ function loadComments(callback) {
 		$.post("php/tellus.php", { first: first, last: last, contact: contact, country: country, neighborhood: neighborhood, about: about },
 		   function(data) {
 			 $('#commentsForm').fadeOut();
-			 $('.formChatter').append('<p id="thanks">Lorem ipsum dolor sit amet.</p>');
+			 $('.formChatter').append('<p id="thanks">Thank you.</p>');
 			 $('#thanks').fadeIn();
 		});
 	});
@@ -1090,6 +1081,14 @@ function detectIE() {
     return false;
 }
 
+// Cemter portrait video dynamically
+function centerVideo(){
+	//center video using vidholder class so that IE won't have black bars to the right and left of the video
+	console.log($('video').width());
+	var newleft = ($(window).width() - $('video').width()) / 2;
+	$('.fullscreen').css('margin-left', newleft + 'px');
+	
+}
 
 // Add ability to convert spaces to underscores to String prototype
 String.prototype.to_underscore = function() {
