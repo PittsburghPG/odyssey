@@ -34,6 +34,9 @@ console.log(window.innerWidth);
 // Jump to mobile if small enough
 if( window.innerWidth < 900 ) window.location = "m/";
 
+// temporary fix for macs
+ if (navigator.platform.match(/(iPhone|iPod|iPad)/i)?true:false) window.location = "http://newsinteractive.post-gazette.com/odysseys/m";
+
 //detect if Firefox
 var FF = !(window.mozInnerScreenX == null); 
 
@@ -271,7 +274,7 @@ d3.json("world.json", function(error, result) {
 	});
 	
 	$("h1#title").click(function(){ 
-		returnToBrowse();
+		window.location.hash = "browse";
 	});
 
 	
@@ -596,7 +599,7 @@ function loadVideo(countryName, callback) {
 			.style("opacity", "0")
 			.each("end", function(){
 				d3.select(".videoHolder").remove();
-				returnToBrowse();
+				window.location.hash = "browse";
 			});
 	});
 
@@ -702,7 +705,7 @@ function loadStory(country, callback) {
 		var statsWidth = $('#personStats').width();
 		var bioLeft = $('#bio').position();
 		bioLeft = bioLeft.left;
-		if ($(window).height() < statsHeight) { //if the window is too short to show the whole stats column, then make the stats column scrollable with the body
+		if ($(window).height() * .9 < statsHeight) { //if the window is too short to show the whole stats column, then make the stats column scrollable with the body
 			$('#personStats').css('position', 'absolute');
 			var storytextMargLeft = $('.story .text').css('margin-left');
 			storytextMargLeft = storytextMargLeft.substring(0, storytextMargLeft.length-2);
@@ -886,7 +889,7 @@ function loadStory(country, callback) {
 						//loadStory(countryName);
 					}, 300);
 				});
-			returnToBrowse();
+			window.location.hash = "browse";
 		}
 		if(typeof callback === 'function') callback();
 		
