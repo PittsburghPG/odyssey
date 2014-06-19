@@ -90,7 +90,6 @@ h1 {
 	top:100%;
 	transition:all .5s;
 	width:100%;
-	overflow:scroll;
 	height:100%;
 }
 
@@ -99,7 +98,6 @@ h1 {
 		margin:0;
 		margin-top:75px;	
 		text-align:center;
-		overflow:scroll;
 	}
 	
 		.browse li {
@@ -152,7 +150,7 @@ h1 {
 		padding:0;
 		margin:0px auto 5px;
 		font-size:20pt;
-		width:90%;
+		width:80%;
 	}
 	
 	.story .superscript {
@@ -160,8 +158,9 @@ h1 {
 		font-size:12pt;
 		color: #007fd4;
 		text-transform:uppercase;
-		width:90%;
+		width:80%;
 		margin:20px auto 0px;
+		font-weight:bold;
 	}
 	
 		.story ul.bio{
@@ -169,7 +168,7 @@ h1 {
 			padding:0;
 			margin:5px auto;
 			font-size:13pt;
-			width:90%;
+			width:80%;
 			list-style:none;
 		}
 			
@@ -193,7 +192,6 @@ h1 {
 	display: inline-block;
 	position: relative;
 	display:block;
-	overflow:scroll;
 	}
 	
 		.story .text p{
@@ -270,10 +268,14 @@ h1 {
 		margin:10px 0px 20px;
 	}
 	
-	.tellUs input, .tellUs select {
+	.tellUs input, .tellUs select, .tellUs textarea {
 		min-height:30px;
 		width:95%;
 		margin-bottom:15px;
+	}
+	
+	.tellUs textarea {
+		height:60px;
 	}
 	
 	.tellUs .label

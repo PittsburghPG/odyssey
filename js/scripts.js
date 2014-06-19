@@ -8,7 +8,8 @@ var world,
 	width,
 	height,
 	startscale,
-	which_stage;
+	which_stage,
+	timer;
 
 // **************************************************
 // Loading functions
@@ -19,11 +20,22 @@ var world,
 
 // Hash change
 window.onhashchange = function(){
-	//console.log(window.location.hash);
 	if( window.location.hash == "#browse" ){
-		returnToBrowse();
+		if (d3.select(".intro").style("display") != "none" ) { loadBrowse();}
+		else returnToBrowse();
 	}
 }
+
+// Window resize
+window.onresize = resize;
+
+
+console.log(window.innerWidth);
+// Jump to mobile if small enough
+if( window.innerWidth < 900 ) window.location = "m/";
+
+//detect if Firefox
+var FF = !(window.mozInnerScreenX == null); 
 
 var svg = d3.select("#canvas"),
 	globe = svg.selectAll(".country"),
@@ -89,7 +101,10 @@ d3.json("world.json", function(error, result) {
 			.attr('r', projection.scale())
 			.attr("fill", "lightblue")
 			.attr("filter", "url(#glow)")
-			.attr("fill", "url(#gradBlue)");
+			.attr("fill", "url(#gradBlue)")
+			.on("mousemove", function(){
+				d3.selectAll(".country").classed("hover", false) //have to do this for IE;
+			});
 		
 		// Generate globe	
 		countries = topojson.feature(world, world.objects.countries).features;						
@@ -106,7 +121,7 @@ d3.json("world.json", function(error, result) {
 				.attr("country", function(d){ return d.properties.name })
 				.on("mouseover", function(){
 					d3.select(this).moveToFront();
-					
+					//d3.selectAll(".country").classed("hover", false);
 				});
 	
 		// Now bind events to the globe
@@ -146,7 +161,7 @@ d3.json("world.json", function(error, result) {
 					panTo( target.datum() , 1000);
 					target.moveToFront();
 					target.classed("hover", true);
-					
+					if(FF) target.style("filter", "none"); // also because of dratted firefox
 				}
 			})
 			.on("mouseout", function(){
@@ -167,8 +182,15 @@ d3.json("world.json", function(error, result) {
 		});
 		
 		d3.selectAll(".navbarWrapper .fa")
-			.on("click", function(){
-				navBar.node().scrollTop += parseInt(d3.select(this).attr("deltaY"));
+			.on("mousedown", function(){
+				var temp = this;
+				timer = setInterval( function(){ navBar.node().scrollTop += parseInt(d3.select(temp).attr("deltaY")); },50 );
+			})
+			.on("mouseup", function(){
+				clearInterval(timer);
+			})
+			.on("mouseout", function(){
+				clearInterval(timer);
 			});
 			
 		d3.selectAll(".handle")
@@ -266,10 +288,12 @@ function enterViaHash(countryname, callback){
 	d3.select("h1#title")
 		.style({"margin-top":"25px", "font-size":"65px", "padding-left":"10px","position":"fixed", "top":"0px"})
 	
+	
 	var commentBar = d3.select(".commentsWrapper");
 	commentBar.style("left", function(){
-		return -parseInt(commentBar.node().offsetWidth-10) + "px"; //add 10 so border shows
+		return -parseInt(commentBar.node().offsetWidth) + "px"; //add 10 so border shows
 	});
+	
 	
 	d3.select(".navbarWrapper")
 		.classed("hidden", false)
@@ -375,9 +399,7 @@ function loadIntro(callback){
 	});
 
 	$("#begin").click(function(){ 
-		loadBrowse(function(){
-			
-		});
+		window.location.hash = "browse";
 	});
 	
 	if(typeof callback === 'function') callback();
@@ -392,9 +414,6 @@ function loadIntro(callback){
 
 function loadBrowse(callback) {
 
-	// Change hash
-	window.location.hash = "browse";
-	
 	$('#credits').animate({'left': "18px"}, 1000);
 	
 	// turn off rotation (if it's even activated to begin with)
@@ -407,7 +426,12 @@ function loadBrowse(callback) {
 		.on("mouseover", function(d){
 			if(d.properties.completed) {
 				d3.select(this).moveToFront();
+				d3.selectAll(".country.hover").classed("hover", false); // I have to do this because of dratted IE
+				d3.select(this).classed("hover", true); // I have to do it this way because of dratted firefox
+				if(FF) d3.select(this).style("filter", "none"); // also because of dratted firefox
+				
 				endpoint = d3.select( "#nav_" + d3.select(this).attr("id") ).node().offsetTop;
+				d3.selectAll( ".nav" ).classed("hover", false); // I have to do this because of dratted IE
 				d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", true);
 				 
 				navBar.transition()
@@ -422,6 +446,7 @@ function loadBrowse(callback) {
 		})
 		.on("mouseout", function(){
 			d3.select( "#nav_" + d3.select(this).attr("id") ).classed("hover", false);
+			d3.select(this).classed("hover", false);
 		})
 		.on("click", function(d){
 			if(d.properties.completed) {
@@ -437,16 +462,16 @@ function loadBrowse(callback) {
 		
 	});
 	
-	moveAndZoom(width / 2, height / 2, height / 2 * .8, 1000, function(){
-		panTo(d3.select("#USA").datum(), 500);
+	moveAndZoom(width / 2, height / 2, height / 2 * .8, 500, function(){
+		panTo(d3.select("#USA").datum(), 250);
 	});
 	
-	$(".intro").fadeOut(1000); 
+	$(".intro").fadeOut(500); 
 
 	d3.select("body").classed("white", false);
 	
 	d3.select("h1#title")
-		.transition().duration(1000)
+		.transition().duration(500)
 		.style({"margin-top":"25px", "font-size":"65px", "padding-left":"10px"})
 		.each("end", function(){ d3.select(this).style({"position":"fixed", "top":"0px"}) });
 	
@@ -475,16 +500,14 @@ function loadBrowse(callback) {
 // --------------------------------------------------
 // Get ready to load video from browse page
 function getReadyToLoadVideo(countryName) {
-			//window.location.hash = countryName; //put countryname in url
 			loadVideo(countryName, function(){
 				// Fade out when video done and load story
-				d3.select(".videoHolder").transition().duration(1000)
+				d3.select(".videoHolder").transition().duration(500)
 					.style("opacity", "0")
 					.each("end", function(){
-						setTimeout(function() {
-							  d3.select(".videoHolder").remove();
-							loadStory(countryName);
-						}, 300);
+						d3.select(".videoHolder").remove();
+						loadStory(countryName);
+						
 					});
 				
 			});	
@@ -507,7 +530,7 @@ function loadVideo(countryName, callback) {
 	$('body').css('overflow-y', 'hidden'); //disable scrolling
 	
 	// Slide away globe and text widget
-	moveAndZoom(width - 120, height - 100, 75, 1000, function(){
+	moveAndZoom(width - 120, height - 100, 75, 500, function(){
 		circle.attr("fill", "white")
 			.attr("stroke", "lightgray")
 			.attr("filter", "none");
@@ -522,6 +545,11 @@ function loadVideo(countryName, callback) {
 	$('h1#title').css({
 		'z-index': '99'
 	});
+	
+	d3.select("body").transition()
+		.duration(500)
+		.style("background-color", "white");
+		
 	//put vidholder and video on the page
 	var video = d3.select(".content")
 		.insert("div", ".story")
@@ -529,8 +557,8 @@ function loadVideo(countryName, callback) {
 		.append("video")
 			.style("opacity", "0")
 			.attr("class", "fullscreen");
+			
 		
-		var FF = !(window.mozInnerScreenX == null); //detect if Firefox
 		if(FF) { //if firefox, use webm
 			d3.select("video")
 			.append("source")
@@ -543,35 +571,33 @@ function loadVideo(countryName, callback) {
 				.attr("type", "video/mp4");
 		}
 	
-	
-	d3.select("body").transition()
-		.duration(500)
-		.style("background-color", "white")
-		.each("end", function(){
-			// Center video dynamically
-			centerVideo();
-			video.node().play();
-			video.transition().duration(1000)
-				.style("opacity", "1")
-				.each("end", function(){
-					video.on("ended", function(){
-						if(typeof callback === 'function') callback();
+		
+		
+		d3.select("video").on("canplay", function(){
+				console.log(video.node().networkState);
+				console.log("canplaythrough");
+				centerVideo();
+				
+				video.transition().duration(1000)
+					.style("opacity", "1")
+					.each("end", function(){
+						video.on("ended", function(){
+							if(typeof callback === 'function') callback();
+						});
 					});
-				});
 			});
+		
+		video.node().play();
 	
 	globe.on("click", function(){		
 		$('video').stop(); // stop video
 	
 		d3.select(".videoHolder").transition().duration(1000)
-					.style("opacity", "1")
-					.each("end", function(){
-						setTimeout(function() {
-							  d3.select(".videoHolder").remove();
-							//loadStory(countryName);
-						}, 300);
-					});
-		returnToBrowse();
+			.style("opacity", "0")
+			.each("end", function(){
+				d3.select(".videoHolder").remove();
+				returnToBrowse();
+			});
 	});
 
 }
@@ -600,10 +626,10 @@ function loadStory(country, callback) {
 		
 		
 		var commentBar = d3.select(".commentsWrapper"); //reposition commentBar so border doesn't get cut off
-		commentBar.style("left", function(){
+		/*commentBar.style("left", function(){
 			return -parseInt(commentBar.node().offsetWidth-10) + "px"; //add 10 so border shows
 		});
-		
+		*/
 		//remove positioning of svg so that story shows up
 		$('svg').css({
 				'position': '',
@@ -663,7 +689,7 @@ function loadStory(country, callback) {
 			});
 		});
 			
-		
+		// Center story
 		$('.story').css('margin-left', ( $(window).width() - $(".story").width() ) / 2 ); 
 		
 		//position the stats in a fixed col on the left
@@ -682,14 +708,16 @@ function loadStory(country, callback) {
 			storytextMargLeft = storytextMargLeft.substring(0, storytextMargLeft.length-2);
 			var statsLeft = (storytextMargLeft - $('#personStats').width())/2;
 			$('#personStats').css('left', statsLeft + 'px');
-			var textTop = $('.text').offset().top - $(window).scrollTop();
+			
+			var textTop = $('.story .text').offset().top;
+			console.log($('.story .text').offset());
 			$('#personStats').css('top', textTop + 'px');
 		} 
 		
 		
 		
 		//append sigil to end of story
-		$("<div class='sigil'><i class='fa fa-globe'></i> Odysseys</div>").insertAfter('.text #bio p:last');
+		$('.text #bio p:last').append("<div class = 'sigil'><i class='fa fa-globe'></i></div>");
 		
 		$('body').css('overflow-y', 'scroll'); //put the scroll on the body, not the story		
 		
@@ -715,8 +743,7 @@ function loadStory(country, callback) {
 		//if in bio page and click arrow up, scroll back to browse
 		$('.fa-arrow-circle-o-up').click(function(){
 			if( d3.select("body").classed("white") ) {
-				window.location.hash = '';
-				returnToBrowse();
+				window.location.hash = 'browse';
 			}
 		});
 		
@@ -749,12 +776,10 @@ function loadStory(country, callback) {
 			.append("video")
 				.style("opacity", "0")
 				.attr("class", "fullscreen")
-				.attr("controls", true)
-				.style("width", width)
-				.style("height", height);
-			
-			var FF = !(window.mozInnerScreenX == null); //detect if Firefox
-			
+				.attr("controls", true);
+				//.style("width", width)
+				//.style("height", height);
+				
 			if(FF) {
 				d3.select("video")
 				.append("source")
@@ -766,14 +791,15 @@ function loadStory(country, callback) {
 					.attr("src", "countries/" + countryName + "/vid/" + countryName + "_portrait.mp4") //other browsers can use mp4 
 					.attr("type", "video/mp4");
 			}
-						
-
 			d3.select("body").transition()
 			.duration(500)
-			.style("background-color", "white")
-			.each("end", function(){
+			.style("background-color", "white");
+			
+			d3.select("video").on("canplay", function(){
+				console.log(video.node().networkState);
+				console.log("canplaythrough");
 				centerVideo();
-				video.node().play();
+				
 				video.transition().duration(1000)
 					.style("opacity", "1")
 					.each("end", function(){
@@ -781,21 +807,11 @@ function loadStory(country, callback) {
 							if(typeof callback === 'function') callback();
 						});
 					});
-				});
+			});
+		
+		video.node().play();
 			
 			globe.on("click", function(){		
-				/*$('video').stop(); // stop video
-				$('#arrowdown').fadeOut('fast');
-			
-				d3.select(".videoHolder").transition().duration(1000)
-							.style("opacity", "1")
-							.each("end", function(){
-								setTimeout(function() {
-									  d3.select(".videoHolder").remove();
-									//loadStory(countryName);
-								}, 300);
-							});
-				returnToBrowse();*/
 				clickGlobeOnBioPage();
 			});
 			
@@ -832,6 +848,10 @@ function loadStory(country, callback) {
 			window.open(url, '_blank');
 		});
 		
+		$('#comments').click(function(){
+			
+			loadComments();
+		});
 		
 		$('#shareside').click(function(){
 			 $('#copylinkbox').show();
@@ -880,7 +900,6 @@ function loadStory(country, callback) {
 function returnToBrowse(callback) {
 	//Turn off video
 	d3.select(".videoHolder").remove();
-	$('.story').css('display', 'none');
 	
 	$('body').css('overflow-y', 'hidden'); //hide scroll 
 	$('#pglogo').css('visibility', 'hidden');
@@ -889,13 +908,12 @@ function returnToBrowse(callback) {
 		'z-index': '1'
 	});
 		
-	d3.select(".story").transition().duration(500)
+	d3.select(".story").transition().duration(250)
 			.style('opacity', '0')
-			.style("margin-top", height + "px")
 				.each("end", function(){
 				d3.select(".story").style({"margin-top":"0px", "display":"none"});
 				d3.select("body").transition()
-					.duration(500)
+					.duration(250)
 					.style("background-color", "black")
 					.each("end", function(){
 						circle.attr("filter", "url(#glow)")
@@ -926,13 +944,12 @@ $('.commentsHandle').click(function(){
 
 function loadComments(callback) {
 	
-	$('h1#title').hide();
+	//$('h1#title').hide();
 	$('#countryTab').removeClass("out");
 	
 	$('body').append("<div id='commentsBg'></div>"); //insert dimmer
 	$("#commentsBg").css("opacity"); // hacky solution to make browser recognize initial state of new element
 	$('#commentsBg').css('opacity', ".5"); //fade in the dimmer
-	$('#pglogo').attr('src', 'img/PGwhite.png');
 	
 	//size the width of the part of the page containing the tell us form
 	var leftColWidth = $('.commentsWrapper').width() - $(".comments").outerWidth() - parseInt($(".comments").css("margin-left")) - parseInt($(".commentsLeft").css("padding-left")) - parseInt($(".commentsLeft").css("padding-right")); //minus the width of the commetns, minus the padding on comments, minus the left margin, minus the padding on commentsLeft
@@ -1106,7 +1123,6 @@ function moveAndZoom(newX, newY, endZoom, duration, callback) {
 // Center portrait video dynamically
 function centerVideo(){
 	//center video using vidholder class so that IE won't have black bars to the right and left of the video
-	console.log($('video').width());
 	var newleft = ($(window).width() - $('video').width()) / 2;
 	$('.fullscreen').css('margin-left', newleft + 'px');
 	
