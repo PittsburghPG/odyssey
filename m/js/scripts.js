@@ -137,7 +137,7 @@ function loadTellUs(callback) {
 		d3.select("#submit")
 			.on("click", function(){
 				form = d3.select("form").node();
-				$.post("../php/tellus.php", { first: form.first.value, last: form.last.value, contact: form.contact.value, country: form.country.value, neighborhood: form.neighborhood.value, about: "" }, function(data) {
+				$.post("../php/tellus.php", { first: form.first.value, last: form.last.value, contact: form.contact.value, country: form.country.value, neighborhood: form.neighborhood.value, about: form.about.value }, function(data) {
 					alert("Thanks for submitting!");
 					window.location.hash = "countries";
 				});
@@ -206,13 +206,6 @@ function loadStory(country, callback) {
 		text = d3.select(".story .text");
 		text.selectAll("p").remove();
 		text.html(data[0].Notes)
-		
-		text.selectAll("img")
-			.attr("src", function(){ return "../" + d3.select(this).attr("src");  })
-		.append("div")
-			.attr("class", "caption")
-			.text(function(){ return d3.select(this).attr("caption"); });
-			
 		
 		d3.select(".story").insert("video", ".superscript")
 			.attr("src", "../countries/" + formattedName + "/vid/" + formattedName + "_portrait.mp4");
