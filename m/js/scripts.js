@@ -207,6 +207,13 @@ function loadStory(country, callback) {
 		text.selectAll("p").remove();
 		text.html(data[0].Notes)
 		
+		text.selectAll("img")
+			.attr("src", function(){ return "../" + d3.select(this).attr("src");  })
+		.append("div")
+			.attr("class", "caption")
+			.text(function(){ return d3.select(this).attr("caption"); });
+			
+		
 		d3.select(".story").insert("video", ".superscript")
 			.attr("src", "../countries/" + formattedName + "/vid/" + formattedName + "_portrait.mp4");
 		
