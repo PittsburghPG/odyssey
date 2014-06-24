@@ -30,7 +30,6 @@ window.onhashchange = function(){
 window.onresize = resize;
 
 
-console.log(window.innerWidth);
 // Jump to mobile if small enough
 if( window.innerWidth < 900 ) window.location = "m/";
 
@@ -955,20 +954,18 @@ function loadComments(callback) {
 	$('#commentsBg').css('opacity', ".5"); //fade in the dimmer
 	
 	//size the width of the part of the page containing the tell us form
-	var leftColWidth = $('.commentsWrapper').width() - $(".comments").outerWidth() - parseInt($(".comments").css("margin-left")) - parseInt($(".commentsLeft").css("padding-left")) - parseInt($(".commentsLeft").css("padding-right")); //minus the width of the commetns, minus the padding on comments, minus the left margin, minus the padding on commentsLeft
+	var leftColWidth = $('.commentsWrapper').width() - $(".comments").outerWidth() - parseInt($(".comments").css("margin-left")) - parseInt($(".commentsLeft").css("padding-left")) - parseInt($(".commentsLeft").css("padding-right")); //minus the width of the comments, minus the padding on comments, minus the left margin, minus the padding on commentsLeft
 	$('.commentsLeft').css('width', leftColWidth + 'px');
 	$(window).resize(myResizeFunction).trigger('resize');
 	
 	//resize textarea for story
-	var commentsFormHeight = $('#commentsForm').height();
 	var titleHeight = $('.commentsLeft h1').height();
 	var chatterHeight = $('.formChatter').height();
-	var commentsFormTop = $('#commentsForm').position().top;
-	var remainingForForm = height - 150 - commentsFormTop - titleHeight - chatterHeight; //150 is for the credits
-	var rowHeight = $('input[type=text]').height() + 10;
-	var allRows = rowHeight * 4;
-	var forText = remainingForForm - allRows;
-	$('#formStory').css('height', forText + 'px');
+	console.log("titleHeight: " +  titleHeight );
+	//console.log("chatterHeight: " + chatterHeight );
+	console.log('height of page: ' + height);
+	var remainingForForm = height - 20 - titleHeight - chatterHeight; //150 is for the credits; 20 is the top padding
+	
 	
 	$('#formStory, #blinking_caret').click(function(){
 		$('#blinking_caret').stop( true, true ).fadeOut(0);
@@ -987,7 +984,18 @@ function loadComments(callback) {
 	
 	$('#neighborhood, #countryofOrigin').attr('maxlength', '60'); //make sure neighborhood doesn't go off the screen
 	
+	
+	
 	$('.commentsWrapper').animate({'left': "0"}, 1000); 
+	
+	var rowHeight = $('#contactrow').height() + 10;
+	console.log('row height: ' + rowHeight);
+	console.log("remainingForForm: " + remainingForForm);
+	var allRows = rowHeight * 4 + 10; //10 is for the border at the bottom of the form
+	console.log("allRows: " + allRows);
+	var forText = remainingForForm - allRows - 100; //100 for padding
+	console.log("forText: " + forText);
+	$('#formStory').css('height', forText + 'px');
 	
 	//autocomplete
 	var options, a;
