@@ -572,12 +572,13 @@ function loadVideo(countryName, callback) {
 				.attr("src", "countries/" + countryName + "/vid/" + countryName + "_portrait.mp4") //other browsers can use mp4 
 				.attr("type", "video/mp4");
 		}
-	
 		
+		//add "Back to story" button
+		$('.content').prepend("<div id='arrowdown' tip='Return to story'><i class='fa fa-arrow-circle-down fa-2x vidclose'></i></div>");
 		
 		d3.select("video").on("canplay", function(){
-				console.log(video.node().networkState);
-				console.log("canplaythrough");
+				//console.log(video.node().networkState);
+				//console.log("canplaythrough");
 				centerVideo();
 				
 				video.transition().duration(1000)
@@ -590,7 +591,11 @@ function loadVideo(countryName, callback) {
 			});
 		
 		video.node().play();
-	
+	$('.vidclose').click(function(){ //if click video close
+				 vidClose(countryName);
+				
+				
+	});
 	globe.on("click", function(){		
 		$('video').stop(); // stop video
 	
@@ -612,8 +617,9 @@ function loadVideo(countryName, callback) {
 // Load story
 
 function loadStory(country, callback) {
-	
+	d3.select("#arrowdown").remove();
 	d3.select(".videoHolder").remove();
+	
 	
 	//calculate width of story text so that personStats gets placed correctly
 	var storyWidth = width/2 -196;
@@ -721,6 +727,17 @@ function loadStory(country, callback) {
 		//append sigil to end of story
 		$('.text #bio p:last').append("<div class = 'sigil'><i class='fa fa-globe'></i></div>");
 		
+		//append Facebook comments
+		var bioW = $('.text #bio p').width();
+		var data_href = "http://newsinteractive.post-gazette.com/odysseys/#" + data.Country.toLowerCase().to_underscore();
+		console.log(data_href);
+		
+			//$('.text').append("<div class='fb-comments' id='countrycomments' data-href='" + data_href + "' data-width='" + bioW + "' data-numposts='25' data-colorscheme='light'></div>");
+			$('#storycomments').html("<div class='fb-comments' id='countrycomments' data-href='" + data_href + "' data-width='" + bioW + "' data-numposts='25' data-colorscheme='light'></div>");
+			FB.XFBML.parse();
+		
+		
+		
 		$('body').css('overflow-y', 'scroll'); //put the scroll on the body, not the story		
 		
 		//show bio
@@ -770,7 +787,7 @@ function loadStory(country, callback) {
 				'z-index': '99'
 			});
 			
-			$('.content').prepend("<div id='arrowdown' title='Return to story'><i class='fa fa-arrow-circle-down fa-2x vidclose'></i></div>");
+			$('.content').prepend("<div id='arrowdown' tip='Return to story'><i class='fa fa-arrow-circle-down fa-2x vidclose'></i></div>");
 			
 			var video = d3.select(".content")
 			.insert("div", ".story")
@@ -798,8 +815,8 @@ function loadStory(country, callback) {
 			.style("background-color", "white");
 			
 			d3.select("video").on("canplay", function(){
-				console.log(video.node().networkState);
-				console.log("canplaythrough");
+				//console.log(video.node().networkState);
+				//console.log("canplaythrough");
 				centerVideo();
 				
 				video.transition().duration(1000)
@@ -818,21 +835,8 @@ function loadStory(country, callback) {
 			});
 			
 			$('.vidclose').click(function(){ //if click video close
-				 $('video').get(0).pause(); //if they click it in the middle of the video, we need to stop the video 
-				 d3.select(".videoHolder").remove();
-				 $('body').css('overflow-y','scroll'); //put back the scroll
-				$('.vidclose').remove();
-				$('.commentsHandle').show();
-				$( "#personStats, .story .text" ).animate({ //fade in the bio
-					'opacity': 1,
-					'z-index': '5'
-				  }, 500);
-				
-				//push little globe back to original DOM order so that story can be seen
-				$('svg').css({
-					'position': '',
-					'z-index': ''
-				});
+				 vidClose(countryName);
+				 
 				
 			});
 			
@@ -932,6 +936,24 @@ function returnToBrowse(callback) {
 // End return form story/video to browse
 // --------------------------------------------------
 
+function vidClose(countryName) {
+	$('video').get(0).pause(); //if they click it in the middle of the video, we need to stop the video 
+				 d3.select(".videoHolder").remove();
+				 $('body').css('overflow-y','scroll'); //put back the scroll
+				$('.vidclose').remove();
+				$('.commentsHandle').show();
+				$( "#personStats, .story .text" ).animate({ //fade in the bio
+					'opacity': 1,
+					'z-index': '5'
+				  }, 500);
+				
+				//push little globe back to original DOM order so that story can be seen
+				$('svg').css({
+					'position': '',
+					'z-index': ''
+				});
+				loadStory(countryName);
+}
 
 // --------------------------------------------------
 // Load comments
