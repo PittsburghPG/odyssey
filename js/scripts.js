@@ -594,9 +594,14 @@ function loadVideo(countryName, callback) {
 		video.node().play();
 	$('.vidclose').click(function(){ //if click video close
 				 vidClose(countryName);
-				
-				
 	});
+	
+	$(document).keyup(function(e) {
+	  if (e.keyCode == 27) { 
+		vidClose(countryName);
+	  }   // esc
+	});
+	
 	globe.on("click", function(){		
 		$('video').stop(); // stop video
 	
@@ -837,8 +842,12 @@ function loadStory(country, callback) {
 			
 			$('.vidclose').click(function(){ //if click video close
 				 vidClose(countryName);
-				 
-				
+			});
+			
+			$(document).keyup(function(e) {
+			  if (e.keyCode == 27) { 
+				vidClose(countryName);
+			  }   // esc
 			});
 			
 			
