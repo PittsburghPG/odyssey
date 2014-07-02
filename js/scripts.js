@@ -1050,8 +1050,8 @@ function myResizeFunction() {
 function unloadComments(callback) {
 	$('#commentsBg').css('opacity',0);
 	$('#countryTab').addClass("out");
+	$("#commentsBg").remove();
 	$('.commentsWrapper').animate({'left': $(".commentsWrapper").outerWidth() * -1	}, 1000, function(){
-		$("#commentsBg").remove();
 		$('h1#title').delay(500).show();
 	});
 	if ($('.videoHolder').is(":visible")) {
