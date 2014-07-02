@@ -574,7 +574,8 @@ function loadVideo(countryName, callback) {
 		}
 		
 		//add "Back to story" button
-		$('.content').prepend("<div id='arrowdown' tip='Return to story'><i class='fa fa-arrow-circle-down fa-2x vidclose'></i></div>");
+		//<div id="arrowup" tip="Return to globe" class="righticon"><i class="fa fa-arrow-circle-o-up fa-3x"></i></div>
+		$('.content').prepend("<div id='arrowdown' tip='Return to story' class='righticon'><i class='fa fa-arrow-circle-down fa-3x vidclose'></i></div>");
 		
 		d3.select("video").on("canplay", function(){
 				//console.log(video.node().networkState);
@@ -718,7 +719,7 @@ function loadStory(country, callback) {
 			$('#personStats').css('left', statsLeft + 'px');
 			
 			var textTop = $('.story .text').offset().top;
-			console.log($('.story .text').offset());
+			//console.log($('.story .text').offset());
 			$('#personStats').css('top', textTop + 'px');
 		} 
 		
@@ -730,7 +731,7 @@ function loadStory(country, callback) {
 		//append Facebook comments
 		var bioW = $('.text #bio p').width();
 		var data_href = "http://newsinteractive.post-gazette.com/odysseys/#" + data.Country.toLowerCase().to_underscore();
-		console.log(data_href);
+		//console.log(data_href);
 		
 			//$('.text').append("<div class='fb-comments' id='countrycomments' data-href='" + data_href + "' data-width='" + bioW + "' data-numposts='25' data-colorscheme='light'></div>");
 			$('#storycomments').html("<div class='fb-comments' id='countrycomments' data-href='" + data_href + "' data-width='" + bioW + "' data-numposts='25' data-colorscheme='light'></div>");
@@ -787,7 +788,7 @@ function loadStory(country, callback) {
 				'z-index': '99'
 			});
 			
-			$('.content').prepend("<div id='arrowdown' tip='Return to story'><i class='fa fa-arrow-circle-down fa-2x vidclose'></i></div>");
+			$('.content').prepend("<div id='arrowdown' tip='Return to story' class='righticon'><i class='fa fa-arrow-circle-down fa-3x vidclose'></i></div>");
 			
 			var video = d3.select(".content")
 			.insert("div", ".story")
@@ -855,8 +856,9 @@ function loadStory(country, callback) {
 		});
 		
 		$('#comments').click(function(){
-			
-			loadComments();
+			//loadComments();
+			var point = $('.sigil');
+			$('html, body').animate({scrollTop: point.offset().top},'slow');
 		});
 		
 		$('#shareside').click(function(){
