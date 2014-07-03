@@ -324,6 +324,14 @@ width:200px;
 			color:white;
 			cursor:pointer;
 			}
+			
+			.new { /*blue circle for new countries */
+				border-radius: 50%;
+				width: 10px;
+				height: 10px; 
+				display: inline-block;
+				background: #007FD4;
+			}
 
 #commentsBg {
 transition: all .5s linear;
@@ -606,9 +614,9 @@ padding-right: 20px;
 		}
 	
 	 #copylinkbox {
-		position: fixed;
-		top: 110px;
-		right: 135px;
+		position: absolute;
+		top: 300px;
+		right: -200px;
 		width: 200px;
 		border-radius: 15px;
 		background-color: #eee;
@@ -976,7 +984,11 @@ letter-spacing:.1em;
 	#creditsbarWrap #creditsbar .smallsquare {
 		padding: 0 10px;
 	}
+
+	
+	
 .autocomplete-suggestions { border: 1px solid #999; background: #FFF; cursor: default; overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); font-family: Helvetica, Arial, sans-serif;}
 .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
 .autocomplete-selected { background: #F0F0F0; }
 .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+
