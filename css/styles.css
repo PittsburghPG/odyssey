@@ -543,6 +543,28 @@ background-color:white;
 outline: 0;
 }
 
+#arrowdown {
+    color: lightgray;
+    z-index: 99;
+    position: fixed;
+    top: 20px;
+    right: 37px;
+    padding: 10px;
+}
+#arrowdown:hover{
+    padding: 10px;
+    color: #007fd4;
+    cursor: pointer;
+}
+#arrowdown:hover:before {
+    content: attr(tip); 
+    float:left;
+    color: #007fd4;
+    font-family: "Muli", sans-serif;
+    font-size: 16px;
+    margin:7px 40px;
+}
+
 .story
 {
 width: 50%;
@@ -570,7 +592,15 @@ padding-right: 20px;
 		color: #007fd4;
 		cursor: pointer;
 	}
-	
+	/*.vidclose:hover:before {
+			content: attr(tip);
+			margin-right: 35px;
+			color: #007fd4;
+			font-family: "Muli", sans-serif;
+			font-size: 16px;
+			position: relative;
+			top: -6px;
+		}*/
 	
 	 
 	.story #arrowup .fa-arrow-circle-o-up, .fa-play-circle-o, .story  #facebookside  .fa-facebook-square, .story  #twitterside  .fa-twitter-square, .story  #shareside  .fa-share-alt-square, .story #comment .fa {

@@ -574,8 +574,7 @@ function loadVideo(countryName, callback) {
 		}
 		
 		//add "Back to story" button
-		//<div id="arrowup" tip="Return to globe" class="righticon"><i class="fa fa-arrow-circle-o-up fa-3x"></i></div>
-		$('.content').prepend("<div id='arrowdown' tip='Return to story' class='righticon'><i class='fa fa-arrow-circle-o-down fa-3x vidclose'></i></div>");
+		$('.content').prepend("<div tip='Return to story' class='arrowdown' id='arrowdown'><i class='fa fa-arrow-circle-o-down fa-2x vidclose'></i></div>");
 		
 		d3.select("video").on("canplay", function(){
 				//console.log(video.node().networkState);
@@ -793,7 +792,7 @@ function loadStory(country, callback) {
 				'z-index': '99'
 			});
 			
-			$('.content').prepend("<div id='arrowdown' tip='Return to story' class='righticon'><i class='fa fa-arrow-circle-o-down fa-3x vidclose'></i></div>");
+			$('.content').prepend("<div tip='Return to story' class='arrowdown' id='arrowdown'><i class='fa fa-arrow-circle-o-down fa-2x vidclose'></i></div>");
 			
 			var video = d3.select(".content")
 			.insert("div", ".story")
@@ -868,7 +867,6 @@ function loadStory(country, callback) {
 			//loadComments();
 			var point = $('.sigil'); //this marks the end of the story
 			$('html, body').animate({scrollTop: point.offset().top},'slow');
-			//animate({scrollTop: point.offset().top},'slow');
 			 
 		});
 		
