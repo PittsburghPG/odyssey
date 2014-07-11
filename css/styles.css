@@ -259,11 +259,14 @@ width:200px;
 	.navbarWrapper .navbar
 	{
 	width:100%;
-	padding-top:20px;
+	/*padding-top:20px;*/
 	overflow:hidden;
 	height:100%;
 	}
 		
+		.navbarWrapper .navbar:first-child {
+			margin-top: 20px;
+		}
 		.navbarWrapper .navHandle
 		{
 		-webkit-transform:rotate(90deg);
