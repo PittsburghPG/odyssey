@@ -45,7 +45,8 @@ if($content != FALSE) {
 								`Neighborhood`, 
 								`Notes`, 
 								`Heading`,
-								`Activated`) 
+								`Activated`,
+								`DatePublished`) 
 					VALUES      (\"" . $country["Country"] . "\",
 								\"" . $country["Name"] . "\",
 								\"" . $country["Age"] . "\",
@@ -54,8 +55,10 @@ if($content != FALSE) {
 								\"" . $country["Current neighborhood"] . "\",
 								\"" . $country["Story text"] . "\",
 								\"" . $country["Story title"] . "\",
-								\"" . ($country["Active?"] == "" ? "0" : "1") . "\"
+								\"" . ($country["Active?"] == "" ? "0" : "1") . "\",
+								\"" . $country["Date published"] . "\"
 								)");
+		
 		echo "Uploaded " . $country["Country"] . "<br />";
 	}
 	echo $mysqli->error;

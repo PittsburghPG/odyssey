@@ -77,17 +77,23 @@ d3.json("world.json", function(error, result) {
 		// to more easily match with the geometries file
 		associative_results = [];
 		results.forEach(function(item){
-			associative_results[item.Country] = {"count": +item.Count, "active": item.Activated};
+			associative_results[item.Country] = {"count": +item.Count, "active": item.Activated, "date_published": item.DatePublished};
 		});
 		
 		
 		
 		// This function adds one or two properties to the geometries file, indicating
-		// whether or not a) a country is involved in the project or b) we have completed
-		// a story for said country. 
+		// whether or not a) a country is involved in the project, b) we have completed
+		// a story for said country and c) its publication date.
 		world.objects.countries.geometries.forEach(function(country,i){
 			if( typeof associative_results[country.properties.name] != "undefined") {
+				// Insert publish date
+				world.objects.countries.geometries[i].properties.date_published = associative_results[country.properties.name].date_published;
+				
+				// Mark as in the project 
 				world.objects.countries.geometries[i].properties.in_project = true;
+				
+				// Test for activation
 				if( associative_results[country.properties.name].count > 1 && associative_results[country.properties.name].active == 1 ) 
 					world.objects.countries.geometries[i].properties.completed = true;
 				else
@@ -145,7 +151,7 @@ d3.json("world.json", function(error, result) {
 		
 		navBar = d3.select(".navbar");
 	
-		navBar.selectAll("div")
+		var nav = navBar.selectAll("div")
 			.data(world.objects.countries.geometries).enter()
 		.append("div")
 			.attr("class",function(d){
@@ -156,7 +162,6 @@ d3.json("world.json", function(error, result) {
 			})
 			.attr("country", function(d){ return d.properties.id })
 			.attr("id", function(d){ return "nav_" + d.properties.id })
-			.html(function(d){ return d.properties.name })
 			.on("mouseover", function(d){
 				if(d.properties.completed) {
 					target = d3.select( "#" + d3.select(this).attr("country") );
@@ -178,6 +183,24 @@ d3.json("world.json", function(error, result) {
 					getReadyToLoadVideo(countryName);
 				}
 			});
+			
+		nav.append("div")
+			.classed("dot", true)
+			.classed("active", function(d){ 
+				if( typeof d.properties.date_published != "undefined" && d.properties.date_published != "0000-00-00") {
+					return (new Date() - new Date(d.properties.date_published) <= 604800000 ? true : false)
+				}
+				
+				return false;
+				
+			});
+		
+		nav.append("span")
+			.html(function(d){ return d.properties.name });
+		
+		
+			
+			
 		
 		navBar.on("mousewheel", function(){
 			navBar.node().scrollTop += event.deltaY;
@@ -577,8 +600,6 @@ function loadVideo(countryName, callback) {
 		$('.content').prepend("<div tip='Return to story' class='arrowdown' id='arrowdown'><i class='fa fa-arrow-circle-o-down fa-2x vidclose'></i></div>");
 		
 		d3.select("video").on("canplay", function(){
-				//console.log(video.node().networkState);
-				//console.log("canplaythrough");
 				centerVideo();
 				
 				video.transition().duration(1000)
@@ -723,7 +744,7 @@ function loadStory(country, callback) {
 			$('#personStats').css('left', statsLeft + 'px');
 			
 			var textTop = $('.story .text').offset().top;
-			//console.log($('.story .text').offset());
+			
 			$('#personStats').css('top', textTop + 'px');
 		} 
 		
@@ -735,7 +756,7 @@ function loadStory(country, callback) {
 		//append Facebook comments
 		var bioW = $('.text #bio p').width();
 		var data_href = "http://newsinteractive.post-gazette.com/odysseys/#" + data.Country.toLowerCase().to_underscore();
-		//console.log(data_href);
+		
 		
 			//$('.text').append("<div class='fb-comments' id='countrycomments' data-href='" + data_href + "' data-width='" + bioW + "' data-numposts='25' data-colorscheme='light'></div>");
 			$('#storycomments').html("<div class='fb-comments' id='countrycomments' data-href='" + data_href + "' data-width='" + bioW + "' data-numposts='25' data-colorscheme='light'></div>");
