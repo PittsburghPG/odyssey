@@ -20,6 +20,10 @@ switch($_GET["operation"]) {
 		$qNations = "SELECT Country from people WHERE Activated = '' ORDER BY Country";
 	break;
 	
+	case "getNextCountry":
+		$qNations = "SELECT Country, Name from people where Country > '" . $_GET["country"] . "' AND Activated = 1 ORDER BY Country LIMIT 1";
+	break;
+	
 	default:
 		$qNations = "SELECT Country, Name, Age, Occupation, Origin, Neighborhood, Heading, Notes FROM people order by Country";
 	break;

@@ -24,6 +24,9 @@ window.onhashchange = function(){
 		if (d3.select(".intro").style("display") != "none" ) { loadBrowse();}
 		else returnToBrowse();
 	}
+	else {
+		getReadyToLoadVideo(window.location.hash.substring(1, window.location.hash.length));
+	}
 }
 
 // Window resize
@@ -180,7 +183,6 @@ d3.json("world.json", function(error, result) {
 					countryName = d3.select(this).select("span").html().toLowerCase();
 					countryName = countryName.split(' ').join('_');
 					window.location.hash = countryName;
-					getReadyToLoadVideo(countryName);
 				}
 			});
 			
@@ -477,8 +479,8 @@ function loadBrowse(callback) {
 			if(d.properties.completed) {
 				countryName = d3.select(this).attr("country").toLowerCase();
 				countryName = countryName.split(' ').join('_');
-				window.location.hash = countryName;
-				if( !d3.select("body").classed("white") ) getReadyToLoadVideo(countryName)
+				
+				if( !d3.select("body").classed("white") ) window.location.hash = countryName;
 			}
 		});	
 		
@@ -646,6 +648,7 @@ function loadStory(country, callback) {
 	d3.select("#arrowdown").remove();
 	d3.select(".videoHolder").remove();
 	
+	window.scrollTo(0,0);
 	
 	//calculate width of story text so that personStats gets placed correctly
 	var storyWidth = width/2 -196;
@@ -752,6 +755,19 @@ function loadStory(country, callback) {
 		
 		//append sigil to end of story
 		$('.text #bio p:last').append("<div class = 'sigil'><i class='fa fa-globe'></i></div>");
+		
+		// Append next story button
+		$.getJSON("php/getNations.php?operation=getNextCountry&country=" + country, function(next_country_data){
+			if( next_country_data != "null"){
+				next_country_data = next_country_data[0];
+				$('.text #bio p:last').after("<div class='nextStory' href='http://newsinteractive.post-gazette.com/odysseys/#" + next_country_data.Country.toLowerCase().to_underscore() + "'></div>");
+				$(".nextStory").append("<div class='circlePortrait' style='background-image:url(\"countries/" + next_country_data.Country.toLowerCase().to_underscore() + "/img/" + next_country_data.Country.toLowerCase().to_underscore() + "_portrait.jpg\")'></div>");
+				$(".nextStory").append("<div class='description'></div>");
+				$(".nextStory .description").append("<h4>Next<h4>");
+				$(".nextStory .description").append("<h3>" + next_country_data.Name + ", from " + next_country_data.Country + "<h3>");
+				$(".nextStory").click(function(){ window.location = "http://newsinteractive.post-gazette.com/odysseys/#" + next_country_data.Country.toLowerCase().to_underscore() });
+			}
+		});
 		
 		//append Facebook comments
 		var bioW = $('.text #bio p').width();
