@@ -177,7 +177,7 @@ d3.json("world.json", function(error, result) {
 			})
 			.on("click", function(d){
 				if(d.properties.completed) {
-					countryName = d3.select(this).html().toLowerCase();
+					countryName = d3.select(this).select("span").html().toLowerCase();
 					countryName = countryName.split(' ').join('_');
 					window.location.hash = countryName;
 					getReadyToLoadVideo(countryName);
